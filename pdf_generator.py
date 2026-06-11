@@ -749,12 +749,13 @@ class PDFGenerator:
         x_right = page_w - margin
         c = canvas.Canvas(output_path, pagesize=A4)
 
-        col_idx = x0
-        col_nom = x0 + 22
-        col_type = x0 + 215
-        col_qte = x0 + 300
-        col_pu = x0 + 405
-        col_sub = x_right
+        # Colonnes :  #  |  Qte  |  Composant  |  Type  |  PU achat  |  Sous-total
+        col_idx = x0              # "#"  (gauche)
+        col_qte = x0 + 50         # "Qte" (droite)
+        col_nom = x0 + 60         # "Composant" (gauche)
+        col_type = x0 + 270       # "Type" (gauche)
+        col_pu = x0 + 400         # "PU achat" (droite)
+        col_sub = x_right         # "Sous-total" (droite)
 
         def header_band(title_y):
             yy = title_y
@@ -772,9 +773,9 @@ class PDFGenerator:
             c.setFillColorRGB(0, 0, 0)
             c.setFont(font_b, 9)
             c.drawString(col_idx, yy, "#")
+            c.drawRightString(col_qte, yy, "Qte")
             c.drawString(col_nom, yy, "Composant")
             c.drawString(col_type, yy, "Type")
-            c.drawRightString(col_qte, yy, "Qte")
             c.drawRightString(col_pu, yy, "PU achat")
             c.drawRightString(col_sub, yy, "Sous-total")
             return yy - 20
@@ -801,6 +802,7 @@ class PDFGenerator:
 
         total_mat = 0.0
         total_pierres = 0.0
+        nb_pierres = 0
         c.setFont(font_n, 9)
         for i, row in enumerate(composition, start=1):
             nom = str(row.get("composant", "")).strip() or "-"
@@ -809,10 +811,12 @@ class PDFGenerator:
             pu = float(row.get("cout_unitaire", 0.0) or 0.0)
             sub = pu * qty
             total_mat += sub
-            if cat.lower().startswith("pierre"):
+            is_pierre = cat.lower().startswith("pierre")
+            if is_pierre:
                 total_pierres += sub
+                nb_pierres += qty
 
-            if y < margin + 90:
+            if y < margin + 120:
                 c.showPage()
                 y = header_band(page_h - margin)
                 y = table_header(y)
@@ -820,9 +824,9 @@ class PDFGenerator:
 
             nom_lines = simpleSplit(nom, font_n, 9, col_type - col_nom - 6)
             c.drawString(col_idx, y, str(i))
+            c.drawRightString(col_qte, y, str(qty))
             c.drawString(col_nom, y, nom_lines[0] if nom_lines else nom)
             c.drawString(col_type, y, cat)
-            c.drawRightString(col_qte, y, str(qty))
             c.drawRightString(col_pu, y, f"{pu:.2f} EUR")
             c.drawRightString(col_sub, y, f"{sub:.2f} EUR")
             y -= 14
@@ -840,24 +844,31 @@ class PDFGenerator:
         c.line(x0, y, x_right, y)
         y -= 18
 
+        # Nombre de pierres (uniquement les pierres)
+        c.setFont(font_b, 10)
+        c.drawString(x0, y, f"Nombre de pierres : {nb_pierres}")
+        y -= 20
+
+        # Recapitulatif des couts
         prix_vente = float(bracelet.get("prix_vente", 0.0) or 0.0)
-        cout_revient = float(metrics.get("cout_revient", total_mat) or total_mat)
-        marge = prix_vente - cout_revient
-        c.setFont(font_n, 10)
-        c.drawRightString(col_pu, y, "Cout pierres :")
-        c.drawRightString(col_sub, y, f"{total_pierres:.2f} EUR")
-        y -= 14
-        c.drawRightString(col_pu, y, "Cout matieres total :")
-        c.drawRightString(col_sub, y, f"{cout_revient:.2f} EUR")
-        y -= 14
-        c.setFont(font_b, 11)
-        c.drawRightString(col_pu, y, "Prix de vente :")
-        c.drawRightString(col_sub, y, f"{prix_vente:.2f} EUR")
-        y -= 15
-        c.setFont(font_n, 10)
-        c.drawRightString(col_pu, y, "Marge :")
-        c.drawRightString(col_sub, y, f"{marge:.2f} EUR")
-        y -= 26
+        total_autres = total_mat - total_pierres
+        cout_total = total_pierres + total_autres
+        marge = prix_vente - cout_total
+
+        def total_line(lbl, val, bold=False, size=10):
+            nonlocal y
+            c.setFont(font_b if bold else font_n, size)
+            c.drawRightString(col_pu, y, lbl)
+            c.drawRightString(col_sub, y, val)
+            y -= 14
+
+        total_line("Cout pierres :", f"{total_pierres:.2f} EUR")
+        total_line("Cout matieres :", f"{total_autres:.2f} EUR")
+        total_line("Cout total (pierres + matieres) :", f"{cout_total:.2f} EUR", bold=True)
+        y -= 3
+        total_line("Prix de vente :", f"{prix_vente:.2f} EUR", bold=True, size=11)
+        total_line("Marge :", f"{marge:.2f} EUR")
+        y -= 22
 
         vertus = metrics.get("vertus", []) or []
         chakras = metrics.get("chakras", []) or []
