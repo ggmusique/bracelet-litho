@@ -584,6 +584,7 @@ class BraceletEditor(BaseEditor):
         pu_entry.grid(row=0, column=4, padx=6)
 
         row = {"frame": row_wrap, "cat_var": cat_var, "comp_var": comp_var, "comp_box": comp_box, "qty_var": qty_var, "pu_var": pu_var, "pos_label": pos_label}
+        self._bind_comp_wheel(comp_box, row)
 
         cat_var.trace_add("write", lambda *_: self._on_category_changed(row))
         comp_var.trace_add("write", lambda *_: self._on_comp_row_changed())
@@ -644,6 +645,28 @@ class BraceletEditor(BaseEditor):
     @staticmethod
     def _fmt_pu(value: float) -> str:
         return f"{float(value or 0.0):.2f}"
+
+    def _bind_comp_wheel(self, comp_box, row: dict[str, Any]) -> None:
+        """Fait defiler la liste des composants/pierres avec la molette de la souris."""
+        def _wheel(event):
+            cat = row["cat_var"].get()
+            values = self._names_by_cat.get(cat, [])
+            if not values:
+                return "break"
+            try:
+                idx = values.index(row["comp_var"].get())
+            except ValueError:
+                idx = 0
+            down = getattr(event, "delta", 0) < 0 or getattr(event, "num", 0) == 5
+            idx = min(len(values) - 1, idx + 1) if down else max(0, idx - 1)
+            row["comp_var"].set(values[idx])
+            self._on_component_selected(row)
+            return "break"
+        for seq in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
+            try:
+                comp_box.bind(seq, _wheel)
+            except Exception:
+                pass
 
     def _on_component_selected(self, row: dict[str, Any]) -> None:
         cat = row["cat_var"].get()
