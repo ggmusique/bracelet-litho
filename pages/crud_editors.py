@@ -327,16 +327,24 @@ class BaseEditor(ctk.CTkToplevel):
         self.grab_set()
 
     def _maximize_window(self) -> None:
-        """Agrandit la fenetre (maximisee) selon la plateforme."""
+        """Agrandit la fenetre en occupant presque tout l'ecran, mais en
+        laissant une marge en bas pour que la barre des taches Windows et
+        surtout le pied de page (boutons Enregistrer / Annuler) restent
+        visibles. On evite 'zoomed' qui faisait deborder la fenetre sous la
+        barre des taches (boutons hors ecran)."""
         try:
-            self.state("zoomed")
-            return
+            self.update_idletasks()
+            screen_w = self.winfo_screenwidth()
+            screen_h = self.winfo_screenheight()
+            margin_bottom = 90
+            win_h = max(640, screen_h - margin_bottom)
+            win_w = max(900, screen_w - 40)
+            self.geometry(f"{win_w}x{win_h}+0+0")
         except Exception:
-            pass
-        try:
-            self.attributes("-zoomed", True)
-        except Exception:
-            pass
+            try:
+                self.state("zoomed")
+            except Exception:
+                pass
 
     def _mark_dirty(self, *_args) -> None:
         if not self._closing:
@@ -396,19 +404,15 @@ class ComponentEditor(BaseEditor):
         self._update_preview()
 
     def _build_ui(self) -> None:
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+
         header = ctk.CTkFrame(self, fg_color="transparent")
-        header.pack(fill="x", padx=22, pady=(18, 8))
+        header.grid(row=0, column=0, sticky="ew", padx=22, pady=(18, 8))
         ctk.CTkLabel(header, text="Composant", font=ctk.CTkFont(size=20, weight="bold"), text_color=theme.TEXT_PRIMARY).pack(anchor="w")
 
-        # Pied de page ancre en bas AVANT le contenu extensible, pour que les
-        # boutons Enregistrer / Annuler restent toujours visibles.
-        footer = ctk.CTkFrame(self, fg_color="transparent")
-        footer.pack(fill="x", side="bottom", padx=20, pady=(0, 16))
-        ctk.CTkButton(footer, text="Annuler", fg_color=theme.BG_SIDEBAR, hover_color=theme.BG_CARD_HOVER, command=self._on_close_request).pack(side="right", padx=(8, 0))
-        ctk.CTkButton(footer, text="Enregistrer", fg_color=theme.SUCCESS, hover_color=theme.ACCENT_TURQUOISE, command=self._save).pack(side="right")
-
         tabs = ctk.CTkTabview(self, fg_color=theme.BG_CARD, segmented_button_fg_color=theme.BG_SIDEBAR)
-        tabs.pack(fill="both", expand=True, padx=20, pady=(0, 12))
+        tabs.grid(row=1, column=0, sticky="nsew", padx=20, pady=(0, 12))
         info_tab = tabs.add("Informations")
         photo_tab = tabs.add("Photo")
         supplier_tab = tabs.add("Fournisseur")
@@ -416,6 +420,13 @@ class ComponentEditor(BaseEditor):
         self._build_info_tab(info_tab)
         self._build_photo_tab(photo_tab)
         self._build_supplier_tab(supplier_tab)
+
+        # Pied de page dans une rangee dediee (row 2), toujours visible sous le
+        # contenu (qui defile dans la row 1 extensible).
+        footer = ctk.CTkFrame(self, fg_color="transparent")
+        footer.grid(row=2, column=0, sticky="ew", padx=20, pady=(0, 16))
+        ctk.CTkButton(footer, text="Annuler", fg_color=theme.BG_SIDEBAR, hover_color=theme.BG_CARD_HOVER, command=self._on_close_request).pack(side="right", padx=(8, 0))
+        ctk.CTkButton(footer, text="Enregistrer", fg_color=theme.SUCCESS, hover_color=theme.ACCENT_TURQUOISE, command=self._save).pack(side="right")
 
     def _build_info_tab(self, tab) -> None:
         for col in range(2):
@@ -662,20 +673,15 @@ class BraceletEditor(BaseEditor):
         self._recompute_metrics()
 
     def _build_ui(self) -> None:
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+
         header = ctk.CTkFrame(self, fg_color="transparent")
-        header.pack(fill="x", padx=22, pady=(18, 8))
+        header.grid(row=0, column=0, sticky="ew", padx=22, pady=(18, 8))
         ctk.CTkLabel(header, text="Bracelet", font=ctk.CTkFont(size=20, weight="bold"), text_color=theme.TEXT_PRIMARY).pack(anchor="w")
 
-        # Pied de page ancre en bas AVANT le contenu extensible, pour que les
-        # boutons Enregistrer / Annuler restent toujours visibles meme si la
-        # liste de composants est longue.
-        footer = ctk.CTkFrame(self, fg_color="transparent")
-        footer.pack(fill="x", side="bottom", padx=20, pady=(0, 16))
-        ctk.CTkButton(footer, text="Annuler", fg_color=theme.BG_SIDEBAR, hover_color=theme.BG_CARD_HOVER, command=self._on_close_request).pack(side="right", padx=(8, 0))
-        ctk.CTkButton(footer, text="Enregistrer", fg_color=theme.SUCCESS, hover_color=theme.ACCENT_TURQUOISE, command=self._save).pack(side="right")
-
         tabs = ctk.CTkTabview(self, fg_color=theme.BG_CARD, segmented_button_fg_color=theme.BG_SIDEBAR)
-        tabs.pack(fill="both", expand=True, padx=20, pady=(0, 12))
+        tabs.grid(row=1, column=0, sticky="nsew", padx=20, pady=(0, 12))
         info_tab = tabs.add("Informations")
         photo_tab = tabs.add("Photo")
         comp_tab = tabs.add("Composition")
@@ -683,6 +689,13 @@ class BraceletEditor(BaseEditor):
         self._build_info_tab(info_tab)
         self._build_photo_tab(photo_tab)
         self._build_composition_tab(comp_tab)
+
+        # Pied de page dans une rangee dediee (row 2), toujours visible meme si
+        # la liste de composants est longue (elle defile dans la row 1).
+        footer = ctk.CTkFrame(self, fg_color="transparent")
+        footer.grid(row=2, column=0, sticky="ew", padx=20, pady=(0, 16))
+        ctk.CTkButton(footer, text="Annuler", fg_color=theme.BG_SIDEBAR, hover_color=theme.BG_CARD_HOVER, command=self._on_close_request).pack(side="right", padx=(8, 0))
+        ctk.CTkButton(footer, text="Enregistrer", fg_color=theme.SUCCESS, hover_color=theme.ACCENT_TURQUOISE, command=self._save).pack(side="right")
 
     def _build_info_tab(self, tab) -> None:
         for col in range(2):
@@ -1259,24 +1272,26 @@ class ProductEditor(BaseEditor):
         self._update_preview()
 
     def _build_ui(self) -> None:
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+
         header = ctk.CTkFrame(self, fg_color="transparent")
-        header.pack(fill="x", padx=22, pady=(18, 8))
+        header.grid(row=0, column=0, sticky="ew", padx=22, pady=(18, 8))
         ctk.CTkLabel(header, text="Produit", font=ctk.CTkFont(size=20, weight="bold"), text_color=theme.TEXT_PRIMARY).pack(anchor="w")
 
-        # Pied de page ancre en bas AVANT le contenu extensible, pour que les
-        # boutons Enregistrer / Annuler restent toujours visibles.
-        footer = ctk.CTkFrame(self, fg_color="transparent")
-        footer.pack(fill="x", side="bottom", padx=20, pady=(0, 16))
-        ctk.CTkButton(footer, text="Annuler", fg_color=theme.BG_SIDEBAR, hover_color=theme.BG_CARD_HOVER, command=self._on_close_request).pack(side="right", padx=(8, 0))
-        ctk.CTkButton(footer, text="Enregistrer", fg_color=theme.SUCCESS, hover_color=theme.ACCENT_TURQUOISE, command=self._save).pack(side="right")
-
         tabs = ctk.CTkTabview(self, fg_color=theme.BG_CARD, segmented_button_fg_color=theme.BG_SIDEBAR)
-        tabs.pack(fill="both", expand=True, padx=20, pady=(0, 12))
+        tabs.grid(row=1, column=0, sticky="nsew", padx=20, pady=(0, 12))
         info_tab = tabs.add("Informations")
         photo_tab = tabs.add("Photo")
 
         self._build_info_tab(info_tab)
         self._build_photo_tab(photo_tab)
+
+        # Pied de page dans une rangee dediee (row 2), toujours visible.
+        footer = ctk.CTkFrame(self, fg_color="transparent")
+        footer.grid(row=2, column=0, sticky="ew", padx=20, pady=(0, 16))
+        ctk.CTkButton(footer, text="Annuler", fg_color=theme.BG_SIDEBAR, hover_color=theme.BG_CARD_HOVER, command=self._on_close_request).pack(side="right", padx=(8, 0))
+        ctk.CTkButton(footer, text="Enregistrer", fg_color=theme.SUCCESS, hover_color=theme.ACCENT_TURQUOISE, command=self._save).pack(side="right")
 
     def _build_info_tab(self, tab) -> None:
         for col in range(2):
