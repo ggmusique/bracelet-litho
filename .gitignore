@@ -28,6 +28,9 @@ backup/
 snapshots/
 *.zip
 
+# ===== Historique runtime (regenere par l'app) =====
+history_local.json
+
 # ===== Fichiers temporaires / systeme / debug =====
 .DS_Store
 Thumbs.db
