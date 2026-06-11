@@ -37,6 +37,7 @@ class ScrollableComboBox(ctk.CTkFrame):
         self._command = command
         self._popup = None
         self._click_bind = None
+        self._focus_bind = None
         self._suppress_filter = False
 
         self.columnconfigure(0, weight=1)
@@ -124,6 +125,7 @@ class ScrollableComboBox(ctk.CTkFrame):
         except Exception:
             pass
         self._click_bind = container.bind("<Button-1>", self._maybe_close_on_click, add="+")
+        self._focus_bind = self._entry.bind("<FocusOut>", self._on_entry_focus_out, add="+")
 
     def _render_items(self) -> None:
         if self._popup is None:
@@ -183,6 +185,22 @@ class ScrollableComboBox(ctk.CTkFrame):
             pass
         self._close_popup()
 
+    def _on_entry_focus_out(self, _event=None) -> None:
+        self.after(120, self._check_focus_outside)
+
+    def _check_focus_outside(self) -> None:
+        if self._popup is None:
+            return
+        try:
+            foc = self.focus_get()
+        except Exception:
+            foc = None
+        if foc is not None:
+            p = str(foc)
+            if p.startswith(str(self)) or p.startswith(str(self._popup)):
+                return
+        self._close_popup()
+
     def _close_popup(self) -> None:
         if self._click_bind is not None:
             try:
@@ -190,6 +208,12 @@ class ScrollableComboBox(ctk.CTkFrame):
             except Exception:
                 pass
             self._click_bind = None
+        if self._focus_bind is not None:
+            try:
+                self._entry.unbind("<FocusOut>", self._focus_bind)
+            except Exception:
+                pass
+            self._focus_bind = None
         if self._popup is not None:
             try:
                 self._popup.destroy()
