@@ -21,18 +21,21 @@ dist/
 *.pyz
 *.pkg
 *.toc
+build_log.txt
 
 # ===== Sauvegardes & snapshots de l'app =====
 backup/
 snapshots/
 *.zip
 
-# ===== Fichiers temporaires / systeme =====
+# ===== Fichiers temporaires / systeme / debug =====
 .DS_Store
 Thumbs.db
 *.log
 *.tmp
 *.bak
+debug_sheet.txt
+debug_*.txt
 
 # ===== Editeurs / IDE =====
 .vscode/
