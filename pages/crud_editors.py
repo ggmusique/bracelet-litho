@@ -662,11 +662,20 @@ class BraceletEditor(BaseEditor):
             row["comp_var"].set(values[idx])
             self._on_component_selected(row)
             return "break"
-        for seq in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
+        targets = [comp_box]
+        i = 0
+        while i < len(targets):
             try:
-                comp_box.bind(seq, _wheel)
+                targets.extend(targets[i].winfo_children())
             except Exception:
                 pass
+            i += 1
+        for widget in targets:
+            for seq in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
+                try:
+                    widget.bind(seq, _wheel, add="+")
+                except Exception:
+                    pass
 
     def _on_component_selected(self, row: dict[str, Any]) -> None:
         cat = row["cat_var"].get()
