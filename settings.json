@@ -1,0 +1,104 @@
+{
+  "version": "1.0.0",
+  "autosave_seconds": 120,
+  "default_qr": false,
+  "last_export_dir": "C:\\Users\\geohe\\OneDrive\\Bureau",
+  "theme": "clair",
+  "label_font": "Helvetica",
+  "logo_path": "",
+  "stock_alert_threshold": 5,
+  "stock_target": 20,
+  "update_manifest_url": "https://example.com/lithotherapie/version.json",
+  "update_download_url": "https://example.com/lithotherapie/Lithotherapie.exe",
+  "feuille_positions": [
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": false
+    },
+    {
+      "used": true,
+      "bracelet_id": "e381fc4d-a65e-4577-b7db-5fe12e682de2",
+      "bracelet_nom": "Bracelet Voix Intérieure",
+      "model": "vertus"
+    },
+    {
+      "used": true,
+      "bracelet_id": "e381fc4d-a65e-4577-b7db-5fe12e682de2",
+      "bracelet_nom": "Bracelet Voix Intérieure",
+      "model": "bracelet"
+    },
+    {
+      "used": false
+    }
+  ],
+  "phase1c_counter_pie": 365,
+  "phase1c_counter_bre": 15,
+  "phase1c_counter_int": 8,
+  "phase1c_counter_fin": 25,
+  "phase1c_counter_bra": 1,
+  "phase1c_counter_pro": 1,
+  "niimbot_calibration": {
+    "x": 0.0,
+    "y": 0.0
+  },
+  "price_coefficient": 5.0
+}

@@ -1,0 +1,57 @@
+{
+  "model": "vertus",
+  "nom": {
+    "x": 13.1,
+    "y": 2.7,
+    "size": 10,
+    "bold": true
+  },
+  "sep_y": 7.5,
+  "vertus_label": {
+    "x": 2.8,
+    "y": 7.7,
+    "size": 7,
+    "bold": true
+  },
+  "vertus_items": {
+    "x": 1.5,
+    "y": 11.7,
+    "size": 5,
+    "bold": false,
+    "leading": 4.2
+  },
+  "chakras_label": {
+    "x": 36.4,
+    "y": 8.4,
+    "size": 7,
+    "bold": true
+  },
+  "chakras_items": {
+    "x": 49.3,
+    "y": 8.2,
+    "size": 7,
+    "bold": false,
+    "leading": 4.2
+  },
+  "prix": {
+    "x": 44.4,
+    "y": 34.1,
+    "size": 12,
+    "bold": true,
+    "visible": false
+  },
+  "prix_revient": {
+    "x": 48.9,
+    "y": 34.8,
+    "size": 10,
+    "bold": false,
+    "visible": false
+  },
+  "marge": {
+    "x": 53.6,
+    "y": 35.6,
+    "size": 10,
+    "bold": false,
+    "visible": false
+  }
+}

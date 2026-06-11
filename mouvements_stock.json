@@ -1,0 +1,56 @@
+[
+  {
+    "id": "06d27fc9-c346-4bed-b51e-5d19787f4271",
+    "type": "bracelet",
+    "item_id": "16d04712-d654-4a9f-84ad-d0793d5751ca",
+    "item_nom": "Bracelet Harmonie Intérieure",
+    "delta": 10,
+    "motif": "Création article",
+    "date": "2026-05-30T15:22:57"
+  },
+  {
+    "id": "a5da9235-2464-4f25-b787-184f8dcd2d0a",
+    "type": "produit",
+    "item_id": "876c90bc-58d6-4426-b6a7-aa0b64f3482e",
+    "item_nom": "harmonie",
+    "delta": 0,
+    "motif": "Création article",
+    "date": "2026-05-30T15:23:25"
+  },
+  {
+    "id": "4cf15497-9889-4020-bc0e-4961a8e83654",
+    "type": "bracelet",
+    "item_id": "d0cd2dac-da12-423b-899b-3e8d36411bc0",
+    "item_nom": "Bracelet Harmonie Intérieure",
+    "delta": 10,
+    "motif": "Création article",
+    "date": "2026-05-30T15:24:24"
+  },
+  {
+    "id": "be160d50-1627-41dc-b185-029869a79448",
+    "type": "bracelet",
+    "item_id": "e381fc4d-a65e-4577-b7db-5fe12e682de2",
+    "item_nom": "Bracelet Voix Intérieure",
+    "delta": 1,
+    "motif": "Création article",
+    "date": "2026-05-30T17:25:06"
+  },
+  {
+    "id": "d48d9e44-3205-44b3-a767-01d5fe56668b",
+    "type": "bracelet",
+    "item_id": "b5f3d266-894a-4dd3-bbd2-065d466ca3c9",
+    "item_nom": "Bracelet Voix Intérieure",
+    "delta": 1,
+    "motif": "Création article",
+    "date": "2026-05-30T17:40:32"
+  },
+  {
+    "id": "5d636e96-fa31-4c29-9fce-cc6f13f5ff6f",
+    "type": "produit",
+    "item_id": "a81ea162-5aa3-4239-ac61-68b457898bcd",
+    "item_nom": "Bracelet Voix Intérieure",
+    "delta": 0,
+    "motif": "Création article",
+    "date": "2026-05-30T17:41:14"
+  }
+]

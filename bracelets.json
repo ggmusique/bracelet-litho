@@ -1,0 +1,56 @@
+[
+  {
+    "id": "566bfb7f-6ed8-4ef3-a8e5-ab043399b89e",
+    "reference": "BRA-0001",
+    "nom": "Belier",
+    "composition": [
+      {
+        "composant": "Onyx noir",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Belier",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir",
+        "categorie": "Pierre",
+        "quantite": 6,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Hematite",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Jaspe rouge",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      }
+    ],
+    "prix_vente": 20.25,
+    "stock": 1,
+    "genre": "Homme",
+    "prix_auto": false,
+    "vertus": "Protection, Ancrage, Force intérieure, Confiance, Stabilité, Concentration, Mémoire, Vitalité, Force physique, Endurance",
+    "chakras": "Racine (1ère)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-11T07:42:06",
+    "qr_enabled": false,
+    "created_at": "2026-06-10T14:58:37"
+  }
+]

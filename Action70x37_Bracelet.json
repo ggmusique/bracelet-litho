@@ -1,0 +1,44 @@
+{
+  "model": "bracelet",
+  "nom": {
+    "x": 10.5,
+    "y": 1.3,
+    "size": 12,
+    "bold": true
+  },
+  "sep_y": 7.5,
+  "comp_label": {
+    "x": 1.7,
+    "y": 7.7,
+    "size": 9,
+    "bold": true
+  },
+  "comp_items": {
+    "x": 28.2,
+    "y": 7.9,
+    "size": 9,
+    "bold": false,
+    "leading": 4.8
+  },
+  "prix": {
+    "x": 1.5,
+    "y": 31.2,
+    "size": 10,
+    "bold": true,
+    "visible": false
+  },
+  "prix_revient": {
+    "x": 1.6,
+    "y": 14.7,
+    "size": 10,
+    "bold": false,
+    "visible": false
+  },
+  "marge": {
+    "x": 1.2,
+    "y": 22.6,
+    "size": 10,
+    "bold": false,
+    "visible": false
+  }
+}
