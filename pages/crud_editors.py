@@ -101,8 +101,8 @@ class ScrollableComboBox(ctk.CTkFrame):
         x = self._entry.winfo_rootx() - container.winfo_rootx()
         y = self._entry.winfo_rooty() - container.winfo_rooty() + self._entry.winfo_height() + 2
         width = max(self._entry.winfo_width() + self._button.winfo_width() + 2, 200)
-        self._popup = ctk.CTkScrollableFrame(container, fg_color=theme.BG_CARD, height=240)
-        self._popup.place(x=x, y=y, width=width, height=240)
+        self._popup = ctk.CTkScrollableFrame(container, fg_color=theme.BG_CARD, width=width, height=240)
+        self._popup.place(x=x, y=y)
         self._popup.lift()
         self._render_items()
         self._entry.focus_set()
