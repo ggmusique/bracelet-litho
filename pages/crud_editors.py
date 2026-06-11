@@ -28,6 +28,8 @@ class ScrollableComboBox(ctk.CTkFrame):
     permettent de faire defiler les resultats.
     """
 
+    _open_instance = None
+
     def __init__(self, master, variable, values=None, command=None, **kwargs):
         super().__init__(master, fg_color="transparent", **kwargs)
         self._variable = variable
@@ -35,6 +37,7 @@ class ScrollableComboBox(ctk.CTkFrame):
         self._command = command
         self._popup = None
         self._click_bind = None
+        self._suppress_filter = False
 
         self.columnconfigure(0, weight=1)
         self._text_var = ctk.StringVar(value=variable.get())
@@ -79,6 +82,8 @@ class ScrollableComboBox(ctk.CTkFrame):
         return self._text_var.get().strip().lower()
 
     def _matches(self) -> list:
+        if getattr(self, "_suppress_filter", False):
+            return list(self._values)
         needle = self._needle()
         if not needle:
             return list(self._values)
@@ -96,6 +101,12 @@ class ScrollableComboBox(ctk.CTkFrame):
             return
         if not self.winfo_ismapped():
             return
+        other = ScrollableComboBox._open_instance
+        if other is not None and other is not self:
+            try:
+                other._close_popup()
+            except Exception:
+                pass
         container = self.winfo_toplevel()
         container.update_idletasks()
         x = self._entry.winfo_rootx() - container.winfo_rootx()
@@ -104,8 +115,14 @@ class ScrollableComboBox(ctk.CTkFrame):
         self._popup = ctk.CTkScrollableFrame(container, fg_color=theme.BG_CARD, width=width, height=240)
         self._popup.place(x=x, y=y)
         self._popup.lift()
+        ScrollableComboBox._open_instance = self
+        self._suppress_filter = True
         self._render_items()
         self._entry.focus_set()
+        try:
+            self._entry.select_range(0, "end")
+        except Exception:
+            pass
         self._click_bind = container.bind("<Button-1>", self._maybe_close_on_click, add="+")
 
     def _render_items(self) -> None:
@@ -150,7 +167,9 @@ class ScrollableComboBox(ctk.CTkFrame):
             return
         if keysym in ("Up", "Down", "Left", "Right"):
             return
-        self._open_popup()
+        if self._popup is None:
+            self._open_popup()
+        self._suppress_filter = False
         self._render_items()
 
     def _maybe_close_on_click(self, event) -> None:
@@ -177,6 +196,9 @@ class ScrollableComboBox(ctk.CTkFrame):
             except Exception:
                 pass
             self._popup = None
+        if ScrollableComboBox._open_instance is self:
+            ScrollableComboBox._open_instance = None
+        self._suppress_filter = False
         try:
             self._text_var.set(self._variable.get())
         except Exception:
