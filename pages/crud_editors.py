@@ -307,6 +307,18 @@ class BaseEditor(ctk.CTkToplevel):
         self.transient(parent)
         self.grab_set()
 
+    def _maximize_window(self) -> None:
+        """Agrandit la fenetre (maximisee) selon la plateforme."""
+        try:
+            self.state("zoomed")
+            return
+        except Exception:
+            pass
+        try:
+            self.attributes("-zoomed", True)
+        except Exception:
+            pass
+
     def _mark_dirty(self, *_args) -> None:
         if not self._closing:
             self._dirty = True
@@ -586,6 +598,8 @@ class ComponentEditor(BaseEditor):
 class BraceletEditor(BaseEditor):
     def __init__(self, parent, db: Any, mode: str, initial_item: dict[str, Any] | None, on_submit: Callable[[dict[str, Any]], bool]) -> None:
         super().__init__(parent, "Bracelet")
+        # Ouvrir la fiche bracelet maximisee pour plus de confort
+        self.after(10, self._maximize_window)
         self.db = db
         self.mode = mode
         self.initial_item = initial_item or {}
