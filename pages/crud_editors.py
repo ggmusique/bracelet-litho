@@ -21,6 +21,176 @@ _COMPONENT_CATEGORY_CONFIG: dict[str, dict[str, str]] = {
 }
 
 
+class ScrollableComboBox(ctk.CTkFrame):
+    """Liste deroulante avec recherche au clavier et barre de defilement.
+
+    Remplace CTkComboBox: taper filtre la liste; molette et barre laterale
+    permettent de faire defiler les resultats.
+    """
+
+    def __init__(self, master, variable, values=None, command=None, **kwargs):
+        super().__init__(master, fg_color="transparent", **kwargs)
+        self._variable = variable
+        self._values = [str(v) for v in (values or [])]
+        self._command = command
+        self._popup = None
+        self._click_bind = None
+
+        self.columnconfigure(0, weight=1)
+        self._text_var = ctk.StringVar(value=variable.get())
+        self._entry = ctk.CTkEntry(
+            self,
+            textvariable=self._text_var,
+            fg_color=theme.BG_INPUT,
+            border_color=theme.BORDER,
+            text_color=theme.TEXT_PRIMARY,
+        )
+        self._entry.grid(row=0, column=0, sticky="ew")
+        self._button = ctk.CTkButton(
+            self,
+            text=chr(0x25BC),
+            width=28,
+            fg_color=theme.BG_CARD,
+            hover_color=theme.BG_CARD_HOVER,
+            command=self._toggle_popup,
+        )
+        self._button.grid(row=0, column=1, padx=(2, 0))
+
+        self._entry.bind("<KeyRelease>", self._on_keyrelease)
+        self._entry.bind("<Button-1>", lambda _e: self._open_popup())
+        self._entry.bind("<Down>", lambda _e: self._open_popup())
+        self._var_trace = variable.trace_add("write", self._on_var_changed)
+        self.bind("<Destroy>", self._on_destroy)
+
+    def set_values(self, values) -> None:
+        self._values = [str(v) for v in (values or [])]
+        if self._popup is not None:
+            self._render_items()
+
+    def _on_var_changed(self, *_args) -> None:
+        try:
+            current = self._variable.get()
+        except Exception:
+            return
+        if self._text_var.get() != current:
+            self._text_var.set(current)
+
+    def _needle(self) -> str:
+        return self._text_var.get().strip().lower()
+
+    def _matches(self) -> list:
+        needle = self._needle()
+        if not needle:
+            return list(self._values)
+        return [v for v in self._values if needle in v.lower()]
+
+    def _toggle_popup(self) -> None:
+        if self._popup is not None:
+            self._close_popup()
+        else:
+            self._open_popup()
+
+    def _open_popup(self) -> None:
+        if self._popup is not None:
+            self._render_items()
+            return
+        if not self.winfo_ismapped():
+            return
+        container = self.winfo_toplevel()
+        container.update_idletasks()
+        x = self._entry.winfo_rootx() - container.winfo_rootx()
+        y = self._entry.winfo_rooty() - container.winfo_rooty() + self._entry.winfo_height() + 2
+        width = max(self._entry.winfo_width() + self._button.winfo_width() + 2, 200)
+        self._popup = ctk.CTkScrollableFrame(container, fg_color=theme.BG_CARD, height=240)
+        self._popup.place(x=x, y=y, width=width, height=240)
+        self._popup.lift()
+        self._render_items()
+        self._entry.focus_set()
+        self._click_bind = container.bind("<Button-1>", self._maybe_close_on_click, add="+")
+
+    def _render_items(self) -> None:
+        if self._popup is None:
+            return
+        for child in self._popup.winfo_children():
+            child.destroy()
+        matches = self._matches()
+        if not matches:
+            ctk.CTkLabel(self._popup, text="(aucun resultat)", text_color=theme.TEXT_SECONDARY).pack(anchor="w", padx=8, pady=4)
+            return
+        for val in matches:
+            ctk.CTkButton(
+                self._popup,
+                text=val,
+                anchor="w",
+                fg_color="transparent",
+                hover_color=theme.BG_CARD_HOVER,
+                text_color=theme.TEXT_PRIMARY,
+                command=lambda v=val: self._choose(v),
+            ).pack(fill="x", padx=2, pady=1)
+
+    def _choose(self, val: str) -> None:
+        self._close_popup()
+        self._variable.set(val)
+        self._text_var.set(val)
+        if self._command is not None:
+            try:
+                self._command(val)
+            except Exception:
+                pass
+
+    def _on_keyrelease(self, event) -> None:
+        keysym = getattr(event, "keysym", "")
+        if keysym == "Escape":
+            self._close_popup()
+            return
+        if keysym in ("Return", "KP_Enter"):
+            matches = self._matches()
+            if matches:
+                self._choose(matches[0])
+            return
+        if keysym in ("Up", "Down", "Left", "Right"):
+            return
+        self._open_popup()
+        self._render_items()
+
+    def _maybe_close_on_click(self, event) -> None:
+        try:
+            path = str(event.widget)
+            if path.startswith(str(self)):
+                return
+            if self._popup is not None and path.startswith(str(self._popup)):
+                return
+        except Exception:
+            pass
+        self._close_popup()
+
+    def _close_popup(self) -> None:
+        if self._click_bind is not None:
+            try:
+                self.winfo_toplevel().unbind("<Button-1>", self._click_bind)
+            except Exception:
+                pass
+            self._click_bind = None
+        if self._popup is not None:
+            try:
+                self._popup.destroy()
+            except Exception:
+                pass
+            self._popup = None
+        try:
+            self._text_var.set(self._variable.get())
+        except Exception:
+            pass
+
+    def _on_destroy(self, event) -> None:
+        if event.widget is self:
+            try:
+                self._variable.trace_remove("write", self._var_trace)
+            except Exception:
+                pass
+            self._close_popup()
+
+
 class BaseEditor(ctk.CTkToplevel):
     def __init__(self, parent, title: str) -> None:
         super().__init__(parent)
@@ -565,14 +735,10 @@ class BraceletEditor(BaseEditor):
         )
         cat_menu.grid(row=0, column=1, padx=(8, 4), pady=8)
 
-        comp_box = ctk.CTkComboBox(
+        comp_box = ScrollableComboBox(
             row_wrap,
             variable=comp_var,
             values=(names or ["(Aucun)"]),
-            fg_color=theme.BG_INPUT,
-            button_color=theme.BG_CARD,
-            button_hover_color=theme.BG_CARD_HOVER,
-            border_color=theme.BORDER,
             command=lambda _v=None: self._on_component_selected(row),
         )
         comp_box.grid(row=0, column=2, sticky="ew", padx=4, pady=8)
@@ -584,7 +750,6 @@ class BraceletEditor(BaseEditor):
         pu_entry.grid(row=0, column=4, padx=6)
 
         row = {"frame": row_wrap, "cat_var": cat_var, "comp_var": comp_var, "comp_box": comp_box, "qty_var": qty_var, "pu_var": pu_var, "pos_label": pos_label}
-        self._bind_comp_wheel(comp_box, row)
 
         cat_var.trace_add("write", lambda *_: self._on_category_changed(row))
         comp_var.trace_add("write", lambda *_: self._on_comp_row_changed())
@@ -646,37 +811,6 @@ class BraceletEditor(BaseEditor):
     def _fmt_pu(value: float) -> str:
         return f"{float(value or 0.0):.2f}"
 
-    def _bind_comp_wheel(self, comp_box, row: dict[str, Any]) -> None:
-        """Fait defiler la liste des composants/pierres avec la molette de la souris."""
-        def _wheel(event):
-            cat = row["cat_var"].get()
-            values = self._names_by_cat.get(cat, [])
-            if not values:
-                return "break"
-            try:
-                idx = values.index(row["comp_var"].get())
-            except ValueError:
-                idx = 0
-            down = getattr(event, "delta", 0) < 0 or getattr(event, "num", 0) == 5
-            idx = min(len(values) - 1, idx + 1) if down else max(0, idx - 1)
-            row["comp_var"].set(values[idx])
-            self._on_component_selected(row)
-            return "break"
-        targets = [comp_box]
-        i = 0
-        while i < len(targets):
-            try:
-                targets.extend(targets[i].winfo_children())
-            except Exception:
-                pass
-            i += 1
-        for widget in targets:
-            for seq in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
-                try:
-                    widget.bind(seq, _wheel, add="+")
-                except Exception:
-                    pass
-
     def _on_component_selected(self, row: dict[str, Any]) -> None:
         cat = row["cat_var"].get()
         name = row["comp_var"].get()
@@ -688,7 +822,7 @@ class BraceletEditor(BaseEditor):
         names = self._names_by_cat.get(cat, [])
         box = row.get("comp_box")
         if box is not None:
-            box.configure(values=(names or ["(Aucun)"]))
+            box.set_values(names or ["(Aucun)"])
         new_name = names[0] if names else ""
         row["comp_var"].set(new_name)
         row["pu_var"].set(self._fmt_pu(self._price_for(cat, new_name)))
