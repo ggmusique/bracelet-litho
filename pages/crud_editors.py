@@ -22,10 +22,12 @@ _COMPONENT_CATEGORY_CONFIG: dict[str, dict[str, str]] = {
 
 
 class ScrollableComboBox(ctk.CTkFrame):
-    """Liste deroulante avec recherche au clavier et barre de defilement.
+    """Liste deroulante avec recherche, dans une vraie fenetre popup.
 
-    Remplace CTkComboBox: taper filtre la liste; molette et barre laterale
-    permettent de faire defiler les resultats.
+    Le popup est une fenetre dediee (CTkToplevel) qui capte la souris via
+    grab_set: tout clic en dehors du popup est detecte par coordonnees et
+    referme la liste de maniere fiable (independamment du focus). Le champ
+    de recherche est dans le popup et part vide (affiche toutes les valeurs).
     """
 
     _open_instance = None
@@ -35,10 +37,10 @@ class ScrollableComboBox(ctk.CTkFrame):
         self._variable = variable
         self._values = [str(v) for v in (values or [])]
         self._command = command
+        self._popup_win = None
         self._popup = None
-        self._click_bind = None
-        self._focus_bind = None
-        self._suppress_filter = False
+        self._search_entry = None
+        self._search_var = ctk.StringVar(value="")
 
         self.columnconfigure(0, weight=1)
         self._text_var = ctk.StringVar(value=variable.get())
@@ -48,6 +50,7 @@ class ScrollableComboBox(ctk.CTkFrame):
             fg_color=theme.BG_INPUT,
             border_color=theme.BORDER,
             text_color=theme.TEXT_PRIMARY,
+            state="readonly",
         )
         self._entry.grid(row=0, column=0, sticky="ew")
         self._button = ctk.CTkButton(
@@ -60,9 +63,7 @@ class ScrollableComboBox(ctk.CTkFrame):
         )
         self._button.grid(row=0, column=1, padx=(2, 0))
 
-        self._entry.bind("<KeyRelease>", self._on_keyrelease)
-        self._entry.bind("<Button-1>", lambda _e: self._open_popup())
-        self._entry.bind("<Down>", lambda _e: self._open_popup())
+        self._entry.bind("<Button-1>", lambda _e: self._toggle_popup())
         self._var_trace = variable.trace_add("write", self._on_var_changed)
         self.bind("<Destroy>", self._on_destroy)
 
@@ -79,26 +80,20 @@ class ScrollableComboBox(ctk.CTkFrame):
         if self._text_var.get() != current:
             self._text_var.set(current)
 
-    def _needle(self) -> str:
-        return self._text_var.get().strip().lower()
-
     def _matches(self) -> list:
-        if getattr(self, "_suppress_filter", False):
-            return list(self._values)
-        needle = self._needle()
+        needle = self._search_var.get().strip().lower()
         if not needle:
             return list(self._values)
         return [v for v in self._values if needle in v.lower()]
 
     def _toggle_popup(self) -> None:
-        if self._popup is not None:
+        if self._popup_win is not None:
             self._close_popup()
         else:
             self._open_popup()
 
     def _open_popup(self) -> None:
-        if self._popup is not None:
-            self._render_items()
+        if self._popup_win is not None:
             return
         if not self.winfo_ismapped():
             return
@@ -108,24 +103,110 @@ class ScrollableComboBox(ctk.CTkFrame):
                 other._close_popup()
             except Exception:
                 pass
-        container = self.winfo_toplevel()
-        container.update_idletasks()
-        x = self._entry.winfo_rootx() - container.winfo_rootx()
-        y = self._entry.winfo_rooty() - container.winfo_rooty() + self._entry.winfo_height() + 2
-        width = max(self._entry.winfo_width() + self._button.winfo_width() + 2, 200)
-        self._popup = ctk.CTkScrollableFrame(container, fg_color=theme.BG_CARD, width=width, height=240)
-        self._popup.place(x=x, y=y)
-        self._popup.lift()
-        ScrollableComboBox._open_instance = self
-        self._suppress_filter = True
-        self._render_items()
-        self._entry.focus_set()
+
+        self.update_idletasks()
+        x = self._entry.winfo_rootx()
+        y = self._entry.winfo_rooty() + self._entry.winfo_height() + 1
+        width = max(self._entry.winfo_width() + self._button.winfo_width() + 2, 220)
+
+        win = ctk.CTkToplevel(self)
+        win.geometry(f"{width}x300+{x}+{y}")
+        win.configure(fg_color=theme.BORDER)
         try:
-            self._entry.select_range(0, "end")
+            win.wm_overrideredirect(True)
         except Exception:
             pass
-        self._click_bind = container.bind("<Button-1>", self._maybe_close_on_click, add="+")
-        self._focus_bind = self._entry.bind("<FocusOut>", self._on_entry_focus_out, add="+")
+        try:
+            win.attributes("-topmost", True)
+        except Exception:
+            pass
+        self._popup_win = win
+        ScrollableComboBox._open_instance = self
+
+        self._search_var.set("")
+        self._search_entry = ctk.CTkEntry(
+            win,
+            textvariable=self._search_var,
+            placeholder_text="Rechercher...",
+            fg_color=theme.BG_INPUT,
+            border_color=theme.BORDER,
+            text_color=theme.TEXT_PRIMARY,
+        )
+        self._search_entry.pack(fill="x", padx=4, pady=4)
+        self._search_entry.bind("<KeyRelease>", self._on_search_key)
+        self._search_entry.bind("<Escape>", lambda _e: self._close_popup())
+        self._search_entry.bind("<Return>", lambda _e: self._choose_first())
+
+        self._popup = ctk.CTkScrollableFrame(win, fg_color=theme.BG_CARD)
+        self._popup.pack(fill="both", expand=True, padx=4, pady=(0, 4))
+        self._render_items()
+
+        win.bind("<Button-1>", self._on_any_click, add="+")
+        win.bind("<Escape>", lambda _e: self._close_popup())
+        win.bind("<FocusOut>", self._on_focus_out, add="+")
+
+        win.update_idletasks()
+        try:
+            win.wm_overrideredirect(True)
+        except Exception:
+            pass
+        win.lift()
+        try:
+            win.grab_set()
+        except Exception:
+            win.after(50, self._safe_grab)
+        try:
+            self._search_entry.focus_set()
+        except Exception:
+            pass
+
+    def _safe_grab(self) -> None:
+        win = self._popup_win
+        if win is None:
+            return
+        try:
+            if win.winfo_exists():
+                win.grab_set()
+        except Exception:
+            pass
+
+    def _on_search_key(self, event) -> None:
+        keysym = getattr(event, "keysym", "")
+        if keysym in ("Escape", "Return", "KP_Enter", "Up", "Down", "Left", "Right"):
+            return
+        self._render_items()
+
+    def _on_any_click(self, event) -> None:
+        win = self._popup_win
+        if win is None:
+            return
+        try:
+            wx = win.winfo_rootx()
+            wy = win.winfo_rooty()
+            ww = win.winfo_width()
+            wh = win.winfo_height()
+        except Exception:
+            return
+        if not (wx <= event.x_root < wx + ww and wy <= event.y_root < wy + wh):
+            self._close_popup()
+
+    def _on_focus_out(self, _event=None) -> None:
+        win = self._popup_win
+        if win is None:
+            return
+        win.after(1, self._check_focus)
+
+    def _check_focus(self) -> None:
+        win = self._popup_win
+        if win is None:
+            return
+        try:
+            foc = win.focus_get()
+        except Exception:
+            foc = None
+        if foc is not None and str(foc).startswith(str(win)):
+            return
+        self._close_popup()
 
     def _render_items(self) -> None:
         if self._popup is None:
@@ -147,84 +228,58 @@ class ScrollableComboBox(ctk.CTkFrame):
                 command=lambda v=val: self._choose(v),
             ).pack(fill="x", padx=2, pady=1)
 
+    def _choose_first(self) -> None:
+        matches = self._matches()
+        if matches:
+            self._choose(matches[0])
+
     def _choose(self, val: str) -> None:
-        self._close_popup()
         self._variable.set(val)
         self._text_var.set(val)
+        self._close_popup()
         if self._command is not None:
             try:
                 self._command(val)
             except Exception:
                 pass
 
-    def _on_keyrelease(self, event) -> None:
-        keysym = getattr(event, "keysym", "")
-        if keysym == "Escape":
-            self._close_popup()
-            return
-        if keysym in ("Return", "KP_Enter"):
-            matches = self._matches()
-            if matches:
-                self._choose(matches[0])
-            return
-        if keysym in ("Up", "Down", "Left", "Right"):
-            return
-        if self._popup is None:
-            self._open_popup()
-        self._suppress_filter = False
-        self._render_items()
-
-    def _maybe_close_on_click(self, event) -> None:
-        try:
-            path = str(event.widget)
-            if path.startswith(str(self)):
-                return
-            if self._popup is not None and path.startswith(str(self._popup)):
-                return
-        except Exception:
-            pass
-        self._close_popup()
-
-    def _on_entry_focus_out(self, _event=None) -> None:
-        self.after(120, self._check_focus_outside)
-
-    def _check_focus_outside(self) -> None:
-        if self._popup is None:
-            return
-        try:
-            foc = self.focus_get()
-        except Exception:
-            foc = None
-        if foc is not None:
-            p = str(foc)
-            if p.startswith(str(self)) or p.startswith(str(self._popup)):
-                return
-        self._close_popup()
-
     def _close_popup(self) -> None:
-        if self._click_bind is not None:
-            try:
-                self.winfo_toplevel().unbind("<Button-1>", self._click_bind)
-            except Exception:
-                pass
-            self._click_bind = None
-        if self._focus_bind is not None:
-            try:
-                self._entry.unbind("<FocusOut>", self._focus_bind)
-            except Exception:
-                pass
-            self._focus_bind = None
-        if self._popup is not None:
-            try:
-                self._popup.destroy()
-            except Exception:
-                pass
-            self._popup = None
+        win = self._popup_win
+        self._popup_win = None
+        self._popup = None
+        self._search_entry = None
         if ScrollableComboBox._open_instance is self:
             ScrollableComboBox._open_instance = None
-        self._suppress_filter = False
+        if win is not None:
+            try:
+                win.grab_release()
+            except Exception:
+                pass
+            try:
+                win.destroy()
+            except Exception:
+                pass
         try:
             self._text_var.set(self._variable.get())
+        except Exception:
+            pass
+        self._restore_parent_grab()
+
+    def _restore_parent_grab(self) -> None:
+        try:
+            top = self.winfo_toplevel()
+        except Exception:
+            return
+
+        def _do():
+            try:
+                if top.winfo_exists():
+                    top.grab_set()
+            except Exception:
+                pass
+
+        try:
+            top.after(20, _do)
         except Exception:
             pass
 
