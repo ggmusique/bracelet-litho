@@ -106,11 +106,30 @@ class ScrollableComboBox(ctk.CTkFrame):
 
         self.update_idletasks()
         x = self._entry.winfo_rootx()
-        y = self._entry.winfo_rooty() + self._entry.winfo_height() + 1
+        entry_y = self._entry.winfo_rooty()
+        entry_h = self._entry.winfo_height()
         width = max(self._entry.winfo_width() + self._button.winfo_width() + 2, 220)
 
+        # Positionnement intelligent : si la place manque en dessous (beaucoup de
+        # composants poussent la ligne vers le bas de l'ecran), on ouvre la liste
+        # vers le haut, et on adapte sa hauteur a l'espace disponible.
+        screen_h = self.winfo_screenheight()
+        margin = 12
+        desired_h = 300
+        space_below = screen_h - (entry_y + entry_h) - margin
+        space_above = entry_y - margin
+        if space_below >= desired_h:
+            popup_h = desired_h
+            y = entry_y + entry_h + 1
+        elif space_above > space_below:
+            popup_h = max(160, min(desired_h, space_above))
+            y = max(margin, entry_y - popup_h - 1)
+        else:
+            popup_h = max(160, min(desired_h, space_below))
+            y = entry_y + entry_h + 1
+
         win = ctk.CTkToplevel(self)
-        win.geometry(f"{width}x300+{x}+{y}")
+        win.geometry(f"{width}x{popup_h}+{x}+{y}")
         win.configure(fg_color=theme.BORDER)
         try:
             win.wm_overrideredirect(True)
