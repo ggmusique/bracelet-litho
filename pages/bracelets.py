@@ -4,6 +4,7 @@ Phase 1C : fiche avancee, photo 300x300, KPI rentabilite et composition detaille
 """
 from __future__ import annotations
 
+import os
 import tkinter.filedialog as fd
 import tkinter.messagebox as mb
 import uuid
@@ -109,6 +110,19 @@ class BraceletsPage(ctk.CTkFrame):
             hover_color=theme.WARNING,
             command=self._delete_bracelet,
         ).pack(fill="x", pady=(2, 0))
+
+        # ── Séparateur + bouton Fiche vierge ──────────────────────────
+        ctk.CTkFrame(self._left, height=1, fg_color=theme.BORDER).pack(fill="x", padx=14, pady=(10, 6))
+        ctk.CTkButton(
+            self._left,
+            text="📋 Fiche vierge PDF",
+            height=30,
+            corner_radius=10,
+            fg_color=theme.BG_CARD,
+            hover_color=theme.BG_CARD_HOVER,
+            command=self._export_fiche_vierge,
+        ).pack(fill="x", padx=14, pady=(0, 6))
+        # ──────────────────────────────────────────────────────────────
 
         ctk.CTkFrame(self._left, height=1, fg_color=theme.BORDER).pack(fill="x", padx=14)
 
@@ -423,6 +437,28 @@ class BraceletsPage(ctk.CTkFrame):
             self.db.save_bracelets()
         metrics = self.db.calculate_bracelet_metrics(bracelet) if self.db else {}
         self._render_fiche(bracelet, metrics)
+
+    def _export_fiche_vierge(self) -> None:
+        """Genere une fiche de creation vierge (25 lignes) au format A4 et l'ouvre."""
+        from pdf_generator import PDFGenerator
+        dest = fd.asksaveasfilename(
+            title="Enregistrer la fiche vierge",
+            defaultextension=".pdf",
+            filetypes=[("PDF", "*.pdf")],
+            initialfile="fiche_vierge_bracelet.pdf",
+        )
+        if not dest:
+            return
+        try:
+            gen = PDFGenerator(self.db)
+            gen.export_fiche_vierge_pdf(dest, nb_lignes=25)
+            mb.showinfo("Fiche vierge", f"Fiche generee :\n{dest}")
+            try:
+                os.startfile(dest)
+            except Exception:
+                pass
+        except Exception as exc:
+            mb.showerror("Erreur PDF", str(exc))
 
     def _show_empty_fiche(self) -> None:
         for w in self._right.winfo_children():
