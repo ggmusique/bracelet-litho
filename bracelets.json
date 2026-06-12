@@ -108,108 +108,6 @@
     "created_at": "2026-06-10T14:58:37"
   },
   {
-    "id": "62ebea51-6c13-4f6c-bc76-9c7dff17a3ab",
-    "reference": "BRA-0004",
-    "nom": "Sagitaire",
-    "composition": [
-      {
-        "composant": "Onyx noir mat",
-        "categorie": "Pierre",
-        "quantite": 5,
-        "cout_unitaire": 0.17
-      },
-      {
-        "composant": "Sagittaire",
-        "categorie": "Cache-noeud",
-        "quantite": 1,
-        "cout_unitaire": 0.2
-      },
-      {
-        "composant": "Onyx noir mat",
-        "categorie": "Pierre",
-        "quantite": 5,
-        "cout_unitaire": 0.17
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Lapis-lazuli",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.08
-      },
-      {
-        "composant": "Turquoise",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 2.0
-      },
-      {
-        "composant": "Oeil de tigre",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.05
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Lapis-lazuli",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.08
-      },
-      {
-        "composant": "Turquoise blanche",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.02
-      },
-      {
-        "composant": "Oeil de tigre",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.05
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Lapis-lazuli",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.08
-      },
-      {
-        "composant": "Onyx noir mat",
-        "categorie": "Pierre",
-        "quantite": 4,
-        "cout_unitaire": 0.17
-      }
-    ],
-    "prix_vente": 26.95,
-    "stock": 0,
-    "genre": "Homme",
-    "prix_auto": true,
-    "vertus": "Communication, Intuition, Sagesse, Vérité, Expression personnelle, Protection, Guérison, Amitié, Confiance, Ancrage, Force intérieure, Détermination",
-    "chakras": "Gorge (5e), 3e Œil (6e), Cœur (4e), Plexus solaire (3e), Sacré (2e)",
-    "photo": "",
-    "photo_thumb": "",
-    "updated_at": "2026-06-12T14:08:55",
-    "qr_enabled": false,
-    "created_at": "2026-06-12T14:08:55"
-  },
-  {
     "id": "61762b92-d1bb-4bfd-a6ea-9960c4baeda8",
     "reference": "BRA-0005",
     "nom": "Capricorne",
@@ -592,5 +490,107 @@
     "updated_at": "2026-06-12T14:40:06",
     "qr_enabled": false,
     "created_at": "2026-06-12T13:59:00"
+  },
+  {
+    "id": "62ebea51-6c13-4f6c-bc76-9c7dff17a3ab",
+    "reference": "BRA-0004",
+    "nom": "Sagitaire",
+    "composition": [
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.17
+      },
+      {
+        "composant": "Sagittaire",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.17
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Turquoise",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.0
+      },
+      {
+        "composant": "Oeil de tigre",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Turquoise blanche",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.02
+      },
+      {
+        "composant": "Oeil de tigre",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 4,
+        "cout_unitaire": 0.17
+      }
+    ],
+    "prix_vente": 16.95,
+    "stock": 0,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "Communication, Intuition, Sagesse, Vérité, Expression personnelle, Protection, Guérison, Amitié, Confiance, Ancrage, Force intérieure, Détermination",
+    "chakras": "Gorge (5e), 3e Œil (6e), Cœur (4e), Plexus solaire (3e), Sacré (2e)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-12T16:22:34",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T14:08:55"
   }
 ]
