@@ -88,6 +88,19 @@ class ComposantsPage(ctk.CTkFrame):
 
         Divider(self).pack(fill="x", padx=32, pady=20)
 
+        self._global_kpi_row = ctk.CTkFrame(self, fg_color="transparent")
+        self._global_kpi_row.pack(fill="x", padx=32, pady=(0, 14))
+        self._kpi_total = KPICard(self._global_kpi_row, icon="🧩", value="0", label="Total composants", accent=theme.INFO)
+        self._kpi_stock_total = KPICard(self._global_kpi_row, icon="💰", value=self._money(0.0), label="Valeur stock total", accent=theme.SUCCESS)
+        self._kpi_rupture = KPICard(self._global_kpi_row, icon="🚨", value="0", label="En rupture", accent=theme.DANGER)
+        self._kpi_stock_avg = KPICard(self._global_kpi_row, icon="📊", value="0", label="Stock moyen", accent=theme.ACCENT_TURQUOISE)
+        self._kpi_total.grid(row=0, column=0, padx=6, sticky="nsew")
+        self._kpi_stock_total.grid(row=0, column=1, padx=6, sticky="nsew")
+        self._kpi_rupture.grid(row=0, column=2, padx=6, sticky="nsew")
+        self._kpi_stock_avg.grid(row=0, column=3, padx=6, sticky="nsew")
+        for i in range(4):
+            self._global_kpi_row.columnconfigure(i, weight=1)
+
         body = ctk.CTkFrame(self, fg_color="transparent")
         body.pack(fill="both", expand=True, padx=32, pady=(0, 24))
 
@@ -260,6 +273,20 @@ class ComposantsPage(ctk.CTkFrame):
         for i in range(3):
             self._kpi_row.columnconfigure(i, weight=1)
 
+        self._quick_restock_btn = ctk.CTkButton(
+            self._right,
+            text="⚡ Réappro rapide",
+            height=34,
+            corner_radius=12,
+            fg_color=theme.BG_CARD,
+            hover_color=theme.BG_CARD_HOVER,
+            border_color=theme.ACCENT_TURQUOISE,
+            border_width=1,
+            state="disabled",
+            command=self._quick_restock,
+        )
+        self._quick_restock_btn.pack(anchor="w", pady=(0, 14), **pad)
+
         ctk.CTkFrame(self._right, height=1, fg_color=theme.BORDER).pack(fill="x", **pad)
 
         ctk.CTkLabel(
@@ -268,6 +295,9 @@ class ComposantsPage(ctk.CTkFrame):
             font=ctk.CTkFont(size=13, weight="bold"),
             text_color=theme.TEXT_PRIMARY,
         ).pack(anchor="w", pady=(12, 8), **pad)
+
+        supplier_wrap = ctk.CTkFrame(self._right, fg_color=theme.BG_SIDEBAR, corner_radius=12)
+        supplier_wrap.pack(fill="x", pady=(0, 16), **pad)
 
         self._supplier_values: dict[str, ctk.CTkLabel] = {}
         for key, label in [
@@ -278,15 +308,15 @@ class ComposantsPage(ctk.CTkFrame):
             ("price", "Prix d'achat"),
             ("last_buy", "Date dernier achat"),
         ]:
-            row = ctk.CTkFrame(self._right, fg_color="transparent")
-            row.pack(fill="x", pady=2, **pad)
+            row = ctk.CTkFrame(supplier_wrap, fg_color="transparent")
+            row.pack(fill="x", pady=2, padx=14)
             ctk.CTkLabel(row, text=label, width=180, anchor="w", text_color=theme.TEXT_SECONDARY).pack(side="left")
             val = ctk.CTkLabel(row, text="—", anchor="w", text_color=theme.TEXT_PRIMARY)
             val.pack(side="left")
             self._supplier_values[key] = val
 
         self._supplier_btn = ctk.CTkButton(
-            self._right,
+            supplier_wrap,
             text="Ouvrir le site fournisseur",
             height=34,
             corner_radius=12,
@@ -297,7 +327,17 @@ class ComposantsPage(ctk.CTkFrame):
             state="disabled",
             command=self._open_current_supplier,
         )
-        self._supplier_btn.pack(anchor="w", pady=(10, 16), **pad)
+        self._supplier_btn.pack(anchor="w", pady=(10, 12), padx=14)
+
+        ctk.CTkLabel(
+            self._right,
+            text="🔗  Utilisé dans les bracelets",
+            font=ctk.CTkFont(size=13, weight="bold"),
+            text_color=theme.TEXT_PRIMARY,
+        ).pack(anchor="w", pady=(2, 8), **pad)
+
+        self._used_bracelets_box = ctk.CTkFrame(self._right, fg_color="transparent")
+        self._used_bracelets_box.pack(fill="x", pady=(0, 16), **pad)
 
         self._show_empty_fiche()
 
@@ -317,6 +357,7 @@ class ComposantsPage(ctk.CTkFrame):
         self._all_items = sorted(source, key=lambda x: str(x.get("nom", "")).lower())
         self._all_by_id = {str(i.get("id", "")): i for i in self._all_items if i.get("id")}
         self._rebuild_item_cache()
+        self._update_global_kpis()
         self._apply_filter()
 
     def _rebuild_item_cache(self) -> None:
@@ -391,7 +432,8 @@ class ComposantsPage(ctk.CTkFrame):
         for item_id in self._filtered_ids:
             item = self._all_by_id[item_id]
             stock = int(item.get("stock", 0) or 0)
-            line2 = f"  {item.get('reference', '—')}   ·   Stock: {stock}"
+            badge = self._stock_badge(stock)
+            line2 = f"  {item.get('reference', '—')}   ·   {badge} {stock}"
 
             row = ctk.CTkFrame(self._list_scroll, fg_color="transparent")
             row.pack(fill="x", pady=2, padx=4)
@@ -516,6 +558,8 @@ class ComposantsPage(ctk.CTkFrame):
         self._detail_values["fournisseur"].configure(text=str(cached.get("supplier", {}).get("name", "—")))
         self._detail_values["updated"].configure(text=str(cached.get("updated", "—")))
         self._detail_values["valeur_stock"].configure(text=self._money(float(cached.get("value", 0.0))))
+        self._quick_restock_btn.configure(state="normal")
+        self._update_used_in_bracelets(item_id, item)
 
     def _import_image_current(self) -> None:
         if not self._selected_id:
@@ -563,7 +607,9 @@ class ComposantsPage(ctk.CTkFrame):
         self._kpi_price.set_value(self._money(0.0))
         self._kpi_value.set_value(self._money(0.0))
         self._supplier_btn.configure(state="disabled")
+        self._quick_restock_btn.configure(state="disabled")
         self._current_supplier_url = ""
+        self._render_used_bracelets([])
 
     def _new_component(self) -> None:
         editor_cat = _PAGE_SUB_TO_EDITOR_CAT.get(self._active_sub, "Pierre")
@@ -783,6 +829,153 @@ class ComposantsPage(ctk.CTkFrame):
     @staticmethod
     def _item_price(item: dict) -> float:
         return float(item.get("prix_achat", item.get("cout_unitaire", item.get("prix_moyen", 0.0))) or 0.0)
+
+    def _update_global_kpis(self) -> None:
+        stocks = [int(item.get("stock", 0) or 0) for item in self._all_by_id.values()]
+        total_items = len(stocks)
+        stock_total_value = sum(float(self._item_price(item)) * int(item.get("stock", 0) or 0) for item in self._all_by_id.values())
+        ruptures = sum(1 for st in stocks if st <= 0)
+        non_zero_stocks = [st for st in stocks if st != 0]
+        stock_avg = (sum(non_zero_stocks) / len(non_zero_stocks)) if non_zero_stocks else 0.0
+
+        self._kpi_total.set_value(str(total_items))
+        self._kpi_stock_total.set_value(self._money(stock_total_value))
+        self._kpi_rupture.set_value(f"🔴 {ruptures}" if ruptures > 0 else "0")
+        self._kpi_stock_avg.set_value(f"{stock_avg:.1f}")
+        self._kpi_rupture._value_lbl.configure(text_color=theme.DANGER if ruptures > 0 else theme.TEXT_PRIMARY)
+
+    @staticmethod
+    def _stock_badge(stock: int) -> str:
+        if stock <= 0:
+            return "🔴"
+        if stock <= 5:
+            return "🟠"
+        return "🟢"
+
+    def _quick_restock(self) -> None:
+        if not self._selected_id:
+            return
+        item = self._all_by_id.get(self._selected_id)
+        if item is None:
+            return
+
+        dialog = ctk.CTkToplevel(self)
+        dialog.title("Réappro rapide")
+        dialog.geometry("320x150")
+        dialog.resizable(False, False)
+        dialog.transient(self.winfo_toplevel())
+        dialog.grab_set()
+
+        ctk.CTkLabel(dialog, text="Nouveau stock :", text_color=theme.TEXT_PRIMARY).pack(anchor="w", padx=16, pady=(16, 6))
+        stock_var = ctk.StringVar(value=str(int(item.get("stock", 0) or 0)))
+        entry = ctk.CTkEntry(dialog, textvariable=stock_var, fg_color=theme.BG_INPUT, border_color=theme.BORDER, text_color=theme.TEXT_PRIMARY)
+        entry.pack(fill="x", padx=16)
+        entry.focus_set()
+
+        actions = ctk.CTkFrame(dialog, fg_color="transparent")
+        actions.pack(fill="x", padx=16, pady=(12, 12))
+        ctk.CTkButton(
+            actions,
+            text="Annuler",
+            fg_color=theme.BG_CARD,
+            hover_color=theme.BG_CARD_HOVER,
+            command=dialog.destroy,
+        ).pack(side="right", padx=(8, 0))
+
+        def _validate_restock() -> None:
+            try:
+                new_stock = int(stock_var.get().strip())
+            except ValueError:
+                mb.showerror("Réappro rapide", "Le stock doit être un nombre entier.", parent=dialog)
+                return
+            if not self._set_item_stock(self._selected_id or "", new_stock):
+                mb.showerror("Réappro rapide", "Impossible de mettre à jour le stock.", parent=dialog)
+                return
+            dialog.destroy()
+            self._refresh_after_crud(self._selected_id)
+
+        ctk.CTkButton(
+            actions,
+            text="Valider",
+            fg_color=theme.SUCCESS,
+            hover_color=theme.ACCENT_TURQUOISE,
+            command=_validate_restock,
+        ).pack(side="right")
+        dialog.bind("<Return>", lambda _e: _validate_restock())
+
+    def _set_item_stock(self, item_id: str, stock: int) -> bool:
+        source, saver = self._get_source_and_saver()
+        for row in source:
+            if str(row.get("id", "")) == item_id:
+                row["stock"] = int(stock)
+                row["updated_at"] = datetime.now().isoformat(timespec="seconds")
+                saver()
+                return True
+        return False
+
+    def _update_used_in_bracelets(self, item_id: str, item: dict) -> None:
+        used_names: list[str] = []
+        bracelets = list(getattr(self.db, "bracelets", []) or [])
+        component_name = str(item.get("nom", "") or "").strip().lower()
+        component_id = str(item_id or "").strip()
+
+        for bracelet in bracelets:
+            if self._bracelet_contains_component(bracelet, component_id, component_name):
+                name = str(bracelet.get("nom", "—") or "—")
+                if name not in used_names:
+                    used_names.append(name)
+            if len(used_names) >= 8:
+                break
+
+        self._render_used_bracelets(used_names)
+
+    def _render_used_bracelets(self, names: list[str]) -> None:
+        for child in self._used_bracelets_box.winfo_children():
+            child.destroy()
+        if not names:
+            ctk.CTkLabel(
+                self._used_bracelets_box,
+                text="Non utilisé dans les bracelets actuels",
+                text_color=theme.TEXT_SECONDARY,
+            ).pack(anchor="w")
+            return
+        for name in names:
+            ctk.CTkLabel(
+                self._used_bracelets_box,
+                text=f"• {name}",
+                text_color=theme.TEXT_PRIMARY,
+            ).pack(anchor="w", pady=1)
+
+    def _bracelet_contains_component(self, bracelet: dict, component_id: str, component_name: str) -> bool:
+        targets = {component_id.lower(), component_name}
+        for field in ("composition", "composants"):
+            values = bracelet.get(field)
+            for candidate in self._extract_component_candidates(values):
+                if candidate and candidate.lower() in targets:
+                    return True
+        return False
+
+    def _extract_component_candidates(self, payload) -> list[str]:
+        if payload is None:
+            return []
+        if isinstance(payload, dict):
+            out: list[str] = []
+            for key in ("id", "composant_id", "id_composant", "component_id", "composant", "nom", "name"):
+                if key in payload:
+                    out.append(str(payload.get(key, "")).strip())
+            for value in payload.values():
+                out.extend(self._extract_component_candidates(value))
+            return out
+        if isinstance(payload, list):
+            out: list[str] = []
+            for row in payload:
+                out.extend(self._extract_component_candidates(row))
+            return out
+        raw = str(payload).strip()
+        if not raw:
+            return []
+        parts = [p.strip() for p in raw.replace("|", ",").replace(";", ",").split(",")]
+        return [p for p in parts if p]
 
     @staticmethod
     def _money(value: float) -> str:
