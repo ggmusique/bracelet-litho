@@ -40,7 +40,12 @@ class ScrollableComboBox(ctk.CTkFrame):
         self._popup_win = None
         self._popup = None
         self._search_entry = None
-        self._search_var = ctk.StringVar(value="")
+        # IMPORTANT : la StringVar de recherche est (re)creee a chaque ouverture
+        # de popup (voir _open_popup), liee a la fenetre popup. On evite ainsi
+        # d'accumuler des write-traces sur des CTkEntry detruits, ce qui faisait
+        # planter _activate_placeholder (.get() sur un widget mort ->
+        # _tkinter.TclError: invalid command name ...).
+        self._search_var = None
 
         self.columnconfigure(0, weight=1)
         self._text_var = ctk.StringVar(value=variable.get())
@@ -81,6 +86,8 @@ class ScrollableComboBox(ctk.CTkFrame):
             self._text_var.set(current)
 
     def _matches(self) -> list:
+        if self._search_var is None:
+            return list(self._values)
         needle = self._search_var.get().strip().lower()
         if not needle:
             return list(self._values)
@@ -142,7 +149,11 @@ class ScrollableComboBox(ctk.CTkFrame):
         self._popup_win = win
         ScrollableComboBox._open_instance = self
 
-        self._search_var.set("")
+        # StringVar neuve, liee a CE popup : le CTkEntry de recherche y attache
+        # son write-trace, et lorsqu'on referme/detruit le popup la variable
+        # devient inutilisee (aucun set ulterieur ne la touche). Plus aucun
+        # trace fantome sur un champ detruit -> plus de crash _activate_placeholder.
+        self._search_var = ctk.StringVar(master=win, value="")
         self._search_entry = ctk.CTkEntry(
             win,
             textvariable=self._search_var,
@@ -267,6 +278,9 @@ class ScrollableComboBox(ctk.CTkFrame):
         self._popup_win = None
         self._popup = None
         self._search_entry = None
+        # On laisse tomber la reference a la StringVar du popup : elle n'est plus
+        # ecrite et sera collectee avec le popup detruit.
+        self._search_var = None
         if ScrollableComboBox._open_instance is self:
             ScrollableComboBox._open_instance = None
         if win is not None:
@@ -421,8 +435,6 @@ class ComponentEditor(BaseEditor):
         self._build_photo_tab(photo_tab)
         self._build_supplier_tab(supplier_tab)
 
-        # Pied de page dans une rangee dediee (row 2), toujours visible sous le
-        # contenu (qui defile dans la row 1 extensible).
         footer = ctk.CTkFrame(self, fg_color="transparent")
         footer.grid(row=2, column=0, sticky="ew", padx=20, pady=(0, 16))
         ctk.CTkButton(footer, text="Annuler", fg_color=theme.BG_SIDEBAR, hover_color=theme.BG_CARD_HOVER, command=self._on_close_request).pack(side="right", padx=(8, 0))
@@ -690,8 +702,6 @@ class BraceletEditor(BaseEditor):
         self._build_photo_tab(photo_tab)
         self._build_composition_tab(comp_tab)
 
-        # Pied de page dans une rangee dediee (row 2), toujours visible meme si
-        # la liste de composants est longue (elle defile dans la row 1).
         footer = ctk.CTkFrame(self, fg_color="transparent")
         footer.grid(row=2, column=0, sticky="ew", padx=20, pady=(0, 16))
         ctk.CTkButton(footer, text="Annuler", fg_color=theme.BG_SIDEBAR, hover_color=theme.BG_CARD_HOVER, command=self._on_close_request).pack(side="right", padx=(8, 0))
@@ -1287,7 +1297,6 @@ class ProductEditor(BaseEditor):
         self._build_info_tab(info_tab)
         self._build_photo_tab(photo_tab)
 
-        # Pied de page dans une rangee dediee (row 2), toujours visible.
         footer = ctk.CTkFrame(self, fg_color="transparent")
         footer.grid(row=2, column=0, sticky="ew", padx=20, pady=(0, 16))
         ctk.CTkButton(footer, text="Annuler", fg_color=theme.BG_SIDEBAR, hover_color=theme.BG_CARD_HOVER, command=self._on_close_request).pack(side="right", padx=(8, 0))
