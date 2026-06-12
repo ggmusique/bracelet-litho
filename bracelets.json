@@ -7,7 +7,7 @@
       {
         "composant": "Onyx noir",
         "categorie": "Pierre",
-        "quantite": 5,
+        "quantite": 6,
         "cout_unitaire": 0.21
       },
       {
@@ -19,7 +19,7 @@
       {
         "composant": "Onyx noir",
         "categorie": "Pierre",
-        "quantite": 6,
+        "quantite": 7,
         "cout_unitaire": 0.21
       },
       {
@@ -39,18 +39,558 @@
         "categorie": "Pierre",
         "quantite": 1,
         "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Cornaline",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Hematite",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Grenat",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.1
+      },
+      {
+        "composant": "Hematite",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Jaspe rouge",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Hematite",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
       }
     ],
     "prix_vente": 20.25,
-    "stock": 1,
+    "stock": 0,
     "genre": "Homme",
     "prix_auto": false,
     "vertus": "Protection, Ancrage, Force intérieure, Confiance, Stabilité, Concentration, Mémoire, Vitalité, Force physique, Endurance",
     "chakras": "Racine (1ère)",
     "photo": "",
     "photo_thumb": "",
-    "updated_at": "2026-06-11T07:42:06",
+    "updated_at": "2026-06-11T17:48:41",
     "qr_enabled": false,
     "created_at": "2026-06-10T14:58:37"
+  },
+  {
+    "id": "62ebea51-6c13-4f6c-bc76-9c7dff17a3ab",
+    "reference": "BRA-0004",
+    "nom": "Sagitaire",
+    "composition": [
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.17
+      },
+      {
+        "composant": "Sagittaire",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.17
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Turquoise",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 2.0
+      },
+      {
+        "composant": "Oeil de tigre",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Turquoise blanche",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.02
+      },
+      {
+        "composant": "Oeil de tigre",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 4,
+        "cout_unitaire": 0.17
+      }
+    ],
+    "prix_vente": 26.95,
+    "stock": 0,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "Communication, Intuition, Sagesse, Vérité, Expression personnelle, Protection, Guérison, Amitié, Confiance, Ancrage, Force intérieure, Détermination",
+    "chakras": "Gorge (5e), 3e Œil (6e), Cœur (4e), Plexus solaire (3e), Sacré (2e)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-12T14:08:55",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T14:08:55"
+  },
+  {
+    "id": "61762b92-d1bb-4bfd-a6ea-9960c4baeda8",
+    "reference": "BRA-0005",
+    "nom": "Capricorne",
+    "composition": [
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.17
+      },
+      {
+        "composant": "Capricorne",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.17
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Obsidienne noire",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Malachite",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Cristal de roche",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 2.0
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Obsidienne noire",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Malachite",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Cristal de roche",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 2.0
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Obsidienne noire",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 4,
+        "cout_unitaire": 0.17
+      }
+    ],
+    "prix_vente": 37.2,
+    "stock": 0,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "Protection, Purification, Ancrage, Nettoyage, Vérité, Transformation, Guérison, Confiance, Changement, Amplification, clarte, purification",
+    "chakras": "Racine (1ère), Cœur (4e), Plexus solaire (3e), Couronne",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-12T14:18:14",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T14:13:00"
+  },
+  {
+    "id": "26336bcb-e061-4c03-a86d-a908c9343099",
+    "reference": "BRA-0003",
+    "nom": "Scorpion",
+    "composition": [
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.17
+      },
+      {
+        "composant": "Scorpion",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.17
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Obsidienne noire",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Malachite",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Grenat",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.1
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Obsidienne noire",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 4,
+        "cout_unitaire": 0.17
+      }
+    ],
+    "prix_vente": 18.95,
+    "stock": 0,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "Protection, Purification, Ancrage, Nettoyage, Vérité, Transformation, Guérison, Confiance, Changement",
+    "chakras": "Racine (1ère), Cœur (4e), Plexus solaire (3e)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-12T14:19:25",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T14:03:11"
+  },
+  {
+    "id": "e7acf60e-e185-4058-9522-db10374f54d8",
+    "reference": "BRA-0006",
+    "nom": "Verseau",
+    "composition": [
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.17
+      },
+      {
+        "composant": "Verseau",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.17
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Amethyste",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.24
+      },
+      {
+        "composant": "Fluorite viollet",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Sodalite",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.02
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Amethyste",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.24
+      },
+      {
+        "composant": "Fluorite viollet",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Sodalite",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.02
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Amethyste",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.24
+      },
+      {
+        "composant": "Onyx noir mat",
+        "categorie": "Pierre",
+        "quantite": 4,
+        "cout_unitaire": 0.17
+      }
+    ],
+    "prix_vente": 19.25,
+    "stock": 0,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "Apaisement, Spiritualité, Intuition, Protection, Sérénité, Communication, Vérité, Logique, Clarté",
+    "chakras": "Couronne (7e), 3e Œil (6e), Gorge (5e)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-12T14:22:25",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T14:17:18"
+  },
+  {
+    "id": "49d7771c-d0c3-4938-9610-225746a89c60",
+    "reference": "BRA-0002",
+    "nom": "Balance",
+    "composition": [
+      {
+        "composant": "Onyx noir",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Balance",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Rhodonite",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.02
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Aventurine verte",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.02
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Onyx noir",
+        "categorie": "Pierre",
+        "quantite": 4,
+        "cout_unitaire": 0.21
+      }
+    ],
+    "prix_vente": 20.3,
+    "stock": 0,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "Communication, Intuition, Sagesse, Vérité, Expression personnelle, Chance, Prospérité, Guérison, Optimisme, Bien-être",
+    "chakras": "Gorge (5e), 3e Œil (6e), Cœur (4e), Plexus solaire (3e)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-12T14:40:06",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T13:59:00"
   }
 ]

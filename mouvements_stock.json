@@ -52,5 +52,68 @@
     "delta": 0,
     "motif": "Création article",
     "date": "2026-05-30T17:41:14"
+  },
+  {
+    "id": "337f9e06-8da9-4bcf-b4bb-d24233f922a7",
+    "type": "fabrication",
+    "item_id": "cfb64e51-ae8e-4e34-a302-4976b5878165",
+    "item_nom": "Onyx noir",
+    "delta": -5,
+    "motif": "Fabrication x1: Belier",
+    "date": "2026-06-11T17:07:51.728556"
+  },
+  {
+    "id": "2f07c22a-c0db-47a1-8361-0d24bc85f7b3",
+    "type": "fabrication",
+    "item_id": "41ebb209-1c01-4923-804f-ad67d46c68f4",
+    "item_nom": "Belier",
+    "delta": -1,
+    "motif": "Fabrication x1: Belier",
+    "date": "2026-06-11T17:07:51.730182"
+  },
+  {
+    "id": "70eb8766-651d-4bc1-80fd-aa47e1fec6b5",
+    "type": "fabrication",
+    "item_id": "cfb64e51-ae8e-4e34-a302-4976b5878165",
+    "item_nom": "Onyx noir",
+    "delta": -6,
+    "motif": "Fabrication x1: Belier",
+    "date": "2026-06-11T17:07:51.731692"
+  },
+  {
+    "id": "66cd4959-49a4-497e-bbc4-13c20c2c849e",
+    "type": "fabrication",
+    "item_id": "32f8891f-9a20-46bc-8d8f-f3e1114a1f80",
+    "item_nom": "Hematite",
+    "delta": -1,
+    "motif": "Fabrication x1: Belier",
+    "date": "2026-06-11T17:07:51.733838"
+  },
+  {
+    "id": "aec98b42-9200-47b1-ab26-18cf299a906c",
+    "type": "fabrication",
+    "item_id": "da5b9a37-9b56-4b77-a817-8e981ec6eba7",
+    "item_nom": "Intercalaire rondelle argente 6mm",
+    "delta": -1,
+    "motif": "Fabrication x1: Belier",
+    "date": "2026-06-11T17:07:51.735802"
+  },
+  {
+    "id": "601096fc-9237-4fbe-918c-36568269eb84",
+    "type": "fabrication",
+    "item_id": "868881e2-b4f5-4408-b998-ec5c2d022f75",
+    "item_nom": "Jaspe rouge",
+    "delta": -1,
+    "motif": "Fabrication x1: Belier",
+    "date": "2026-06-11T17:07:51.737798"
+  },
+  {
+    "id": "c68bc422-b9de-44bb-b42a-92beb6eac15c",
+    "type": "fabrication",
+    "item_id": "566bfb7f-6ed8-4ef3-a8e5-ab043399b89e",
+    "item_nom": "Belier",
+    "delta": 1,
+    "motif": "Fabrication x1",
+    "date": "2026-06-11T17:07:51.739684"
   }
 ]

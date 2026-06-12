@@ -90,11 +90,11 @@
       "used": false
     }
   ],
-  "phase1c_counter_pie": 365,
+  "phase1c_counter_pie": 366,
   "phase1c_counter_bre": 15,
   "phase1c_counter_int": 8,
   "phase1c_counter_fin": 25,
-  "phase1c_counter_bra": 1,
+  "phase1c_counter_bra": 6,
   "phase1c_counter_pro": 1,
   "niimbot_calibration": {
     "x": 0.0,

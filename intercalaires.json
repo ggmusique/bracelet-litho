@@ -33,7 +33,7 @@
     "id": "da5b9a37-9b56-4b77-a817-8e981ec6eba7",
     "nom": "Intercalaire rondelle argente 6mm",
     "cout_unitaire": 0.15,
-    "stock": 200,
+    "stock": 199,
     "fournisseur": "",
     "reference": "INT-0003",
     "fournisseur_ref": "",
@@ -42,7 +42,8 @@
     "date_dernier_achat": "",
     "photo": "",
     "photo_thumb": "",
-    "stock_reserve": 0
+    "stock_reserve": 0,
+    "updated_at": "2026-06-11T17:07:51.693795"
   },
   {
     "id": "0b5874b5-4e29-4ab6-a00b-a681f829582b",
