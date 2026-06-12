@@ -28,6 +28,14 @@ _CAT_COLORS: dict[str, str] = {
     "Cache-noeud": "#a06030",  # marron
 }
 
+# Icônes raccourcis par catégorie
+_CAT_ICONS: dict[str, str] = {
+    "Pierre": "💎",
+    "Breloque": "🔮",
+    "Intercalaire": "🔗",
+    "Cache-noeud": "🪢",
+}
+
 
 class ScrollableComboBox(ctk.CTkFrame):
     """Liste deroulante avec recherche, dans une vraie fenetre popup."""
@@ -741,88 +749,140 @@ class BraceletEditor(BaseEditor):
         ctk.CTkButton(tab, text="Importer une image", fg_color=theme.BG_CARD, hover_color=theme.BG_CARD_HOVER, command=self._import_image).pack(anchor="w", padx=20)
 
     # ─────────────────────────────────────────────────────────────────────────
-    # ONGLET COMPOSITION — version améliorée
+    # ONGLET COMPOSITION — version améliorée v2
     # ─────────────────────────────────────────────────────────────────────────
 
     def _build_composition_tab(self, tab) -> None:
         tab.grid_columnconfigure(0, weight=1)
         tab.grid_rowconfigure(2, weight=1)
 
-        # ── Barre d'outils ────────────────────────────────────────────────
-        toolbar = ctk.CTkFrame(tab, fg_color="transparent")
-        toolbar.grid(row=0, column=0, sticky="ew", padx=12, pady=(10, 4))
+        # ── Ligne 1 : Boutons d'ajout rapide par catégorie ────────────────
+        quick_frame = ctk.CTkFrame(tab, fg_color=theme.BG_CARD, corner_radius=8)
+        quick_frame.grid(row=0, column=0, sticky="ew", padx=12, pady=(10, 4))
+
+        ctk.CTkLabel(
+            quick_frame, text="Ajouter :",
+            text_color=theme.TEXT_SECONDARY,
+            font=ctk.CTkFont(size=12),
+        ).pack(side="left", padx=(12, 8), pady=8)
+
+        for cat in ["Pierre", "Breloque", "Intercalaire", "Cache-noeud"]:
+            color = _CAT_COLORS.get(cat, theme.BG_INPUT)
+            icon = _CAT_ICONS.get(cat, "＋")
+            ctk.CTkButton(
+                quick_frame,
+                text=f"{icon}  {cat}",
+                fg_color=color,
+                hover_color=theme.BG_CARD_HOVER,
+                text_color="#ffffff",
+                width=130,
+                height=32,
+                font=ctk.CTkFont(size=12, weight="bold"),
+                command=lambda c=cat: self._add_comp_row(cat=c),
+            ).pack(side="left", padx=4, pady=8)
+
+        # Séparateur visuel
+        sep = ctk.CTkFrame(quick_frame, fg_color=theme.BORDER, width=1, height=28)
+        sep.pack(side="left", padx=12, pady=8)
 
         ctk.CTkButton(
-            toolbar, text="＋  Ajouter un composant",
-            fg_color=theme.BG_CARD, hover_color=theme.BG_CARD_HOVER,
-            command=self._add_comp_row,
-        ).pack(side="left", padx=(0, 8))
-
-        ctk.CTkButton(
-            toolbar, text="✨  Générer un nom",
+            quick_frame, text="✨  Générer un nom",
             fg_color=theme.ACCENT_AMETHYSTE, hover_color=theme.BG_CARD_HOVER,
+            height=32,
             command=self._suggest_bracelet_name,
-        ).pack(side="left", padx=(0, 8))
+        ).pack(side="left", padx=4, pady=8)
 
         ctk.CTkButton(
-            toolbar, text="🗑  Tout supprimer",
+            quick_frame, text="🗑  Tout vider",
             fg_color=theme.DANGER, hover_color=theme.WARNING,
-            width=130,
+            height=32, width=110,
             command=self._clear_all_rows,
-        ).pack(side="left")
+        ).pack(side="right", padx=12, pady=8)
 
-        # Légende des catégories
-        legend_frame = ctk.CTkFrame(toolbar, fg_color="transparent")
-        legend_frame.pack(side="right", padx=4)
-        for cat, color in _CAT_COLORS.items():
-            badge = ctk.CTkFrame(legend_frame, fg_color=color, corner_radius=4, width=10, height=10)
-            badge.pack(side="left", padx=(6, 2))
-            badge.pack_propagate(False)
-            ctk.CTkLabel(legend_frame, text=cat, text_color=theme.TEXT_SECONDARY,
-                         font=ctk.CTkFont(size=11)).pack(side="left", padx=(0, 4))
+        # ── Ligne 2 : Barre de filtre live ───────────────────────────────
+        filter_frame = ctk.CTkFrame(tab, fg_color="transparent")
+        filter_frame.grid(row=1, column=0, sticky="ew", padx=12, pady=(0, 4))
+        filter_frame.columnconfigure(1, weight=1)
+
+        ctk.CTkLabel(
+            filter_frame, text="🔍  Filtrer :",
+            text_color=theme.TEXT_SECONDARY,
+            font=ctk.CTkFont(size=12),
+        ).grid(row=0, column=0, padx=(4, 6), pady=4)
+
+        self._filter_var = ctk.StringVar(value="")
+        self._filter_entry = ctk.CTkEntry(
+            filter_frame,
+            textvariable=self._filter_var,
+            placeholder_text="Taper un nom pour filtrer les lignes...",
+            fg_color=theme.BG_INPUT,
+            border_color=theme.BORDER,
+            text_color=theme.TEXT_PRIMARY,
+            height=32,
+        )
+        self._filter_entry.grid(row=0, column=1, sticky="ew", padx=(0, 4), pady=4)
+        self._filter_var.trace_add("write", lambda *_: self._apply_filter())
+
+        ctk.CTkButton(
+            filter_frame, text="✕", width=32, height=32,
+            fg_color=theme.BG_SIDEBAR, hover_color=theme.BG_CARD_HOVER,
+            command=lambda: self._filter_var.set(""),
+        ).grid(row=0, column=2, padx=(0, 4), pady=4)
 
         # ── En-tête des colonnes ──────────────────────────────────────────
         header_bar = ctk.CTkFrame(tab, fg_color=theme.BG_SIDEBAR, corner_radius=6)
-        header_bar.grid(row=1, column=0, sticky="ew", padx=12, pady=(0, 2))
-        # Proportions identiques aux lignes : 0=pos, 1=badge, 2=composant(flex), 3=qté, 4=PU, 5=s-total, 6-7=flèches, 8=dup, 9=suppr
-        col_specs = [
-            (0,  "#",         24,  False),
-            (1,  "Catégorie", 110, False),
-            (2,  "Composant", 0,   True),
-            (3,  "Qté",       54,  False),
-            (4,  "PU (€)",    74,  False),
-            (5,  "Sous-total",90,  False),
-            (6,  "↑↓",        72,  False),
-            (7,  "",          90,  False),  # Dupliquer
-            (8,  "",          90,  False),  # Supprimer
+        header_bar.grid(row=2, column=0, sticky="ew", padx=12, pady=(0, 2))
+        # col: 0=#, 1=catégorie, 2=composant(flex), 3=qté+boutons, 4=PU, 5=sous-total, 6=actions
+        col_defs = [
+            (0,  "#",          28,  False),
+            (1,  "Catégorie",  120, False),
+            (2,  "Composant",  0,   True),
+            (3,  "Qté",        100, False),
+            (4,  "PU (€)",     74,  False),
+            (5,  "Sous-total", 90,  False),
+            (6,  "",           170, False),
         ]
         header_bar.columnconfigure(2, weight=1)
-        for cidx, (col_i, label, w, flex) in enumerate(col_specs):
-            kw: dict[str, Any] = {"row": 0, "column": cidx, "sticky": "w", "padx": 6, "pady": 4}
-            lbl = ctk.CTkLabel(
+        for cidx, (_, label, w, flex) in enumerate(col_defs):
+            ctk.CTkLabel(
                 header_bar, text=label,
                 font=ctk.CTkFont(size=11, weight="bold"),
                 text_color=theme.TEXT_SECONDARY,
                 width=w if not flex else 0,
-            )
-            lbl.grid(**kw)
+            ).grid(row=0, column=cidx, sticky="w", padx=6, pady=4)
 
         # ── Zone scrollable des lignes ────────────────────────────────────
         self._comp_scroll = ctk.CTkScrollableFrame(tab, fg_color=theme.BG_SIDEBAR)
-        self._comp_scroll.grid(row=2, column=0, sticky="nsew", padx=12, pady=(0, 4))
+        self._comp_scroll.grid(row=3, column=0, sticky="nsew", padx=12, pady=(0, 4))
         self._comp_scroll.columnconfigure(2, weight=1)
+        tab.grid_rowconfigure(3, weight=1)
 
         # ── Barre de récapitulatif ────────────────────────────────────────
         self._recap_bar = ctk.CTkFrame(tab, fg_color=theme.BG_CARD, corner_radius=8)
-        self._recap_bar.grid(row=3, column=0, sticky="ew", padx=12, pady=(2, 8))
+        self._recap_bar.grid(row=4, column=0, sticky="ew", padx=12, pady=(2, 8))
 
-        self._recap_nb_var = ctk.StringVar(value="0 ligne(s)")
+        self._recap_nb_var = ctk.StringVar(value="0 composant(s)")
         self._recap_total_var = ctk.StringVar(value="Coût total : 0,00 €")
 
         ctk.CTkLabel(self._recap_bar, textvariable=self._recap_nb_var,
                      text_color=theme.TEXT_SECONDARY, font=ctk.CTkFont(size=12)).pack(side="left", padx=16, pady=6)
         ctk.CTkLabel(self._recap_bar, textvariable=self._recap_total_var,
                      text_color=theme.TEXT_PRIMARY, font=ctk.CTkFont(size=13, weight="bold")).pack(side="right", padx=16, pady=6)
+
+    def _apply_filter(self) -> None:
+        """Affiche/masque les lignes selon le filtre texte."""
+        needle = self._filter_var.get().strip().lower()
+        for row in self._composition_rows:
+            nom = row["comp_var"].get().lower()
+            cat = row["cat_var"].get().lower()
+            visible = (not needle) or (needle in nom) or (needle in cat)
+            try:
+                if visible:
+                    row["frame"].pack(fill="x", padx=2, pady=2)
+                else:
+                    row["frame"].pack_forget()
+            except Exception:
+                pass
 
     def _bind_dirty_tracking(self) -> None:
         for var in [self._nom_var, self._stock_var, self._pv_var]:
@@ -953,44 +1013,33 @@ class BraceletEditor(BaseEditor):
         row_wrap.pack(fill="x", padx=2, pady=2)
         row_wrap.columnconfigure(2, weight=1)
 
-        # Numéro de position
-        pos_label = ctk.CTkLabel(row_wrap, text="1", width=24,
-                                  font=ctk.CTkFont(size=12, weight="bold"),
-                                  text_color=theme.TEXT_SECONDARY)
-        pos_label.grid(row=0, column=0, padx=(8, 4), pady=8)
+        # ── Col 0 : Numéro de position ────────────────────────────────────
+        pos_label = ctk.CTkLabel(
+            row_wrap, text="1", width=28,
+            font=ctk.CTkFont(size=12, weight="bold"),
+            text_color=theme.TEXT_SECONDARY,
+        )
+        pos_label.grid(row=0, column=0, padx=(8, 2), pady=10)
 
+        # ── Col 1 : Menu catégorie coloré ─────────────────────────────────
         cat_var = ctk.StringVar(value=cat)
-        comp_var = ctk.StringVar(value=name)
-        qty_var = ctk.StringVar(value=str(max(1, int(qty))))
-        if pu is None:
-            pu = self._price_for(cat, name)
-        pu_var = ctk.StringVar(value=self._fmt_pu(pu))
-        subtotal_var = ctk.StringVar(value="0,00 €")
-
-        # Badge catégorie coloré
         cat_color = _CAT_COLORS.get(cat, theme.BG_INPUT)
-        cat_badge_frame = ctk.CTkFrame(row_wrap, fg_color=cat_color, corner_radius=6, width=110, height=28)
-        cat_badge_frame.grid(row=0, column=1, padx=(4, 6), pady=8)
-        cat_badge_frame.pack_propagate(False)
-        cat_badge_lbl = ctk.CTkLabel(cat_badge_frame, text=cat, text_color="#ffffff",
-                                      font=ctk.CTkFont(size=11, weight="bold"))
-        cat_badge_lbl.place(relx=0.5, rely=0.5, anchor="center")
-
-        # Menu catégorie caché derrière le badge — clic sur le badge ouvre un menu
         cat_menu = ctk.CTkOptionMenu(
             row_wrap,
             variable=cat_var,
             values=self._categories,
-            width=110,
+            width=120,
+            height=34,
             fg_color=cat_color,
             button_color=cat_color,
             button_hover_color=theme.BG_CARD_HOVER,
             text_color="#ffffff",
+            font=ctk.CTkFont(size=12, weight="bold"),
         )
-        # On place le cat_menu mais on l'affiche dans la cellule 1 pour garder la sélection fonctionnelle
         cat_menu.grid(row=0, column=1, padx=(4, 6), pady=8)
 
-        # Composant
+        # ── Col 2 : Sélecteur de composant (pleine largeur) ───────────────
+        comp_var = ctk.StringVar(value=name)
         comp_box = ScrollableComboBox(
             row_wrap,
             variable=comp_var,
@@ -999,23 +1048,60 @@ class BraceletEditor(BaseEditor):
         )
         comp_box.grid(row=0, column=2, sticky="ew", padx=4, pady=8)
 
-        # Quantité
-        qty_entry = ctk.CTkEntry(row_wrap, textvariable=qty_var, width=54,
-                                  fg_color=theme.BG_INPUT, border_color=theme.BORDER,
-                                  justify="center")
-        qty_entry.grid(row=0, column=3, padx=4)
+        # ── Col 3 : Quantité avec boutons − et + ──────────────────────────
+        qty_var = ctk.StringVar(value=str(max(1, int(qty))))
+        qty_frame = ctk.CTkFrame(row_wrap, fg_color="transparent")
+        qty_frame.grid(row=0, column=3, padx=4)
 
-        # PU
-        pu_entry = ctk.CTkEntry(row_wrap, textvariable=pu_var, width=74,
-                                 fg_color=theme.BG_INPUT, border_color=theme.BORDER,
-                                 justify="right")
+        ctk.CTkButton(
+            qty_frame, text="−", width=28, height=34,
+            fg_color=theme.BG_INPUT, hover_color=theme.BG_CARD_HOVER,
+            text_color=theme.TEXT_PRIMARY,
+            font=ctk.CTkFont(size=16, weight="bold"),
+            command=lambda: self._dec_qty(qty_var),
+        ).pack(side="left")
+
+        qty_entry = ctk.CTkEntry(
+            qty_frame, textvariable=qty_var,
+            width=44, height=34,
+            fg_color=theme.BG_INPUT, border_color=theme.BORDER,
+            justify="center",
+            font=ctk.CTkFont(size=13, weight="bold"),
+        )
+        qty_entry.pack(side="left", padx=2)
+
+        ctk.CTkButton(
+            qty_frame, text="＋", width=28, height=34,
+            fg_color=theme.ACCENT_TURQUOISE, hover_color=theme.BG_CARD_HOVER,
+            text_color="#ffffff",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            command=lambda: self._inc_qty(qty_var),
+        ).pack(side="left")
+
+        # ── Col 4 : Prix unitaire ──────────────────────────────────────────
+        if pu is None:
+            pu = self._price_for(cat, name)
+        pu_var = ctk.StringVar(value=self._fmt_pu(pu))
+        pu_entry = ctk.CTkEntry(
+            row_wrap, textvariable=pu_var,
+            width=74, height=34,
+            fg_color=theme.BG_INPUT, border_color=theme.BORDER,
+            justify="right",
+        )
         pu_entry.grid(row=0, column=4, padx=4)
 
-        # Sous-total (lecture seule)
-        subtotal_lbl = ctk.CTkLabel(row_wrap, textvariable=subtotal_var, width=90,
-                                     font=ctk.CTkFont(size=12, weight="bold"),
-                                     text_color=theme.TEXT_PRIMARY)
+        # ── Col 5 : Sous-total (lecture seule, affiché en gras) ───────────
+        subtotal_var = ctk.StringVar(value="0,00 €")
+        subtotal_lbl = ctk.CTkLabel(
+            row_wrap, textvariable=subtotal_var, width=90,
+            font=ctk.CTkFont(size=12, weight="bold"),
+            text_color=theme.TEXT_PRIMARY,
+        )
         subtotal_lbl.grid(row=0, column=5, padx=6)
+
+        # ── Col 6 : Boutons d'action (↑ ↓  Dupliquer  Supprimer) ─────────
+        actions = ctk.CTkFrame(row_wrap, fg_color="transparent")
+        actions.grid(row=0, column=6, padx=(4, 8))
 
         row: dict[str, Any] = {
             "frame": row_wrap,
@@ -1027,49 +1113,58 @@ class BraceletEditor(BaseEditor):
             "subtotal_var": subtotal_var,
             "pos_label": pos_label,
             "cat_menu": cat_menu,
-            "cat_badge_lbl": cat_badge_lbl,
-            "cat_badge_frame": cat_badge_frame,
         }
+
+        ctk.CTkButton(
+            actions, text="↑", width=28, height=28,
+            fg_color=theme.BG_INPUT, hover_color=theme.BG_CARD_HOVER,
+            command=lambda: self._move_comp_row(row, -1),
+        ).pack(side="left", padx=1)
+        ctk.CTkButton(
+            actions, text="↓", width=28, height=28,
+            fg_color=theme.BG_INPUT, hover_color=theme.BG_CARD_HOVER,
+            command=lambda: self._move_comp_row(row, 1),
+        ).pack(side="left", padx=1)
+        ctk.CTkButton(
+            actions, text="⧉", width=28, height=28,
+            fg_color=theme.ACCENT_TURQUOISE, hover_color=theme.BG_CARD_HOVER,
+            text_color="#ffffff",
+            command=lambda: self._duplicate_comp_row(row),
+        ).pack(side="left", padx=(4, 1))
+        ctk.CTkButton(
+            actions, text="🗑", width=28, height=28,
+            fg_color=theme.DANGER, hover_color=theme.WARNING,
+            command=lambda: self._remove_comp_row(row_wrap),
+        ).pack(side="left", padx=1)
 
         cat_var.trace_add("write", lambda *_: self._on_category_changed(row))
         comp_var.trace_add("write", lambda *_: self._on_comp_row_changed())
         qty_var.trace_add("write", lambda *_: self._on_comp_row_changed())
         pu_var.trace_add("write", lambda *_: self._on_comp_row_changed())
 
-        # Boutons ↑ ↓
-        arrows = ctk.CTkFrame(row_wrap, fg_color="transparent")
-        arrows.grid(row=0, column=6, padx=(6, 2))
-        ctk.CTkButton(
-            arrows, text="↑", width=32, height=26,
-            fg_color=theme.BG_INPUT, hover_color=theme.BG_CARD_HOVER,
-            command=lambda: self._move_comp_row(row, -1),
-        ).pack(side="left", padx=1)
-        ctk.CTkButton(
-            arrows, text="↓", width=32, height=26,
-            fg_color=theme.BG_INPUT, hover_color=theme.BG_CARD_HOVER,
-            command=lambda: self._move_comp_row(row, 1),
-        ).pack(side="left", padx=1)
-
-        # Bouton Dupliquer
-        ctk.CTkButton(
-            row_wrap, text="⧉ Dupliquer", width=90,
-            fg_color=theme.ACCENT_TURQUOISE, hover_color=theme.BG_CARD_HOVER,
-            command=lambda: self._duplicate_comp_row(row),
-        ).grid(row=0, column=7, padx=4)
-
-        # Bouton Supprimer
-        ctk.CTkButton(
-            row_wrap, text="🗑 Supprimer", width=90,
-            fg_color=theme.DANGER, hover_color=theme.WARNING,
-            command=lambda: self._remove_comp_row(row_wrap),
-        ).grid(row=0, column=8, padx=(2, 8))
-
         self._composition_rows.append(row)
         self._refresh_comp_positions()
         self._on_comp_row_changed()
 
+    # ── Helpers quantité ─────────────────────────────────────────────────────
+
+    @staticmethod
+    def _inc_qty(var: ctk.StringVar) -> None:
+        try:
+            val = int(var.get() or "0")
+        except ValueError:
+            val = 0
+        var.set(str(val + 1))
+
+    @staticmethod
+    def _dec_qty(var: ctk.StringVar) -> None:
+        try:
+            val = int(var.get() or "1")
+        except ValueError:
+            val = 1
+        var.set(str(max(1, val - 1)))
+
     def _duplicate_comp_row(self, row: dict[str, Any]) -> None:
-        """Duplique la ligne de composition donnée juste en dessous."""
         cat = row["cat_var"].get()
         name = row["comp_var"].get()
         try:
@@ -1083,7 +1178,6 @@ class BraceletEditor(BaseEditor):
         self._add_comp_row(cat=cat, name=name, qty=qty, pu=pu)
 
     def _index_catalog(self) -> None:
-        """Indexe le catalogue par categorie (listes triees alphabetiquement)."""
         self._categories_all = ["Pierre", "Breloque", "Intercalaire", "Cache-noeud"]
         self._names_by_cat: dict[str, list[str]] = {}
         self._comp_by_cat_name: dict[tuple[str, str], dict[str, Any]] = {}
@@ -1125,11 +1219,8 @@ class BraceletEditor(BaseEditor):
 
     def _on_category_changed(self, row: dict[str, Any]) -> None:
         cat = row["cat_var"].get()
-        # Met à jour la couleur du badge
         color = _CAT_COLORS.get(cat, theme.BG_INPUT)
         try:
-            row["cat_badge_frame"].configure(fg_color=color)
-            row["cat_badge_lbl"].configure(text=cat)
             row["cat_menu"].configure(fg_color=color, button_color=color)
         except Exception:
             pass
@@ -1191,21 +1282,17 @@ class BraceletEditor(BaseEditor):
             pu = self._parse_float(row["pu_var"].get()) if "pu_var" in row else None
             if pu is None or pu < 0:
                 pu = float(comp["cout_unitaire"])
-            rows.append(
-                {
-                    "composant": comp["nom"],
-                    "categorie": comp["categorie"],
-                    "quantite": qty,
-                    "cout_unitaire": float(pu),
-                }
-            )
+            rows.append({
+                "composant": comp["nom"],
+                "categorie": comp["categorie"],
+                "quantite": qty,
+                "cout_unitaire": float(pu),
+            })
         return rows
 
     def _recompute_metrics(self) -> None:
-        composition = self._composition_payload()
         cout = 0.0
 
-        # Mise à jour des sous-totaux par ligne
         for row in self._composition_rows:
             try:
                 qty = max(0, int(row["qty_var"].get() or 0))
@@ -1241,7 +1328,6 @@ class BraceletEditor(BaseEditor):
         self._marge_var.set(self._money(marge))
         self._rent_var.set(f"{rent:.1f} %".replace(".", ","))
 
-        # Mise à jour du récap bas
         nb = len(self._composition_rows)
         try:
             self._recap_nb_var.set(f"{nb} composant(s)")
