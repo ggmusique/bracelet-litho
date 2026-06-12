@@ -836,8 +836,8 @@ class ComposantsPage(ctk.CTkFrame):
         total_items = len(stocks)
         stock_total_value = sum(float(cached.get("value", 0.0) or 0.0) for cached in self._item_cache.values())
         ruptures = sum(1 for st in stocks if st <= 0)
-        non_zero_stocks = [st for st in stocks if st != 0]
-        stock_avg = (sum(non_zero_stocks) / len(non_zero_stocks)) if non_zero_stocks else 0.0
+        non_null_stocks = [st for st in stocks if st != 0]
+        stock_avg = (sum(non_null_stocks) / len(non_null_stocks)) if non_null_stocks else 0.0
 
         self._kpi_total.set_value(str(total_items))
         self._kpi_stock_total.set_value(self._money(stock_total_value))
@@ -968,10 +968,10 @@ class ComposantsPage(ctk.CTkFrame):
                 results.extend(self._extract_component_candidates(value))
             return results
         if isinstance(payload, list):
-            results: list[str] = []
+            list_results: list[str] = []
             for row in payload:
-                results.extend(self._extract_component_candidates(row))
-            return results
+                list_results.extend(self._extract_component_candidates(row))
+            return list_results
         raw = str(payload).strip()
         if not raw:
             return []
