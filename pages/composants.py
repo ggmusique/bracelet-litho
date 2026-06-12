@@ -38,6 +38,7 @@ _PAGE_SUB_TO_EDITOR_CAT: dict[str, str] = {
 }
 
 _EDITOR_CAT_TO_PAGE_SUB: dict[str, str] = {v: k for k, v in _PAGE_SUB_TO_EDITOR_CAT.items()}
+_MAX_USED_BRACELETS = 8
 
 
 class ComposantsPage(ctk.CTkFrame):
@@ -831,9 +832,9 @@ class ComposantsPage(ctk.CTkFrame):
         return float(item.get("prix_achat", item.get("cout_unitaire", item.get("prix_moyen", 0.0))) or 0.0)
 
     def _update_global_kpis(self) -> None:
-        stocks = [int(item.get("stock", 0) or 0) for item in self._all_by_id.values()]
+        stocks = [int(cached.get("stock", 0) or 0) for cached in self._item_cache.values()]
         total_items = len(stocks)
-        stock_total_value = sum(float(self._item_price(item)) * int(item.get("stock", 0) or 0) for item in self._all_by_id.values())
+        stock_total_value = sum(float(cached.get("value", 0.0) or 0.0) for cached in self._item_cache.values())
         ruptures = sum(1 for st in stocks if st <= 0)
         non_zero_stocks = [st for st in stocks if st != 0]
         stock_avg = (sum(non_zero_stocks) / len(non_zero_stocks)) if non_zero_stocks else 0.0
@@ -842,7 +843,7 @@ class ComposantsPage(ctk.CTkFrame):
         self._kpi_stock_total.set_value(self._money(stock_total_value))
         self._kpi_rupture.set_value(f"🔴 {ruptures}" if ruptures > 0 else "0")
         self._kpi_stock_avg.set_value(f"{stock_avg:.1f}")
-        self._kpi_rupture._value_lbl.configure(text_color=theme.DANGER if ruptures > 0 else theme.TEXT_PRIMARY)
+        self._kpi_rupture.set_value_color(theme.DANGER if ruptures > 0 else theme.TEXT_PRIMARY)
 
     @staticmethod
     def _stock_badge(stock: int) -> str:
@@ -904,14 +905,14 @@ class ComposantsPage(ctk.CTkFrame):
         dialog.bind("<Return>", lambda _e: _validate_restock())
 
     def _set_item_stock(self, item_id: str, stock: int) -> bool:
-        source, saver = self._get_source_and_saver()
-        for row in source:
-            if str(row.get("id", "")) == item_id:
-                row["stock"] = int(stock)
-                row["updated_at"] = datetime.now().isoformat(timespec="seconds")
-                saver()
-                return True
-        return False
+        row = self._all_by_id.get(item_id)
+        if row is None:
+            return False
+        _, saver = self._get_source_and_saver()
+        row["stock"] = int(stock)
+        row["updated_at"] = datetime.now().isoformat(timespec="seconds")
+        saver()
+        return True
 
     def _update_used_in_bracelets(self, item_id: str, item: dict) -> None:
         used_names: list[str] = []
@@ -924,7 +925,7 @@ class ComposantsPage(ctk.CTkFrame):
                 name = str(bracelet.get("nom", "—") or "—")
                 if name not in used_names:
                     used_names.append(name)
-            if len(used_names) >= 8:
+            if len(used_names) >= _MAX_USED_BRACELETS:
                 break
 
         self._render_used_bracelets(used_names)
@@ -947,7 +948,7 @@ class ComposantsPage(ctk.CTkFrame):
             ).pack(anchor="w", pady=1)
 
     def _bracelet_contains_component(self, bracelet: dict, component_id: str, component_name: str) -> bool:
-        targets = {component_id.lower(), component_name}
+        targets = {component_id.lower(), component_name.lower()}
         for field in ("composition", "composants"):
             values = bracelet.get(field)
             for candidate in self._extract_component_candidates(values):
@@ -959,18 +960,18 @@ class ComposantsPage(ctk.CTkFrame):
         if payload is None:
             return []
         if isinstance(payload, dict):
-            out: list[str] = []
+            results: list[str] = []
             for key in ("id", "composant_id", "id_composant", "component_id", "composant", "nom", "name"):
                 if key in payload:
-                    out.append(str(payload.get(key, "")).strip())
+                    results.append(str(payload.get(key, "")).strip())
             for value in payload.values():
-                out.extend(self._extract_component_candidates(value))
-            return out
+                results.extend(self._extract_component_candidates(value))
+            return results
         if isinstance(payload, list):
-            out: list[str] = []
+            results: list[str] = []
             for row in payload:
-                out.extend(self._extract_component_candidates(row))
-            return out
+                results.extend(self._extract_component_candidates(row))
+            return results
         raw = str(payload).strip()
         if not raw:
             return []
