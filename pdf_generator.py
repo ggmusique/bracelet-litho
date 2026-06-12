@@ -962,3 +962,182 @@ class PDFGenerator:
         c.drawString(x0, margin - 12, "Document interne de fabrication - prix d'achat confidentiels.")
         c.showPage()
         c.save()
+
+    # ──────────────────────────────────────────────────────────────────────────
+    # Fiche VIERGE — 25 lignes numérotées, format identique à la fiche remplie
+    # ──────────────────────────────────────────────────────────────────────────
+    def export_fiche_vierge_pdf(self, output_path: str, nb_lignes: int = 25) -> None:
+        """Genere une fiche de creation de bracelet entierement vierge.
+
+        La mise en page reprend exactement celle de export_fiche_creation_pdf :
+        meme entete, meme tableau (colonnes #, Qte, Composant, Type, PU achat,
+        Sous-total), mais toutes les cellules sont vides sauf les numeros de ligne.
+        Le champ Nom est remplace par « Nom : » suivi d'une ligne a remplir.
+        En bas : zones Nombre de pierres, Cout pierres, Cout matieres, Cout total,
+        Prix de vente, Marge — toutes vierges avec des lignes a remplir.
+        """
+        self.refresh_style_from_settings()
+        fnt = self._safe_font
+        font_n = fnt(self.base_font, bold=False)
+        font_b = fnt(self.base_font, bold=True)
+
+        page_w, page_h = A4
+        margin = 50.0
+        x0 = margin
+        x_right = page_w - margin
+
+        # Colonnes identiques a export_fiche_creation_pdf
+        col_idx  = x0            # "#"
+        col_qte  = x0 + 50       # "Qte"  (droite)
+        col_nom  = x0 + 60       # "Composant"
+        col_type = x0 + 270      # "Type"
+        col_pu   = x0 + 400      # "PU achat"  (droite)
+        col_sub  = x_right       # "Sous-total" (droite)
+
+        # Largeur utile pour la colonne Composant (pour tracer la ligne a remplir)
+        col_nom_w = col_type - col_nom - 6
+
+        c = canvas.Canvas(output_path, pagesize=A4)
+
+        def draw_header():
+            """Entete identique a la fiche remplie."""
+            c.setFont(font_b, 18)
+            c.drawString(x0, page_h - margin, "Fiche de creation de bracelet")
+            c.setLineWidth(1)
+            c.line(x0, page_h - margin - 6, x_right, page_h - margin - 6)
+
+        def draw_field_line(x: float, y: float, label: str, width: float) -> None:
+            """Affiche 'label' puis une ligne pointillee jusqu'a x+width."""
+            c.setFont(font_b, 10)
+            c.drawString(x, y, label)
+            label_w = c.stringWidth(label, font_b, 10)
+            line_x0 = x + label_w + 4
+            line_x1 = x + width
+            if line_x1 > line_x0 + 10:
+                c.setLineWidth(0.4)
+                c.setDash(2, 3)
+                c.line(line_x0, y - 2, line_x1, y - 2)
+                c.setDash()
+
+        def table_header(yy: float) -> float:
+            """En-tete grise du tableau."""
+            c.setFillColorRGB(0.93, 0.93, 0.93)
+            c.rect(x0, yy - 4, x_right - x0, 18, fill=1, stroke=0)
+            c.setFillColorRGB(0, 0, 0)
+            c.setFont(font_b, 9)
+            c.drawString(col_idx, yy, "#")
+            c.drawRightString(col_qte, yy, "Qte")
+            c.drawString(col_nom, yy, "Composant")
+            c.drawString(col_type, yy, "Type")
+            c.drawRightString(col_pu, yy, "PU achat")
+            c.drawRightString(col_sub, yy, "Sous-total")
+            return yy - 20
+
+        def draw_blank_row(yy: float, idx: int) -> float:
+            """Dessine une ligne vierge du tableau avec le numero de ligne."""
+            # Fond alterne leger
+            if idx % 2 == 0:
+                c.setFillColorRGB(0.97, 0.97, 0.97)
+                c.rect(x0, yy - 3, x_right - x0, 16, fill=1, stroke=0)
+                c.setFillColorRGB(0, 0, 0)
+
+            c.setFont(font_n, 9)
+            c.drawString(col_idx, yy, str(idx))
+
+            # Lignes en pointilles dans chaque cellule
+            c.setLineWidth(0.3)
+            c.setDash(2, 3)
+            # Qte
+            c.line(col_qte - 30, yy - 2, col_qte, yy - 2)
+            # Composant
+            c.line(col_nom, yy - 2, col_type - 8, yy - 2)
+            # Type
+            c.line(col_type, yy - 2, col_pu - 10, yy - 2)
+            # PU achat
+            c.line(col_pu - 38, yy - 2, col_pu, yy - 2)
+            # Sous-total
+            c.line(col_sub - 46, yy - 2, col_sub, yy - 2)
+            c.setDash()
+
+            # Separateur horizontal leger
+            c.setLineWidth(0.15)
+            c.line(x0, yy - 4, x_right, yy - 4)
+
+            return yy - 16
+
+        # ── Construction de la page ──────────────────────────────────
+        draw_header()
+        y = page_h - margin - 22
+
+        # Champs d'identification (vierges)
+        field_half = (x_right - x0) / 2 - 8
+        draw_field_line(x0, y, "Nom :", x_right - x0)
+        y -= 18
+        draw_field_line(x0, y, "Reference :", field_half)
+        draw_field_line(x0 + field_half + 16, y, "Genre :", field_half)
+        y -= 18
+        draw_field_line(x0, y, "Date :", field_half)
+        draw_field_line(x0 + field_half + 16, y, "Stock actuel :", field_half)
+        y -= 24
+
+        # Titre tableau
+        c.setFont(font_b, 12)
+        c.drawString(x0, y, "Ordre de montage")
+        y -= 20
+        y = table_header(y)
+
+        # Lignes vierges
+        page_no = 1
+        for i in range(1, nb_lignes + 1):
+            if y < margin + 80:
+                c.showPage()
+                page_no += 1
+                draw_header()
+                y = page_h - margin - 22
+                y = table_header(y)
+            y = draw_blank_row(y, i)
+
+        # ── Zone recapitulative en bas ───────────────────────────────
+        needed = 130
+        if y < margin + needed:
+            c.showPage()
+            draw_header()
+            y = page_h - margin - 22
+
+        y -= 6
+        c.setLineWidth(0.5)
+        c.line(x0, y, x_right, y)
+        y -= 18
+
+        def recap_line(label: str, bold: bool = False, size: int = 10) -> None:
+            nonlocal y
+            c.setFont(font_b if bold else font_n, size)
+            c.drawRightString(col_pu, y, label)
+            # Ligne pointillee pour le montant
+            c.setLineWidth(0.4)
+            c.setDash(2, 3)
+            c.line(col_pu + 4, y - 2, col_sub, y - 2)
+            c.setDash()
+            y -= 16
+
+        c.setFont(font_b, 10)
+        c.drawString(x0, y, "Nombre de pierres :")
+        c.setLineWidth(0.4)
+        c.setDash(2, 3)
+        c.line(x0 + 130, y - 2, x0 + 200, y - 2)
+        c.setDash()
+        y -= 20
+
+        recap_line("Cout pierres :")
+        recap_line("Cout matieres :")
+        recap_line("Cout total (pierres + matieres) :", bold=True)
+        y -= 3
+        recap_line("Prix de vente :", bold=True, size=11)
+        recap_line("Marge :")
+
+        y -= 10
+        c.setFont(font_n, 7)
+        c.drawString(x0, margin - 12, "Document interne de fabrication.")
+
+        c.showPage()
+        c.save()
