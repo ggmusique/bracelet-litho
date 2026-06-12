@@ -222,16 +222,18 @@ class FabricationPage(ctk.CTkFrame):
                 text_color=theme.TEXT_SECONDARY,
             ).pack(pady=20)
 
+        # Resélectionner le bracelet courant ou le premier de la liste
         auto_select = self._selected_id if self._selected_id in self._list_buttons else (
             str(self._filtered_bracelets[0].get("id", "")) if self._filtered_bracelets else None
         )
         if auto_select:
-            self._select_bracelet(auto_select)
+            self._select_bracelet(auto_select, force_refresh=True)
 
     # ── Fiche fabrication ──────────────────────────────────────────
 
-    def _select_bracelet(self, bracelet_id: str) -> None:
-        if self._selected_id == bracelet_id and bracelet_id in self._list_buttons:
+    def _select_bracelet(self, bracelet_id: str, force_refresh: bool = False) -> None:
+        # Permettre le re-rendu si force_refresh=True (ex : après modification)
+        if self._selected_id == bracelet_id and bracelet_id in self._list_buttons and not force_refresh:
             return
         self._selected_id = bracelet_id
         for rid, btn in self._list_buttons.items():
@@ -636,4 +638,7 @@ class FabricationPage(ctk.CTkFrame):
         _open_generated_file(path)
 
     def refresh(self) -> None:
+        """Appele depuis l'exterieur apres modification d'un bracelet pour rafraichir la page."""
+        if self.db:
+            self.db.reload_all()
         self._load_list()
