@@ -578,20 +578,22 @@ def _patch_catalogue_services(module: ModuleType) -> None:
             y -= 4 * mm
 
             name = str(bracelet.get("nom", "") or "Bracelet").strip()
-            y = _draw_centered_wrapped(c, name, "Times-Bold", 14.8, margin, y, inner_w, 5.3 * mm, max_lines=2)
-            y -= 2 * mm
+            y = _draw_centered_wrapped(c, name, "Times-Bold", 13.6, margin, y, inner_w, 4.9 * mm, max_lines=2)
+            y -= 1.4 * mm
 
             # Pierres : uniquement les pierres, dans l'ordre, sans quantités.
             stones = _stone_names_in_order(bracelet)
             if stones:
                 c.setFillColorRGB(*gold)
-                c.setFont("Times-Bold", 7.8)
+                c.setFont("Times-Bold", 7.6)
                 c.drawCentredString(page_w / 2, y, "Pierres")
-                y -= 5 * mm
+                y -= 4.2 * mm
                 c.setFillColorRGB(*ink)
                 stones_txt = "  •  ".join(stones)
-                y = _draw_centered_wrapped(c, stones_txt, "Times-Roman", 8.8, margin + 4 * mm, y, inner_w - 8 * mm, 4.1 * mm, max_lines=3)
-                y -= 1.5 * mm
+                # Sur une petite carte, on garde l'ordre mais on limite à 2 lignes
+                # pour éviter que la composition chevauche les sections du bas.
+                y = _draw_centered_wrapped(c, stones_txt, "Times-Roman", 7.7, margin + 4 * mm, y, inner_w - 8 * mm, 3.45 * mm, max_lines=2)
+                y -= 1.0 * mm
             else:
                 c.setFillColorRGB(*ink)
                 c.setFont("Times-Roman", 10)
@@ -601,12 +603,12 @@ def _patch_catalogue_services(module: ModuleType) -> None:
             wrist = str(bracelet.get("poignet_conseille", bracelet.get("poignet", "") or "")).strip()
             if wrist and wrist not in ("Au choix", "Non spécifié", "Non specifie"):
                 c.setFillColorRGB(*amethyst)
-                c.setFont("Times-Italic", 7.8)
+                c.setFont("Times-Italic", 7.0)
                 c.drawCentredString(page_w / 2, y, f"À porter au poignet {wrist.lower()}")
-                y -= 4.0 * mm
+                y -= 3.0 * mm
 
-            _ornament(c, margin + 18 * mm, y + 1.2 * mm, inner_w - 36 * mm, soft_gold)
-            y -= 4.0 * mm
+            _ornament(c, margin + 20 * mm, y + 1.0 * mm, inner_w - 40 * mm, soft_gold)
+            y -= 3.0 * mm
 
             # Vertus + chakras : le reste utile de la fiche client.
             vertus = module.aggregate_vertus(bracelet, db) if db is not None else []
@@ -616,37 +618,39 @@ def _patch_catalogue_services(module: ModuleType) -> None:
             col_w = (inner_w - col_gap) / 2
             left_x = margin
             right_x = margin + col_w + col_gap
-            section_y = y
+            # Zone basse verrouillée : les textes sont limités pour garantir
+            # une séparation nette avec les conseils et le pied de page.
+            section_y = 31.0 * mm
 
             c.setFillColorRGB(*turquoise)
-            c.setFont("Times-Bold", 8.4)
+            c.setFont("Times-Bold", 7.7)
             c.drawString(left_x, section_y, "Vertus")
             c.setFillColorRGB(*ink)
-            vertus_txt = ", ".join(vertus[:6]) if vertus else "Harmonie, douceur et équilibre."
-            _draw_wrapped(c, vertus_txt, "Times-Roman", 7.5, left_x, section_y - 4.0 * mm, col_w, 3.4 * mm, max_lines=4)
+            vertus_txt = ", ".join(vertus[:4]) if vertus else "Harmonie, douceur et équilibre."
+            _draw_wrapped(c, vertus_txt, "Times-Roman", 6.6, left_x, section_y - 3.6 * mm, col_w, 3.0 * mm, max_lines=2)
 
             c.setFillColorRGB(*amethyst)
-            c.setFont("Times-Bold", 8.4)
+            c.setFont("Times-Bold", 7.7)
             c.drawString(right_x, section_y, "Chakras")
             c.setFillColorRGB(*ink)
-            chakras_txt = ", ".join(chakras[:4]) if chakras else "Énergies associées aux pierres."
-            _draw_wrapped(c, chakras_txt, "Times-Roman", 7.5, right_x, section_y - 4.0 * mm, col_w, 3.4 * mm, max_lines=4)
+            chakras_txt = ", ".join(chakras[:3]) if chakras else "Énergies associées aux pierres."
+            _draw_wrapped(c, chakras_txt, "Times-Roman", 6.6, right_x, section_y - 3.6 * mm, col_w, 3.0 * mm, max_lines=2)
 
             # Conseils courts et élégants.
-            advice_y = 17.5 * mm
+            advice_y = 15.8 * mm
             c.setStrokeColorRGB(*soft_gold)
             c.setLineWidth(0.45)
-            c.line(margin + 8 * mm, advice_y + 8 * mm, page_w - margin - 8 * mm, advice_y + 8 * mm)
+            c.line(margin + 10 * mm, advice_y + 7.0 * mm, page_w - margin - 10 * mm, advice_y + 7.0 * mm)
             c.setFillColorRGB(*gold)
-            c.setFont("Times-Bold", 8.8)
-            c.drawCentredString(page_w / 2, advice_y + 4.0 * mm, "Conseils")
+            c.setFont("Times-Bold", 7.2)
+            c.drawCentredString(page_w / 2, advice_y + 3.6 * mm, "Conseils")
             c.setFillColorRGB(*ink)
-            c.setFont("Times-Italic", 6.8)
-            c.drawCentredString(page_w / 2, advice_y, "À porter avec intention · Purifier régulièrement · Recharger à la lune")
+            c.setFont("Times-Italic", 5.9)
+            c.drawCentredString(page_w / 2, advice_y, "Porter avec intention · Purifier régulièrement · Recharger à la lune")
 
             c.setFillColorRGB(0.38, 0.32, 0.25)
-            c.setFont("Times-Italic", 5.9)
-            c.drawCentredString(page_w / 2, 8.6 * mm, "Une création pensée pour accompagner votre énergie au quotidien")
+            c.setFont("Times-Italic", 5.2)
+            c.drawCentredString(page_w / 2, 7.8 * mm, "Une création pensée pour accompagner votre énergie au quotidien")
 
             c.showPage()
             c.save()
