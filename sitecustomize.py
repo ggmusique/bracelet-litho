@@ -27,8 +27,10 @@ def _patch_crud_editors(module: ModuleType) -> None:
         return
 
     ctk = module.ctk
+    mb = module.mb
     theme = module.theme
     BaseEditor = module.BaseEditor
+    ComponentEditor = module.ComponentEditor
     BraceletEditor = module.BraceletEditor
 
     # ──────────────────────────────────────────────────────────────────────
@@ -92,6 +94,88 @@ def _patch_crud_editors(module: ModuleType) -> None:
                 pass
 
     BaseEditor._maximize_window = _adaptive_maximize_window
+
+    # ──────────────────────────────────────────────────────────────────────
+    # Champ diamètre des pierres dans l'éditeur composant
+    # ──────────────────────────────────────────────────────────────────────
+    orig_component_build_info_tab = ComponentEditor._build_info_tab
+    orig_component_on_category_change = ComponentEditor._on_category_change
+    orig_component_save = ComponentEditor._save
+
+    def _format_diameter_value(value: Any) -> str:
+        if value in (None, ""):
+            return ""
+        try:
+            number = float(str(value).replace(",", "."))
+            if number.is_integer():
+                return str(int(number))
+            return str(number).replace(".", ",")
+        except Exception:
+            return str(value)
+
+    def _component_update_diameter_state(self) -> None:
+        entry = getattr(self, "_diametre_entry", None)
+        if entry is None:
+            return
+        try:
+            if self._cat_var.get() == "Pierre":
+                entry.configure(state="normal", placeholder_text="ex : 6, 8, 10")
+            else:
+                entry.configure(state="disabled", placeholder_text="Réservé aux pierres")
+        except Exception:
+            pass
+
+    def _component_build_info_tab_with_diameter(self, tab) -> None:
+        orig_component_build_info_tab(self, tab)
+        try:
+            raw = self.initial_item.get("diametre", self.initial_item.get("diametre_mm", ""))
+            self._diametre_var = ctk.StringVar(value=_format_diameter_value(raw))
+            self._diametre_entry = self._add_labeled_entry(tab, 2, 1, "Diamètre pierre (mm)", self._diametre_var)
+            self._diametre_var.trace_add("write", self._mark_dirty)
+            _component_update_diameter_state(self)
+        except Exception:
+            pass
+
+    def _component_on_category_change_with_diameter(self) -> None:
+        orig_component_on_category_change(self)
+        _component_update_diameter_state(self)
+
+    def _component_save_with_diameter(self) -> None:
+        original_submit = self.on_submit
+
+        def _submit_with_diameter(payload: dict[str, Any], category_label: str) -> bool:
+            try:
+                raw = getattr(self, "_diametre_var", None).get().strip() if getattr(self, "_diametre_var", None) is not None else ""
+                if category_label == "Pierre":
+                    if raw:
+                        diam = float(raw.replace(",", "."))
+                        if diam < 0:
+                            raise ValueError
+                        payload["diametre"] = diam
+                        payload["diametre_mm"] = diam
+                    else:
+                        payload["diametre"] = ""
+                        payload["diametre_mm"] = ""
+                else:
+                    payload.pop("diametre", None)
+                    payload.pop("diametre_mm", None)
+            except Exception:
+                mb.showerror("Validation", "Le diamètre doit être un nombre positif, en millimètres.", parent=self)
+                return False
+            return original_submit(payload, category_label)
+
+        self.on_submit = _submit_with_diameter
+        try:
+            orig_component_save(self)
+        finally:
+            try:
+                self.on_submit = original_submit
+            except Exception:
+                pass
+
+    ComponentEditor._build_info_tab = _component_build_info_tab_with_diameter
+    ComponentEditor._on_category_change = _component_on_category_change_with_diameter
+    ComponentEditor._save = _component_save_with_diameter
 
     # ──────────────────────────────────────────────────────────────────────
     # Sélection d'une ligne de composition + actions globales larges
@@ -704,3 +788,97 @@ if _CATALOGUE_TARGET in sys.modules:
     _patch_catalogue_services(sys.modules[_CATALOGUE_TARGET])
 elif not any(isinstance(finder, _CataloguePatchFinder) for finder in sys.meta_path):
     sys.meta_path.insert(0, _CataloguePatchFinder())
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Page Composants — affichage du diamètre des pierres
+# ─────────────────────────────────────────────────────────────────────────────
+_COMPOSANTS_TARGET = "pages.composants"
+
+
+def _patch_composants_page(module: ModuleType) -> None:
+    if getattr(module, "_stone_diameter_display_patch_applied", False):
+        return
+
+    ctk = module.ctk
+    theme = module.theme
+    ComposantsPage = module.ComposantsPage
+
+    original_build_fiche_panel = ComposantsPage._build_fiche_panel
+    original_update_details = ComposantsPage._update_details
+
+    def _format_diameter_display(value: Any) -> str:
+        if value in (None, ""):
+            return "—"
+        try:
+            number = float(str(value).replace(",", "."))
+            if number <= 0:
+                return "—"
+            text = str(int(number)) if number.is_integer() else str(number).replace(".", ",")
+            return f"{text} mm"
+        except Exception:
+            text = str(value).strip()
+            return f"{text} mm" if text else "—"
+
+    def _build_fiche_panel_with_diameter(self, parent) -> None:
+        original_build_fiche_panel(self, parent)
+        try:
+            anchor_label = self._detail_values.get("valeur_stock") or self._detail_values.get("stock")
+            info = anchor_label.master.master if anchor_label is not None else None
+            if info is None:
+                return
+            row = ctk.CTkFrame(info, fg_color="transparent")
+            row.pack(fill="x", pady=2)
+            ctk.CTkLabel(row, text="Diamètre", width=160, anchor="w", text_color=theme.TEXT_SECONDARY).pack(side="left")
+            val = ctk.CTkLabel(row, text="—", anchor="w", text_color=theme.TEXT_PRIMARY, font=ctk.CTkFont(weight="bold"))
+            val.pack(side="left")
+            self._detail_values["diametre"] = val
+        except Exception:
+            pass
+
+    def _update_details_with_diameter(self, item_id: str, item: dict) -> None:
+        original_update_details(self, item_id, item)
+        try:
+            label = self._detail_values.get("diametre")
+            if label is not None:
+                if getattr(self, "_active_sub", "") == "Pierres":
+                    raw = item.get("diametre", item.get("diametre_mm", ""))
+                    label.configure(text=_format_diameter_display(raw))
+                else:
+                    label.configure(text="—")
+        except Exception:
+            pass
+
+    ComposantsPage._build_fiche_panel = _build_fiche_panel_with_diameter
+    ComposantsPage._update_details = _update_details_with_diameter
+    module._stone_diameter_display_patch_applied = True
+
+
+class _ComposantsPatchLoader(importlib.abc.Loader):
+    def __init__(self, wrapped):
+        self._wrapped = wrapped
+
+    def create_module(self, spec):
+        if hasattr(self._wrapped, "create_module"):
+            return self._wrapped.create_module(spec)
+        return None
+
+    def exec_module(self, module):
+        self._wrapped.exec_module(module)
+        _patch_composants_page(module)
+
+
+class _ComposantsPatchFinder(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname != _COMPOSANTS_TARGET:
+            return None
+        spec = importlib.machinery.PathFinder.find_spec(fullname, path)
+        if spec and spec.loader:
+            spec.loader = _ComposantsPatchLoader(spec.loader)
+        return spec
+
+
+if _COMPOSANTS_TARGET in sys.modules:
+    _patch_composants_page(sys.modules[_COMPOSANTS_TARGET])
+elif not any(isinstance(finder, _ComposantsPatchFinder) for finder in sys.meta_path):
+    sys.meta_path.insert(0, _ComposantsPatchFinder())
