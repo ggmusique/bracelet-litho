@@ -1,45 +1,34 @@
 from __future__ import annotations
-
 from io import BytesIO
 from pathlib import Path
 from typing import Any
-
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.utils import ImageReader, simpleSplit
 from reportlab.pdfgen import canvas
-
 from etiquette import build_label_payload, mm_to_pt
 import layout_profiles
-
 try:
     import qrcode
 except ImportError:
     qrcode = None
 
-
 def coherent_purification(purifs: list) -> str:
-    """Recommandation de purification coherente."""
     default = "Eau (sauf pierres poreuses) ou fumigation (sauge, palo santo)"
     if not purifs:
         return default
-
     def _n(_x: Any) -> str:
         return str(_x).lower().replace(chr(0x2019), "'")
-
     if any(("pas d'eau" in _n(p)) or ("eau" not in _n(p)) for p in purifs):
         return "Fumigation uniquement (sauge ou palo santo) - eviter l'eau"
     return default
 
-
 def coherent_rechargement(rechs: list) -> str:
-    """Recommandation de rechargement coherente."""
     if not rechs:
         return "Lune (nuit de pleine lune) ou amas de quartz / geode 4h"
     uniq = {str(r).strip().lower() for r in rechs}
     if len(uniq) == 1:
         return rechs[0]
     return "Lune (pleine lune) ou amas de quartz / geode"
-
 
 class PDFGenerator:
     def __init__(self, db_manager) -> None:
@@ -224,46 +213,4 @@ class PDFGenerator:
         elif "Vertus" in format_type or "Chakra" in format_type:
             cell_w = mm_to_pt(layout_profiles.CELL_W_MM)
             cell_h = mm_to_pt(layout_profiles.CELL_H_MM)
-            pdf = canvas.Canvas(output_path, pagesize=(cell_w, cell_h))
-            self._draw_action_label(pdf, bracelet, 0, 0, cell_w, cell_h, "vertus", self._get_action_layout("vertus"))
-        else:
-            w, h = mm_to_pt(label_mm[0]), mm_to_pt(label_mm[1])
-            pdf = canvas.Canvas(output_path, pagesize=(w, h))
-            self.draw_single_label(pdf, bracelet, 0, 0, w, h)
-        pdf.showPage()
-        pdf.save()
-
-    def draw_label_action_70x37(self, c: canvas.Canvas, bracelet: dict[str, Any], x: float, y: float, w: float, h: float) -> None:
-        self._draw_action_label(c, bracelet, x, y, w, h, "bracelet", self._get_action_layout("bracelet"))
-
-    def draw_label_vertus_chakras(self, c: canvas.Canvas, bracelet: dict[str, Any], x: float, y: float, w: float, h: float) -> None:
-        self._draw_action_label(c, bracelet, x, y, w, h, "vertus", self._get_action_layout("vertus"))
-
-    def _draw_action_label(self, c: canvas.Canvas, bracelet: dict[str, Any], x: float, y: float, w: float, h: float, model: str, layout: dict[str, Any]) -> None:
-        self.refresh_style_from_settings()
-        fnt = self._safe_font
-
-        def pt(mm: float) -> float:
-            return mm_to_pt(mm)
-
-        def at(ex_mm: float, ey_mm: float, size_pt: float = 0.0) -> tuple[float, float]:
-            return x + pt(ex_mm), y + h - pt(ey_mm) - size_pt * 0.72
-
-        c.setLineWidth(0.5)
-        c.rect(x, y, w, h)
-
-        nom_cfg = layout.get("nom", {})
-        if isinstance(nom_cfg, dict):
-            nom_size = int(nom_cfg.get("size", 11))
-            c.setFont(fnt(self.base_font, bold=bool(nom_cfg.get("bold", True))), nom_size)
-            cx, cy = at(nom_cfg.get("x", 4), nom_cfg.get("y", 4), nom_size)
-            c.drawString(cx, cy, bracelet.get("nom", "") or "Bracelet")
-
-        sep_y_mm = float(layout.get("sep_y", 7.5))
-        _, sep_cy = at(4, sep_y_mm)
-        c.setLineWidth(0.3)
-        c.line(x + pt(4), sep_cy, x + w - pt(4), sep_cy)
-
-        metrics = self.db.calculate_bracelet_metrics(bracelet)
-        prix_vente = float(bracelet.get("prix_vente", 0.0) or 0.0)
-        cout_revient = float(metrics.get("cout_revient",
+            pdf = canvas.Canvas(output_path, pages
