@@ -35,28 +35,56 @@ def _patch_crud_editors(module: ModuleType) -> None:
     # Fenêtres éditeur : dimensionnement vraiment adapté à l'écran PC
     # ──────────────────────────────────────────────────────────────────────
     def _adaptive_maximize_window(self) -> None:
+        """Ouvre l'éditeur calé sur la fenêtre principale.
+
+        L'éditeur reste techniquement une fenêtre secondaire modale, mais il ne
+        doit plus apparaître à un endroit aléatoire ni obliger à le replacer à
+        chaque ouverture. On utilise d'abord la géométrie de la fenêtre racine
+        (l'application V2), puis seulement l'écran en secours.
+        """
         try:
             self.update_idletasks()
             screen_w = int(self.winfo_screenwidth())
             screen_h = int(self.winfo_screenheight())
 
-            # Marges prévues pour bordures Windows + barre des tâches.
+            try:
+                parent = self.master.winfo_toplevel()
+                parent.update_idletasks()
+                px = int(parent.winfo_rootx())
+                py = int(parent.winfo_rooty())
+                pw = int(parent.winfo_width())
+                ph = int(parent.winfo_height())
+            except Exception:
+                parent = None
+                px, py, pw, ph = 0, 0, screen_w, screen_h
+
+            # Si la fenêtre principale n'est pas encore mesurée correctement,
+            # on retombe sur l'écran complet.
+            if pw < 700 or ph < 500:
+                px, py, pw, ph = 0, 0, screen_w, screen_h
+
             margin_x = 18
-            margin_top = 8
-            margin_bottom = 82
+            margin_top = 34
+            margin_bottom = 72
 
-            win_w = max(980, screen_w - (margin_x * 2))
-            win_h = max(660, screen_h - margin_top - margin_bottom)
-            win_w = min(win_w, screen_w)
-            win_h = min(win_h, max(620, screen_h - 45))
+            win_w = max(980, pw - (margin_x * 2))
+            win_h = max(660, ph - margin_top - margin_bottom)
+            win_w = min(win_w, screen_w - 20)
+            win_h = min(win_h, screen_h - 60)
 
-            min_w = min(980, max(860, screen_w - 180))
-            min_h = min(700, max(600, screen_h - 180))
+            min_w = min(980, max(860, win_w - 80))
+            min_h = min(700, max(600, win_h - 80))
             self.minsize(min_w, min_h)
 
-            x = max(0, (screen_w - win_w) // 2)
-            y = max(0, margin_top)
-            self.geometry(f"{win_w}x{win_h}+{x}+{y}")
+            # Calé dans la fenêtre principale : même zone de travail, léger
+            # décalage sous la barre de titre/topbar, footer toujours visible.
+            x = max(0, min(px + margin_x, screen_w - win_w - 10))
+            y = max(0, min(py + margin_top, screen_h - win_h - 45))
+            self.geometry(f"{int(win_w)}x{int(win_h)}+{int(x)}+{int(y)}")
+            try:
+                self.lift(parent)
+            except Exception:
+                self.lift()
         except Exception:
             try:
                 self.state("zoomed")
