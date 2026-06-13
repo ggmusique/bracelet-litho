@@ -1,14 +1,17 @@
 from __future__ import annotations
 
-"""Correctifs runtime V2.
+"""
+Correctifs runtime V2.
 
-Charge les petits correctifs non intrusifs au démarrage :
+Charge les petits correctifs non intrusifs au demarrage :
 - migration pierres 8 mm / 6 mm ;
-- diamètre des pierres dans l'éditeur composant ;
-- filtre diamètre dans la composition bracelet ;
-- poignet conseillé ;
-- fiche client PDF compacte ;
-- fiche vierge PDF en 2 tableaux de 50 lignes.
+- diametre des pierres dans l'editeur composant ;
+- filtre diametre dans la composition bracelet ;
+- poignet conseille ;
+- fiche client PDF compacte.
+
+La fiche vierge PDF (2 tableaux x 50 lignes) est geree directement
+dans pdf_generator.py — aucun patch runtime necessaire.
 """
 
 import importlib.abc
@@ -177,9 +180,9 @@ def _install(target: str, patch_func) -> None:
         sys.meta_path.insert(0, _Finder(target, patch_func))
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
 # pages.crud_editors
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
 def _patch_crud_editors(module: ModuleType) -> None:
     if getattr(module, "_runtime_patch_applied_v2", False):
         return
@@ -240,7 +243,7 @@ def _patch_crud_editors(module: ModuleType) -> None:
             if self._cat_var.get() == "Pierre":
                 entry.configure(state="normal", placeholder_text="ex : 6, 8, 10")
             else:
-                entry.configure(state="disabled", placeholder_text="Réservé aux pierres")
+                entry.configure(state="disabled", placeholder_text="Reserve aux pierres")
         except Exception:
             pass
 
@@ -249,7 +252,7 @@ def _patch_crud_editors(module: ModuleType) -> None:
         try:
             raw = self.initial_item.get("diametre", self.initial_item.get("diametre_mm", ""))
             self._diametre_var = ctk.StringVar(value=_fmt_diam(raw))
-            self._diametre_entry = self._add_labeled_entry(tab, 2, 1, "Diamètre pierre (mm)", self._diametre_var)
+            self._diametre_entry = self._add_labeled_entry(tab, 2, 1, "Diametre pierre (mm)", self._diametre_var)
             self._diametre_var.trace_add("write", self._mark_dirty)
             _update_diameter_state(self)
         except Exception:
@@ -279,7 +282,7 @@ def _patch_crud_editors(module: ModuleType) -> None:
                     payload.pop("diametre", None)
                     payload.pop("diametre_mm", None)
             except Exception:
-                mb.showerror("Validation", "Le diamètre doit être un nombre positif, en millimètres.", parent=self)
+                mb.showerror("Validation", "Le diametre doit etre un nombre positif, en millimetres.", parent=self)
                 return False
             return original_submit(payload, category_label)
 
@@ -307,7 +310,7 @@ def _patch_crud_editors(module: ModuleType) -> None:
                 raw = "Au choix"
             self._poignet_var = ctk.StringVar(value=raw)
             menu = ctk.CTkOptionMenu(tab, variable=self._poignet_var, values=["Au choix", "Gauche", "Droit"], fg_color=theme.BG_INPUT, button_color=theme.BG_CARD, button_hover_color=theme.BG_CARD_HOVER)
-            self._add_labeled_widget(tab, 6, 0, "Poignet conseillé", menu)
+            self._add_labeled_widget(tab, 6, 0, "Poignet conseille", menu)
             self._poignet_var.trace_add("write", self._mark_dirty)
         except Exception:
             pass
@@ -419,7 +422,7 @@ def _patch_crud_editors(module: ModuleType) -> None:
             default = "8 mm" if "8 mm" in choices else choices[0]
             self._stone_diameter_filter_var = ctk.StringVar(value=default)
             ctk.CTkFrame(self._recap_bar, fg_color=theme.BORDER, width=1, height=30).pack(side="left", padx=(10, 8), pady=6)
-            ctk.CTkLabel(self._recap_bar, text="Diamètre pierres", text_color=theme.TEXT_SECONDARY, font=ctk.CTkFont(size=12, weight="bold")).pack(side="left", padx=(0, 6), pady=6)
+            ctk.CTkLabel(self._recap_bar, text="Diametre pierres", text_color=theme.TEXT_SECONDARY, font=ctk.CTkFont(size=12, weight="bold")).pack(side="left", padx=(0, 6), pady=6)
             ctk.CTkOptionMenu(self._recap_bar, variable=self._stone_diameter_filter_var, values=choices, width=92, height=32, fg_color=theme.BG_INPUT, button_color=theme.BG_CARD, button_hover_color=theme.BG_CARD_HOVER, command=lambda _v: refresh_diam(self)).pack(side="left", padx=(0, 8), pady=6)
             refresh_diam(self)
         except Exception:
@@ -447,9 +450,9 @@ def _patch_crud_editors(module: ModuleType) -> None:
     module._runtime_patch_applied_v2 = True
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
 # catalogue_services : fiche client compacte
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
 def _patch_catalogue_services(module: ModuleType) -> None:
     if getattr(module, "_client_postcard_pdf_patch_applied", False):
         return
@@ -485,36 +488,36 @@ def _patch_catalogue_services(module: ModuleType) -> None:
                 lines = simpleSplit(text or "", font, size, width)
                 if len(lines) > max_lines:
                     lines = lines[:max_lines]
-                    lines[-1] = lines[-1].rstrip(" .,;") + "…"
+                    lines[-1] = lines[-1].rstrip(" .,;") + "..."
                 c.setFont(font, size)
                 for line in lines:
                     c.drawCentredString(page_w/2, y0, line)
                     y0 -= size + 3
                 return y0
 
-            c.setFillColorRGB(*ink); c.setFont("Times-Italic", 7.8); c.drawCentredString(page_w/2, y, "Bracelet énergétique")
+            c.setFillColorRGB(*ink); c.setFont("Times-Italic", 7.8); c.drawCentredString(page_w/2, y, "Bracelet energetique")
             y -= 13
             c.setFillColorRGB(*ink); y = centered(str(bracelet.get("nom", "") or "Bracelet"), "Times-Bold", 13.6, y, 2)
             stones = stone_names(bracelet)
             if stones:
                 y -= 2; c.setFillColorRGB(*gold); c.setFont("Times-Bold", 7.6); c.drawCentredString(page_w/2, y, "Pierres"); y -= 12
-                c.setFillColorRGB(*ink); y = centered("  •  ".join(stones), "Times-Roman", 7.7, y, 2, inner_w - 8*mm)
+                c.setFillColorRGB(*ink); y = centered("  -  ".join(stones), "Times-Roman", 7.7, y, 2, inner_w - 8*mm)
             wrist = str(bracelet.get("poignet_conseille", bracelet.get("poignet", "") or "")).strip()
-            if wrist and wrist not in ("Au choix", "Non spécifié", "Non specifie"):
-                c.setFillColorRGB(*amethyst); c.setFont("Times-Italic", 7.0); c.drawCentredString(page_w/2, y, f"À porter au poignet {wrist.lower()}")
+            if wrist and wrist not in ("Au choix", "Non specifie"):
+                c.setFillColorRGB(*amethyst); c.setFont("Times-Italic", 7.0); c.drawCentredString(page_w/2, y, f"A porter au poignet {wrist.lower()}")
             vertus = module.aggregate_vertus(bracelet, db) if db is not None else []
             chakras = module.aggregate_chakras(bracelet, db) if db is not None else []
             col_gap = 7*mm; col_w = (inner_w - col_gap) / 2; lx = margin; rx = margin + col_w + col_gap; sy = 31*mm
             c.setFillColorRGB(*turquoise); c.setFont("Times-Bold", 7.7); c.drawString(lx, sy, "Vertus")
             c.setFillColorRGB(*ink); c.setFont("Times-Roman", 6.6)
-            for i, line in enumerate(simpleSplit(", ".join(vertus[:4]) if vertus else "Harmonie, douceur et équilibre.", "Times-Roman", 6.6, col_w)[:2]): c.drawString(lx, sy-10-i*8, line)
+            for i, line in enumerate(simpleSplit(", ".join(vertus[:4]) if vertus else "Harmonie, douceur et equilibre.", "Times-Roman", 6.6, col_w)[:2]): c.drawString(lx, sy-10-i*8, line)
             c.setFillColorRGB(*amethyst); c.setFont("Times-Bold", 7.7); c.drawString(rx, sy, "Chakras")
             c.setFillColorRGB(*ink); c.setFont("Times-Roman", 6.6)
-            for i, line in enumerate(simpleSplit(", ".join(chakras[:3]) if chakras else "Énergies associées aux pierres.", "Times-Roman", 6.6, col_w)[:2]): c.drawString(rx, sy-10-i*8, line)
+            for i, line in enumerate(simpleSplit(", ".join(chakras[:3]) if chakras else "Energies associees aux pierres.", "Times-Roman", 6.6, col_w)[:2]): c.drawString(rx, sy-10-i*8, line)
             advice_y = 15.8*mm; c.setStrokeColorRGB(*soft_gold); c.line(margin+10*mm, advice_y+7*mm, page_w-margin-10*mm, advice_y+7*mm)
             c.setFillColorRGB(*gold); c.setFont("Times-Bold", 7.2); c.drawCentredString(page_w/2, advice_y+3.6*mm, "Conseils")
-            c.setFillColorRGB(*ink); c.setFont("Times-Italic", 5.9); c.drawCentredString(page_w/2, advice_y, "Porter avec intention · Purifier régulièrement · Recharger à la lune")
-            c.setFont("Times-Italic", 5.2); c.drawCentredString(page_w/2, 7.8*mm, "Une création pensée pour accompagner votre énergie au quotidien")
+            c.setFillColorRGB(*ink); c.setFont("Times-Italic", 5.9); c.drawCentredString(page_w/2, advice_y, "Porter avec intention - Purifier regulierement - Recharger a la lune")
+            c.setFont("Times-Italic", 5.2); c.drawCentredString(page_w/2, 7.8*mm, "Une creation pensee pour accompagner votre energie au quotidien")
             c.showPage(); c.save(); return True
         except Exception:
             return False
@@ -528,9 +531,9 @@ def _patch_catalogue_services(module: ModuleType) -> None:
     module._client_postcard_pdf_patch_applied = True
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# pages.composants : affichage diamètre
-# ─────────────────────────────────────────────────────────────────────────────
+# ---------------------------------------------------------------------------
+# pages.composants : affichage diametre
+# ---------------------------------------------------------------------------
 def _patch_composants_page(module: ModuleType) -> None:
     if getattr(module, "_stone_diameter_display_patch_applied", False):
         return
@@ -542,15 +545,15 @@ def _patch_composants_page(module: ModuleType) -> None:
 
     def fmt(v: Any) -> str:
         if v in (None, ""):
-            return "—"
+            return "-"
         try:
             n = float(str(v).replace(",", "."))
             if n <= 0:
-                return "—"
+                return "-"
             return f"{int(n) if n.is_integer() else str(n).replace('.', ',')} mm"
         except Exception:
             t = str(v).strip()
-            return f"{t} mm" if t else "—"
+            return f"{t} mm" if t else "-"
 
     def build(self, parent) -> None:
         orig_build(self, parent)
@@ -560,8 +563,8 @@ def _patch_composants_page(module: ModuleType) -> None:
             if info is None:
                 return
             row = ctk.CTkFrame(info, fg_color="transparent"); row.pack(fill="x", pady=2)
-            ctk.CTkLabel(row, text="Diamètre", width=160, anchor="w", text_color=theme.TEXT_SECONDARY).pack(side="left")
-            val = ctk.CTkLabel(row, text="—", anchor="w", text_color=theme.TEXT_PRIMARY, font=ctk.CTkFont(weight="bold")); val.pack(side="left")
+            ctk.CTkLabel(row, text="Diametre", width=160, anchor="w", text_color=theme.TEXT_SECONDARY).pack(side="left")
+            val = ctk.CTkLabel(row, text="-", anchor="w", text_color=theme.TEXT_PRIMARY, font=ctk.CTkFont(weight="bold")); val.pack(side="left")
             self._detail_values["diametre"] = val
         except Exception:
             pass
@@ -571,7 +574,7 @@ def _patch_composants_page(module: ModuleType) -> None:
         try:
             label = self._detail_values.get("diametre")
             if label is not None:
-                label.configure(text=fmt(item.get("diametre", item.get("diametre_mm", ""))) if getattr(self, "_active_sub", "") == "Pierres" else "—")
+                label.configure(text=fmt(item.get("diametre", item.get("diametre_mm", ""))) if getattr(self, "_active_sub", "") == "Pierres" else "-")
         except Exception:
             pass
 
@@ -580,86 +583,7 @@ def _patch_composants_page(module: ModuleType) -> None:
     module._stone_diameter_display_patch_applied = True
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# pdf_generator : fiche vierge PDF 2 tableaux de 50 lignes
-# ─────────────────────────────────────────────────────────────────────────────
-def _patch_pdf_generator(module: ModuleType) -> None:
-    if getattr(module, "_fiche_vierge_2x50_patch_applied", False):
-        return
-    PDFGenerator = module.PDFGenerator
-
-    def export_fiche_vierge_pdf(self, output_path: str, nb_lignes: int = 50) -> None:
-        from reportlab.lib.pagesizes import A4
-        from reportlab.pdfgen import canvas
-        self.refresh_style_from_settings()
-        fnt = self._safe_font
-        font_n = fnt(self.base_font, bold=False)
-        font_b = fnt(self.base_font, bold=True)
-        page_w, page_h = A4
-        page_margin, gap, pad = 16.0, 10.0, 6.0
-        card_w = (page_w - 2 * page_margin - gap) / 2
-        card_h = page_h - 2 * page_margin
-        inner_w = card_w - 2 * pad
-        r_idx, r_qte, r_nom = 0, 18, 28
-        r_type, r_end = r_nom + inner_w * 0.53, inner_w
-        c = canvas.Canvas(output_path, pagesize=A4)
-
-        def draw_card(cx: float, cy: float) -> None:
-            c.setLineWidth(0.8); c.rect(cx, cy, card_w, card_h, stroke=1, fill=0)
-            lx, yy = cx + pad, cy + card_h - pad
-
-            def dline(x1, y1, x2, y2, dash=False, lw=0.3):
-                c.setLineWidth(lw)
-                if dash: c.setDash(2, 3)
-                c.line(x1, y1, x2, y2)
-                if dash: c.setDash()
-
-            def field(label, width, x_start=None):
-                nonlocal yy
-                xs = x_start if x_start is not None else lx
-                c.setFont(font_b, 6.8); c.drawString(xs, yy, label)
-                start, end = xs + c.stringWidth(label, font_b, 6.8) + 3, xs + width
-                if end > start + 5: dline(start, yy - 1.5, end, yy - 1.5, dash=True)
-
-            yy -= 2; c.setFont(font_b, 8.5); c.drawString(lx, yy, "Fiche vierge bracelet")
-            yy -= 3; dline(lx, yy, cx + card_w - pad, yy, lw=0.6); yy -= 9
-            half = inner_w / 2 - 4
-            field("Nom :", inner_w); yy -= 10
-            field("Ref :", half); field("Genre :", half, lx + half + 8); yy -= 10
-            field("Date :", half); field("Stock :", half, lx + half + 8); yy -= 11
-            th_h = 10.0
-            c.setFillColorRGB(0.88, 0.88, 0.88); c.rect(lx, yy - th_h + 2, inner_w, th_h, fill=1, stroke=0); c.setFillColorRGB(0,0,0)
-            c.setFont(font_b, 6.6); c.drawString(lx+r_idx, yy, "#"); c.drawRightString(lx+r_qte, yy, "Qte"); c.drawString(lx+r_nom, yy, "Composant"); c.drawString(lx+r_type, yy, "Type")
-            yy -= th_h + 1
-            bottom = cy + pad + 30
-            row_h = max(9.8, min(12.4, max(1.0, yy - bottom) / max(1, nb_lignes)))
-            for i in range(1, nb_lignes + 1):
-                if yy - row_h < bottom: break
-                if i % 2 == 0:
-                    c.setFillColorRGB(0.965,0.965,0.965); c.rect(lx, yy - row_h + 3, inner_w, row_h, fill=1, stroke=0); c.setFillColorRGB(0,0,0)
-                c.setFont(font_n, 6.2); c.drawString(lx+r_idx, yy, str(i))
-                c.setLineWidth(0.25); c.setDash(2,3)
-                c.line(lx+r_qte-14, yy-1.5, lx+r_qte, yy-1.5)
-                c.line(lx+r_nom, yy-1.5, lx+r_type-6, yy-1.5)
-                c.line(lx+r_type, yy-1.5, lx+r_end, yy-1.5)
-                c.setDash(); c.setLineWidth(0.14); c.line(lx, yy-row_h+2, lx+inner_w, yy-row_h+2)
-                yy -= row_h
-            recap_y = cy + pad + 24
-            dline(lx, recap_y + 2, lx + inner_w, recap_y + 2, lw=0.4); recap_y -= 2
-            c.setFont(font_b, 6.6); c.drawString(lx, recap_y, "Nb pierres :")
-            dline(lx + c.stringWidth("Nb pierres :", font_b, 6.6) + 3, recap_y-1.5, lx + inner_w*0.38, recap_y-1.5, dash=True)
-            c.drawString(lx + inner_w*0.42, recap_y, "Prix de vente :")
-            dline(lx + inner_w*0.42 + c.stringWidth("Prix de vente :", font_b, 6.6) + 3, recap_y-1.5, lx + inner_w, recap_y-1.5, dash=True)
-
-        draw_card(page_margin, page_margin)
-        draw_card(page_margin + card_w + gap, page_margin)
-        c.showPage(); c.save()
-
-    PDFGenerator.export_fiche_vierge_pdf = export_fiche_vierge_pdf
-    module._fiche_vierge_2x50_patch_applied = True
-
-
 _install("pages.crud_editors", _patch_crud_editors)
 _install("catalogue_services", _patch_catalogue_services)
 _install("pages.composants", _patch_composants_page)
-_install("pdf_generator", _patch_pdf_generator)
+# NOTE: pdf_generator est gere directement dans pdf_generator.py -- pas de patch runtime.
