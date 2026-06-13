@@ -18,7 +18,7 @@ except ImportError:
 
 
 def coherent_purification(purifs: list) -> str:
-    """Recommandation de purification coherente : si une pierre craint l'eau, fumigation seule."""
+    """Recommandation de purification coherente."""
     default = "Eau (sauf pierres poreuses) ou fumigation (sauge, palo santo)"
     if not purifs:
         return default
@@ -27,18 +27,18 @@ def coherent_purification(purifs: list) -> str:
         return str(_x).lower().replace(chr(0x2019), "'")
 
     if any(("pas d'eau" in _n(p)) or ("eau" not in _n(p)) for p in purifs):
-        return "Fumigation uniquement (sauge ou palo santo) - eviter l'eau (pierres fragiles presentes)"
+        return "Fumigation uniquement (sauge ou palo santo) - eviter l'eau"
     return default
 
 
 def coherent_rechargement(rechs: list) -> str:
-    """Recommandation de rechargement coherente : methode universelle si divergences."""
+    """Recommandation de rechargement coherente."""
     if not rechs:
         return "Lune (nuit de pleine lune) ou amas de quartz / geode 4h"
     uniq = {str(r).strip().lower() for r in rechs}
     if len(uniq) == 1:
         return rechs[0]
-    return "Lune (pleine lune) ou amas de quartz / geode - convient a toutes les pierres"
+    return "Lune (pleine lune) ou amas de quartz / geode"
 
 
 class PDFGenerator:
@@ -47,14 +47,12 @@ class PDFGenerator:
         self.base_font = "Helvetica"
 
     def invalidate_layout_cache(self) -> None:
-        """Invalide le cache des profils de mise en page (appeler apres sauvegarde JSON)."""
         for model in ("bracelet", "vertus"):
             attr = f"_layout_cache_{model}"
             if hasattr(self, attr):
                 delattr(self, attr)
 
     def _get_action_layout(self, model: str) -> dict:
-        """Retourne le profil de mise en page en cache (charge depuis JSON si necessaire)."""
         attr = f"_layout_cache_{model}"
         if not hasattr(self, attr):
             setattr(self, attr, layout_profiles.load_layout(model, self.db.base_dir))
@@ -77,7 +75,6 @@ class PDFGenerator:
         c.setFont("Helvetica-Bold", font_size)
         c.drawString(x, y, f"{label}:")
         y -= font_size + 1
-
         c.setFont("Helvetica", font_size)
         for line in simpleSplit(value or "-", "Helvetica", font_size, width):
             c.drawString(x, y, line)
@@ -87,7 +84,6 @@ class PDFGenerator:
     def _make_qr_image(self, bracelet: dict[str, Any]) -> ImageReader | None:
         if not qrcode:
             return None
-
         payload = f"{bracelet.get('nom', '')}|{bracelet.get('reference', '')}|{bracelet.get('prix_vente', 0)}"
         image = qrcode.make(payload)
         stream = BytesIO()
@@ -99,42 +95,27 @@ class PDFGenerator:
         self.refresh_style_from_settings()
         metrics = self.db.calculate_bracelet_metrics(bracelet)
         payload = build_label_payload(bracelet, metrics)
-
         margin = 8
         cursor_x = x + margin
         cursor_y = y + h - margin - 2
         usable_w = w - (margin * 2)
-
         c.setLineWidth(1)
         c.rect(x, y, w, h)
-
         logo_path = self.db.settings.get("logo_path", "")
         if logo_path and Path(logo_path).exists():
             try:
-                c.drawImage(
-                    logo_path,
-                    x + w - 55,
-                    y + h - 28,
-                    45,
-                    18,
-                    preserveAspectRatio=True,
-                    mask="auto",
-                )
+                c.drawImage(logo_path, x + w - 55, y + h - 28, 45, 18, preserveAspectRatio=True, mask="auto")
             except Exception:
                 pass
-
         c.setFont(self._safe_font(self.base_font, bold=True), 11)
         c.drawString(cursor_x, cursor_y, payload["nom"] or "Bracelet")
         cursor_y -= 14
-
         c.setFont(self._safe_font(self.base_font), 8)
         c.drawString(cursor_x, cursor_y, f"Ref: {payload['reference'] or '-'}")
         cursor_y -= 11
-
         qr_enabled = bool(bracelet.get("qr_enabled"))
         qr_box_size = 44 if qr_enabled else 0
         text_w = usable_w - (qr_box_size + 6 if qr_enabled else 0)
-
         text_y = cursor_y
         c.setFont(self._safe_font(self.base_font, bold=True), 8)
         c.drawString(cursor_x, text_y, "Composition:")
@@ -144,7 +125,6 @@ class PDFGenerator:
             c.drawString(cursor_x, text_y, line)
             text_y -= 9
         text_y -= 1
-
         c.setFont(self._safe_font(self.base_font, bold=True), 8)
         c.drawString(cursor_x, text_y, "Vertus:")
         text_y -= 9
@@ -153,7 +133,6 @@ class PDFGenerator:
             c.drawString(cursor_x, text_y, line)
             text_y -= 9
         text_y -= 1
-
         c.setFont(self._safe_font(self.base_font, bold=True), 8)
         c.drawString(cursor_x, text_y, "Chakras:")
         text_y -= 9
@@ -161,36 +140,20 @@ class PDFGenerator:
         for line in simpleSplit(payload["chakras"] or "-", self._safe_font(self.base_font), 8, text_w):
             c.drawString(cursor_x, text_y, line)
             text_y -= 9
-
         c.setFont(self._safe_font(self.base_font, bold=True), 10)
         c.drawString(cursor_x, y + margin + 2, f"Prix: {payload['prix']}")
-
         if qr_enabled:
             qr_img = self._make_qr_image(bracelet)
             if qr_img:
-                c.drawImage(
-                    qr_img,
-                    x + w - margin - qr_box_size,
-                    y + margin,
-                    qr_box_size,
-                    qr_box_size,
-                    preserveAspectRatio=True,
-                    mask="auto",
-                )
+                c.drawImage(qr_img, x + w - margin - qr_box_size, y + margin, qr_box_size, qr_box_size, preserveAspectRatio=True, mask="auto")
 
-    def export_action_a4_sheet_pdf(
-        self,
-        positions: list[dict],
-        output_path: str,
-    ) -> None:
+    def export_action_a4_sheet_pdf(self, positions: list[dict], output_path: str) -> None:
         page_w, page_h = A4
         margin_x_pt = mm_to_pt(layout_profiles.SHEET_MARGIN_X_MM)
         margin_y_pt = mm_to_pt(layout_profiles.SHEET_MARGIN_Y_MM)
         cell_w = mm_to_pt(layout_profiles.CELL_W_MM)
         cell_h = mm_to_pt(layout_profiles.CELL_H_MM)
-
         pdf = canvas.Canvas(output_path, pagesize=A4)
-
         has_content = False
         for i, pos_data in enumerate(positions):
             if not pos_data.get("used"):
@@ -207,27 +170,19 @@ class PDFGenerator:
             lyt = self._get_action_layout(model)
             self._draw_action_label(pdf, bracelet, x, y, cell_w, cell_h, model, lyt)
             has_content = True
-
         if not has_content:
             pdf.setFont("Helvetica", 12)
             pdf.drawCentredString(page_w / 2, page_h / 2, "Aucune position remplie.")
-
         pdf.showPage()
         pdf.save()
 
-    def export_action_a4_selection_pdf(
-        self,
-        items: list[dict[str, Any]],
-        output_path: str,
-    ) -> None:
+    def export_action_a4_selection_pdf(self, items: list[dict[str, Any]], output_path: str) -> None:
         page_w, page_h = A4
         margin_x_pt = mm_to_pt(layout_profiles.SHEET_MARGIN_X_MM)
         margin_y_pt = mm_to_pt(layout_profiles.SHEET_MARGIN_Y_MM)
         cell_w = mm_to_pt(layout_profiles.CELL_W_MM)
         cell_h = mm_to_pt(layout_profiles.CELL_H_MM)
-
         pdf = canvas.Canvas(output_path, pagesize=A4)
-
         for item in items:
             pos = item["pos"]
             bracelet = item["bracelet"]
@@ -238,33 +193,22 @@ class PDFGenerator:
             y = page_h - margin_y_pt - (row + 1) * cell_h
             lyt = self._get_action_layout(model)
             self._draw_action_label(pdf, bracelet, x, y, cell_w, cell_h, model, lyt)
-
         if not items:
             pdf.setFont("Helvetica", 12)
             pdf.drawCentredString(page_w / 2, page_h / 2, "Aucun contenu a imprimer.")
-
         pdf.showPage()
         pdf.save()
 
-    def export_action_a4_position_pdf(
-        self,
-        bracelet: dict[str, Any],
-        output_path: str,
-        position: int,
-        model: str = "bracelet",
-    ) -> None:
+    def export_action_a4_position_pdf(self, bracelet: dict[str, Any], output_path: str, position: int, model: str = "bracelet") -> None:
         page_w, page_h = A4
         margin_x_pt = mm_to_pt(layout_profiles.SHEET_MARGIN_X_MM)
         margin_y_pt = mm_to_pt(layout_profiles.SHEET_MARGIN_Y_MM)
         cell_w = mm_to_pt(layout_profiles.CELL_W_MM)
         cell_h = mm_to_pt(layout_profiles.CELL_H_MM)
-
         col = (position - 1) % 3
         row = (position - 1) // 3
-
         x = margin_x_pt + col * cell_w
         y = page_h - margin_y_pt - (row + 1) * cell_h
-
         lyt = self._get_action_layout(model)
         pdf = canvas.Canvas(output_path, pagesize=A4)
         self._draw_action_label(pdf, bracelet, x, y, cell_w, cell_h, model, lyt)
@@ -289,4 +233,37 @@ class PDFGenerator:
         pdf.showPage()
         pdf.save()
 
-    def draw_label_action_70x37(self, c: canvas.Canvas, bracelet: dict[str, Any
+    def draw_label_action_70x37(self, c: canvas.Canvas, bracelet: dict[str, Any], x: float, y: float, w: float, h: float) -> None:
+        self._draw_action_label(c, bracelet, x, y, w, h, "bracelet", self._get_action_layout("bracelet"))
+
+    def draw_label_vertus_chakras(self, c: canvas.Canvas, bracelet: dict[str, Any], x: float, y: float, w: float, h: float) -> None:
+        self._draw_action_label(c, bracelet, x, y, w, h, "vertus", self._get_action_layout("vertus"))
+
+    def _draw_action_label(self, c: canvas.Canvas, bracelet: dict[str, Any], x: float, y: float, w: float, h: float, model: str, layout: dict[str, Any]) -> None:
+        self.refresh_style_from_settings()
+        fnt = self._safe_font
+
+        def pt(mm: float) -> float:
+            return mm_to_pt(mm)
+
+        def at(ex_mm: float, ey_mm: float, size_pt: float = 0.0) -> tuple[float, float]:
+            return x + pt(ex_mm), y + h - pt(ey_mm) - size_pt * 0.72
+
+        c.setLineWidth(0.5)
+        c.rect(x, y, w, h)
+
+        nom_cfg = layout.get("nom", {})
+        if isinstance(nom_cfg, dict):
+            nom_size = int(nom_cfg.get("size", 11))
+            c.setFont(fnt(self.base_font, bold=bool(nom_cfg.get("bold", True))), nom_size)
+            cx, cy = at(nom_cfg.get("x", 4), nom_cfg.get("y", 4), nom_size)
+            c.drawString(cx, cy, bracelet.get("nom", "") or "Bracelet")
+
+        sep_y_mm = float(layout.get("sep_y", 7.5))
+        _, sep_cy = at(4, sep_y_mm)
+        c.setLineWidth(0.3)
+        c.line(x + pt(4), sep_cy, x + w - pt(4), sep_cy)
+
+        metrics = self.db.calculate_bracelet_metrics(bracelet)
+        prix_vente = float(bracelet.get("prix_vente", 0.0) or 0.0)
+        cout_revient = float(metrics.get("cout_revient",
