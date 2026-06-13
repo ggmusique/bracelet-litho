@@ -478,13 +478,22 @@ def _patch_catalogue_services(module: ModuleType) -> None:
     original_export_fiche_pdf = module.export_fiche_pdf
 
     def _stone_names_in_order(bracelet: dict[str, Any]) -> list[str]:
+        """Retourne les pierres du bracelet sans répéter toute la composition.
+
+        On conserve l'ordre de première apparition, mais chaque pierre n'apparaît
+        qu'une seule fois. Les intercalaires, breloques, cache-nœuds et autres
+        composants restent exclus de la fiche client.
+        """
         names: list[str] = []
+        seen: set[str] = set()
         for comp in bracelet.get("composition", []) or []:
             cat = str(comp.get("categorie", "") or "").strip().lower()
             if not cat.startswith("pierre"):
                 continue
             name = str(comp.get("composant", "") or "").strip()
-            if name:
+            key = name.casefold()
+            if name and key not in seen:
+                seen.add(key)
                 names.append(name)
         return names
 
