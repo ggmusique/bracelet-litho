@@ -417,3 +417,223 @@ if _TARGET in sys.modules:
     _patch_crud_editors(sys.modules[_TARGET])
 elif not any(isinstance(finder, _PatchFinder) for finder in sys.meta_path):
     sys.meta_path.insert(0, _PatchFinder())
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Fiche client PDF — format carte postale professionnel
+# ─────────────────────────────────────────────────────────────────────────────
+_CATALOGUE_TARGET = "catalogue_services"
+
+
+def _patch_catalogue_services(module: ModuleType) -> None:
+    if getattr(module, "_client_postcard_pdf_patch_applied", False):
+        return
+
+    original_export_fiche_pdf = module.export_fiche_pdf
+
+    def _stone_names_in_order(bracelet: dict[str, Any]) -> list[str]:
+        names: list[str] = []
+        for comp in bracelet.get("composition", []) or []:
+            cat = str(comp.get("categorie", "") or "").strip().lower()
+            if not cat.startswith("pierre"):
+                continue
+            name = str(comp.get("composant", "") or "").strip()
+            if name:
+                names.append(name)
+        return names
+
+    def _draw_centered_wrapped(c, text: str, font: str, size: float, x: float, y: float, width: float, leading: float, max_lines: int = 3) -> float:
+        from reportlab.lib.utils import simpleSplit
+        lines = simpleSplit(text or "", font, size, width)
+        if len(lines) > max_lines:
+            lines = lines[:max_lines]
+            if lines:
+                lines[-1] = lines[-1].rstrip(" .,") + "…"
+        c.setFont(font, size)
+        for line in lines:
+            c.drawCentredString(x + width / 2, y, line)
+            y -= leading
+        return y
+
+    def _draw_wrapped(c, text: str, font: str, size: float, x: float, y: float, width: float, leading: float, max_lines: int = 4) -> float:
+        from reportlab.lib.utils import simpleSplit
+        lines = simpleSplit(text or "", font, size, width)
+        if len(lines) > max_lines:
+            lines = lines[:max_lines]
+            if lines:
+                lines[-1] = lines[-1].rstrip(" .,") + "…"
+        c.setFont(font, size)
+        for line in lines:
+            c.drawString(x, y, line)
+            y -= leading
+        return y
+
+    def _ornament(c, x: float, y: float, w: float, color=(0.45, 0.32, 0.18)) -> None:
+        c.saveState()
+        c.setStrokeColorRGB(*color)
+        c.setFillColorRGB(*color)
+        c.setLineWidth(0.8)
+        c.line(x, y, x + w * 0.42, y)
+        c.line(x + w * 0.58, y, x + w, y)
+        c.circle(x + w * 0.50, y, 2.0, stroke=1, fill=0)
+        c.circle(x + w * 0.47, y, 0.9, stroke=0, fill=1)
+        c.circle(x + w * 0.53, y, 0.9, stroke=0, fill=1)
+        c.restoreState()
+
+    def _export_client_postcard_pdf(bracelet: dict[str, Any], db: Any, output_path: str) -> bool:
+        try:
+            from reportlab.lib.units import mm
+            from reportlab.pdfgen import canvas
+
+            # Carte postale A6 paysage : 148 × 105 mm.
+            page_w, page_h = 148 * mm, 105 * mm
+            c = canvas.Canvas(output_path, pagesize=(page_w, page_h))
+
+            cream = (0.992, 0.965, 0.905)
+            ink = (0.17, 0.13, 0.10)
+            gold = (0.62, 0.45, 0.20)
+            soft_gold = (0.83, 0.70, 0.45)
+            amethyst = (0.38, 0.22, 0.48)
+            turquoise = (0.05, 0.48, 0.52)
+
+            # Fond chaud + double cadre fin.
+            c.setFillColorRGB(*cream)
+            c.rect(0, 0, page_w, page_h, stroke=0, fill=1)
+            c.setStrokeColorRGB(*gold)
+            c.setLineWidth(1.2)
+            c.roundRect(5 * mm, 5 * mm, page_w - 10 * mm, page_h - 10 * mm, 8 * mm, stroke=1, fill=0)
+            c.setStrokeColorRGB(*soft_gold)
+            c.setLineWidth(0.45)
+            c.roundRect(8 * mm, 8 * mm, page_w - 16 * mm, page_h - 16 * mm, 6 * mm, stroke=1, fill=0)
+
+            # Petits ornements de coin.
+            c.setStrokeColorRGB(*soft_gold)
+            c.setLineWidth(0.6)
+            for sx, sy, dx, dy in [
+                (10 * mm, page_h - 13 * mm, 10 * mm, -10 * mm),
+                (page_w - 10 * mm, page_h - 13 * mm, -10 * mm, -10 * mm),
+                (10 * mm, 13 * mm, 10 * mm, 10 * mm),
+                (page_w - 10 * mm, 13 * mm, -10 * mm, 10 * mm),
+            ]:
+                c.line(sx, sy, sx + dx, sy)
+                c.line(sx, sy, sx, sy + dy)
+
+            margin = 14 * mm
+            inner_w = page_w - 2 * margin
+            y = page_h - 17 * mm
+
+            # Titre principal : nom du bracelet uniquement.
+            c.setFillColorRGB(*ink)
+            c.setFont("Times-Italic", 8.5)
+            c.drawCentredString(page_w / 2, y, "Bracelet énergétique")
+            y -= 6 * mm
+            _ornament(c, margin + 15 * mm, y + 2 * mm, inner_w - 30 * mm, gold)
+            y -= 4 * mm
+
+            name = str(bracelet.get("nom", "") or "Bracelet").strip()
+            y = _draw_centered_wrapped(c, name, "Times-Bold", 17, margin, y, inner_w, 6.0 * mm, max_lines=2)
+            y -= 2 * mm
+
+            # Pierres : uniquement les pierres, dans l'ordre, sans quantités.
+            stones = _stone_names_in_order(bracelet)
+            if stones:
+                c.setFillColorRGB(*gold)
+                c.setFont("Times-Bold", 9.5)
+                c.drawCentredString(page_w / 2, y, "Pierres")
+                y -= 5 * mm
+                c.setFillColorRGB(*ink)
+                stones_txt = "  •  ".join(stones)
+                y = _draw_centered_wrapped(c, stones_txt, "Times-Roman", 10.2, margin + 6 * mm, y, inner_w - 12 * mm, 4.8 * mm, max_lines=3)
+                y -= 1.5 * mm
+            else:
+                c.setFillColorRGB(*ink)
+                c.setFont("Times-Roman", 10)
+                c.drawCentredString(page_w / 2, y, "Pierres non renseignées")
+                y -= 6 * mm
+
+            _ornament(c, margin + 22 * mm, y + 1.5 * mm, inner_w - 44 * mm, soft_gold)
+            y -= 5 * mm
+
+            # Vertus + chakras : le reste utile de la fiche client.
+            vertus = module.aggregate_vertus(bracelet, db) if db is not None else []
+            chakras = module.aggregate_chakras(bracelet, db) if db is not None else []
+
+            col_gap = 7 * mm
+            col_w = (inner_w - col_gap) / 2
+            left_x = margin
+            right_x = margin + col_w + col_gap
+            section_y = y
+
+            c.setFillColorRGB(*turquoise)
+            c.setFont("Times-Bold", 9.5)
+            c.drawString(left_x, section_y, "Vertus")
+            c.setFillColorRGB(*ink)
+            vertus_txt = ", ".join(vertus[:6]) if vertus else "Harmonie, douceur et équilibre."
+            _draw_wrapped(c, vertus_txt, "Times-Roman", 8.4, left_x, section_y - 4.5 * mm, col_w, 3.9 * mm, max_lines=4)
+
+            c.setFillColorRGB(*amethyst)
+            c.setFont("Times-Bold", 9.5)
+            c.drawString(right_x, section_y, "Chakras")
+            c.setFillColorRGB(*ink)
+            chakras_txt = ", ".join(chakras[:4]) if chakras else "Énergies associées aux pierres."
+            _draw_wrapped(c, chakras_txt, "Times-Roman", 8.4, right_x, section_y - 4.5 * mm, col_w, 3.9 * mm, max_lines=4)
+
+            # Conseils courts et élégants.
+            advice_y = 21 * mm
+            c.setStrokeColorRGB(*soft_gold)
+            c.setLineWidth(0.45)
+            c.line(margin + 8 * mm, advice_y + 8 * mm, page_w - margin - 8 * mm, advice_y + 8 * mm)
+            c.setFillColorRGB(*gold)
+            c.setFont("Times-Bold", 8.8)
+            c.drawCentredString(page_w / 2, advice_y + 4.0 * mm, "Conseils")
+            c.setFillColorRGB(*ink)
+            c.setFont("Times-Italic", 7.8)
+            c.drawCentredString(page_w / 2, advice_y, "À porter avec intention. Purifier régulièrement. Recharger à la lumière douce de la lune.")
+
+            c.setFillColorRGB(0.38, 0.32, 0.25)
+            c.setFont("Times-Italic", 6.8)
+            c.drawCentredString(page_w / 2, 10.2 * mm, "Une création pensée pour accompagner votre énergie au quotidien")
+
+            c.showPage()
+            c.save()
+            return True
+        except Exception:
+            return False
+
+    def _export_fiche_pdf_patched(bracelet: dict, db: Any, format_type: str, output_path: str) -> bool:
+        if str(format_type).strip().lower() == "client":
+            return _export_client_postcard_pdf(bracelet, db, output_path)
+        return original_export_fiche_pdf(bracelet, db, format_type, output_path)
+
+    module.export_fiche_pdf = _export_fiche_pdf_patched
+    module._client_postcard_pdf_patch_applied = True
+
+
+class _CataloguePatchLoader(importlib.abc.Loader):
+    def __init__(self, wrapped):
+        self._wrapped = wrapped
+
+    def create_module(self, spec):
+        if hasattr(self._wrapped, "create_module"):
+            return self._wrapped.create_module(spec)
+        return None
+
+    def exec_module(self, module):
+        self._wrapped.exec_module(module)
+        _patch_catalogue_services(module)
+
+
+class _CataloguePatchFinder(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname != _CATALOGUE_TARGET:
+            return None
+        spec = importlib.machinery.PathFinder.find_spec(fullname, path)
+        if spec and spec.loader:
+            spec.loader = _CataloguePatchLoader(spec.loader)
+        return spec
+
+
+if _CATALOGUE_TARGET in sys.modules:
+    _patch_catalogue_services(sys.modules[_CATALOGUE_TARGET])
+elif not any(isinstance(finder, _CataloguePatchFinder) for finder in sys.meta_path):
+    sys.meta_path.insert(0, _CataloguePatchFinder())
