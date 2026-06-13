@@ -5,6 +5,7 @@ Phase 1C : fiche avancee, photo 300x300, KPI rentabilite et composition detaille
 from __future__ import annotations
 
 import os
+import tempfile
 import tkinter.filedialog as fd
 import tkinter.messagebox as mb
 import uuid
@@ -437,24 +438,13 @@ class BraceletsPage(ctk.CTkFrame):
         self._render_fiche(bracelet, metrics)
 
     def _export_fiche_vierge(self) -> None:
-        """Genere une fiche de creation vierge (50 lignes) au format A4 et l'ouvre."""
+        """Genere une fiche vierge (50 lignes) et l'ouvre directement sans dialogue."""
         from pdf_generator import PDFGenerator
-        dest = fd.asksaveasfilename(
-            title="Enregistrer la fiche vierge",
-            defaultextension=".pdf",
-            filetypes=[("PDF", "*.pdf")],
-            initialfile="fiche_vierge_bracelet.pdf",
-        )
-        if not dest:
-            return
         try:
+            tmp = tempfile.mktemp(suffix=".pdf", prefix="fiche_vierge_")
             gen = PDFGenerator(self.db)
-            gen.export_fiche_vierge_pdf(dest, nb_lignes=50)
-            mb.showinfo("Fiche vierge", f"Fiche generee :\n{dest}")
-            try:
-                os.startfile(dest)
-            except Exception:
-                pass
+            gen.export_fiche_vierge_pdf(tmp, nb_lignes=50)
+            os.startfile(tmp)
         except Exception as exc:
             mb.showerror("Erreur PDF", str(exc))
 

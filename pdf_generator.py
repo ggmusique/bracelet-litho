@@ -908,17 +908,13 @@ class PDFGenerator:
         r_type = r_idx + 24 + inner_w * 0.52
         r_end  = inner_w
 
-        # --- calcul exact de la hauteur de ligne ----------------------------
-        # On mesure le header reellement pour ne pas se tromper.
-        # header = 2 (top pad) + 8 (titre) + 3 (sep) + 9 (gap) +
-        #          10 (nom) + 10 (ref/genre) + 12 (date/stock) + 11 (th) = 65
         _header_h = 65.0
-        # recap bas = pad (5) + 28 = 33 => on prend 36 pour marge
         _recap_h  = 36.0
         _avail    = card_h - _header_h - _recap_h
-        # row_h egal a l'espace disponible divise par nb_lignes,
-        # borne entre 12 et 18 pt
         row_h = max(12.0, min(18.0, _avail / nb_lignes))
+
+        # Taille de police pour les numeros : grande et lisible, centree verticalement
+        font_size_row = max(8, min(11, int(row_h * 0.72)))
 
         c = canvas.Canvas(output_path, pagesize=A4)
 
@@ -980,34 +976,41 @@ class PDFGenerator:
             yy -= th_h + 1
 
             # -- Lignes du tableau -------------------------------------------
-            # On calcule bottom_reserve de facon a laisser la zone recap
             bottom_reserve = cy + pad + _recap_h - 4
-            font_size_row = max(6, min(8, int(row_h * 0.55)))
 
             for i in range(1, nb_lignes + 1):
-                # Verifie qu'il reste assez de place pour cette ligne
                 if yy - row_h < bottom_reserve:
                     break
+
                 # Fond alterne gris clair
                 if i % 2 == 0:
                     c.setFillColorRGB(0.95, 0.95, 0.95)
                     c.rect(lx, yy - row_h + 2, inner_w, row_h, fill=1, stroke=0)
                     c.setFillColorRGB(0, 0, 0)
-                # Numero de ligne
-                c.setFont(font_n, font_size_row)
-                c.drawString(lx + r_idx, yy, str(i))
-                # Lignes pointillees pour chaque colonne
-                c.setLineWidth(0.25)
+
+                # Centre vertical de la ligne (baseline ReportLab = bas du texte)
+                # On place le texte au centre de la ligne
+                num_y = yy - row_h * 0.5 + font_size_row * 0.3
+                mid_y = yy - row_h * 0.5  # centre geometrique pour les pointilles
+
+                # Numero en gras, centre sur la ligne
+                c.setFont(font_b, font_size_row)
+                c.drawString(lx + r_idx, num_y, str(i))
+
+                # Lignes pointillees centrees verticalement
+                c.setLineWidth(0.3)
                 c.setDash(2, 3)
-                c.line(lx + r_qte - 12, yy - 1.5, lx + r_qte,     yy - 1.5)
-                c.line(lx + r_nom,      yy - 1.5, lx + r_type - 5, yy - 1.5)
-                c.line(lx + r_type,     yy - 1.5, lx + r_end,      yy - 1.5)
+                c.line(lx + r_qte - 12, mid_y, lx + r_qte,     mid_y)
+                c.line(lx + r_nom,      mid_y, lx + r_type - 5, mid_y)
+                c.line(lx + r_type,     mid_y, lx + r_end,      mid_y)
                 c.setDash()
-                # Separateur horizontal BIEN VISIBLE entre chaque ligne
+
+                # Separateur horizontal visible entre lignes
                 c.setLineWidth(0.5)
                 c.setStrokeColorRGB(0.7, 0.7, 0.7)
                 c.line(lx, yy - row_h + 2, lx + inner_w, yy - row_h + 2)
                 c.setStrokeColorRGB(0, 0, 0)
+
                 yy -= row_h
 
             # -- Zone recap bas ----------------------------------------------
