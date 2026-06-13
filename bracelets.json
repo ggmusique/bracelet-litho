@@ -1,221 +1,11 @@
 [
   {
-    "id": "566bfb7f-6ed8-4ef3-a8e5-ab043399b89e",
-    "reference": "BRA-0001",
-    "nom": "Belier",
-    "composition": [
-      {
-        "composant": "Onyx noir",
-        "categorie": "Pierre",
-        "quantite": 6,
-        "cout_unitaire": 0.21
-      },
-      {
-        "composant": "Belier",
-        "categorie": "Cache-noeud",
-        "quantite": 1,
-        "cout_unitaire": 0.2
-      },
-      {
-        "composant": "Onyx noir",
-        "categorie": "Pierre",
-        "quantite": 7,
-        "cout_unitaire": 0.21
-      },
-      {
-        "composant": "Hematite",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.01
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Jaspe rouge",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.03
-      },
-      {
-        "composant": "Cornaline",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.21
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Hematite",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.01
-      },
-      {
-        "composant": "Grenat",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.1
-      },
-      {
-        "composant": "Hematite",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.01
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Jaspe rouge",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.03
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Hematite",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.01
-      }
-    ],
-    "prix_vente": 20.25,
-    "stock": 0,
-    "genre": "Homme",
-    "prix_auto": false,
-    "vertus": "Protection, Ancrage, Force intérieure, Confiance, Stabilité, Concentration, Mémoire, Vitalité, Force physique, Endurance",
-    "chakras": "Racine (1ère)",
-    "photo": "",
-    "photo_thumb": "",
-    "updated_at": "2026-06-11T17:48:41",
-    "qr_enabled": false,
-    "created_at": "2026-06-10T14:58:37"
-  },
-  {
-    "id": "61762b92-d1bb-4bfd-a6ea-9960c4baeda8",
-    "reference": "BRA-0005",
-    "nom": "Capricorne",
-    "composition": [
-      {
-        "composant": "Onyx noir mat",
-        "categorie": "Pierre",
-        "quantite": 5,
-        "cout_unitaire": 0.17
-      },
-      {
-        "composant": "Capricorne",
-        "categorie": "Cache-noeud",
-        "quantite": 1,
-        "cout_unitaire": 0.2
-      },
-      {
-        "composant": "Onyx noir mat",
-        "categorie": "Pierre",
-        "quantite": 5,
-        "cout_unitaire": 0.17
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Obsidienne noire",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.03
-      },
-      {
-        "composant": "Malachite",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.16
-      },
-      {
-        "composant": "Cristal de roche",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 2.0
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Obsidienne noire",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.03
-      },
-      {
-        "composant": "Malachite",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.16
-      },
-      {
-        "composant": "Cristal de roche",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 2.0
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Obsidienne noire",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.03
-      },
-      {
-        "composant": "Onyx noir mat",
-        "categorie": "Pierre",
-        "quantite": 4,
-        "cout_unitaire": 0.17
-      }
-    ],
-    "prix_vente": 37.2,
-    "stock": 0,
-    "genre": "Homme",
-    "prix_auto": true,
-    "vertus": "Protection, Purification, Ancrage, Nettoyage, Vérité, Transformation, Guérison, Confiance, Changement, Amplification, clarte, purification",
-    "chakras": "Racine (1ère), Cœur (4e), Plexus solaire (3e), Couronne",
-    "photo": "",
-    "photo_thumb": "",
-    "updated_at": "2026-06-12T14:18:14",
-    "qr_enabled": false,
-    "created_at": "2026-06-12T14:13:00"
-  },
-  {
     "id": "26336bcb-e061-4c03-a86d-a908c9343099",
     "reference": "BRA-0003",
     "nom": "Scorpion",
     "composition": [
       {
-        "composant": "Onyx noir mat",
+        "composant": "Onyx noir mat 8 mm",
         "categorie": "Pierre",
         "quantite": 5,
         "cout_unitaire": 0.17
@@ -227,7 +17,7 @@
         "cout_unitaire": 0.2
       },
       {
-        "composant": "Onyx noir mat",
+        "composant": "Onyx noir mat 8 mm",
         "categorie": "Pierre",
         "quantite": 5,
         "cout_unitaire": 0.17
@@ -239,7 +29,7 @@
         "cout_unitaire": 0.15
       },
       {
-        "composant": "Obsidienne noire",
+        "composant": "Obsidienne noire 8 mm",
         "categorie": "Pierre",
         "quantite": 2,
         "cout_unitaire": 0.03
@@ -251,7 +41,7 @@
         "cout_unitaire": 0.15
       },
       {
-        "composant": "Malachite",
+        "composant": "Malachite 8 mm",
         "categorie": "Pierre",
         "quantite": 2,
         "cout_unitaire": 0.16
@@ -263,7 +53,7 @@
         "cout_unitaire": 0.15
       },
       {
-        "composant": "Grenat",
+        "composant": "Grenat 8 mm",
         "categorie": "Pierre",
         "quantite": 2,
         "cout_unitaire": 0.1
@@ -275,13 +65,13 @@
         "cout_unitaire": 0.15
       },
       {
-        "composant": "Obsidienne noire",
+        "composant": "Obsidienne noire 8 mm",
         "categorie": "Pierre",
         "quantite": 1,
         "cout_unitaire": 0.03
       },
       {
-        "composant": "Onyx noir mat",
+        "composant": "Onyx noir mat 8 mm",
         "categorie": "Pierre",
         "quantite": 4,
         "cout_unitaire": 0.17
@@ -295,201 +85,9 @@
     "chakras": "Racine (1ère), Cœur (4e), Plexus solaire (3e)",
     "photo": "",
     "photo_thumb": "",
-    "updated_at": "2026-06-12T14:19:25",
+    "updated_at": "2026-06-13T10:54:12",
     "qr_enabled": false,
     "created_at": "2026-06-12T14:03:11"
-  },
-  {
-    "id": "e7acf60e-e185-4058-9522-db10374f54d8",
-    "reference": "BRA-0006",
-    "nom": "Verseau",
-    "composition": [
-      {
-        "composant": "Onyx noir mat",
-        "categorie": "Pierre",
-        "quantite": 5,
-        "cout_unitaire": 0.17
-      },
-      {
-        "composant": "Verseau",
-        "categorie": "Cache-noeud",
-        "quantite": 1,
-        "cout_unitaire": 0.2
-      },
-      {
-        "composant": "Onyx noir mat",
-        "categorie": "Pierre",
-        "quantite": 5,
-        "cout_unitaire": 0.17
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Amethyste",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.24
-      },
-      {
-        "composant": "Fluorite viollet",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.03
-      },
-      {
-        "composant": "Sodalite",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.02
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Amethyste",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.24
-      },
-      {
-        "composant": "Fluorite viollet",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.03
-      },
-      {
-        "composant": "Sodalite",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.02
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Amethyste",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.24
-      },
-      {
-        "composant": "Onyx noir mat",
-        "categorie": "Pierre",
-        "quantite": 4,
-        "cout_unitaire": 0.17
-      }
-    ],
-    "prix_vente": 19.25,
-    "stock": 0,
-    "genre": "Homme",
-    "prix_auto": true,
-    "vertus": "Apaisement, Spiritualité, Intuition, Protection, Sérénité, Communication, Vérité, Logique, Clarté",
-    "chakras": "Couronne (7e), 3e Œil (6e), Gorge (5e)",
-    "photo": "",
-    "photo_thumb": "",
-    "updated_at": "2026-06-12T14:22:25",
-    "qr_enabled": false,
-    "created_at": "2026-06-12T14:17:18"
-  },
-  {
-    "id": "49d7771c-d0c3-4938-9610-225746a89c60",
-    "reference": "BRA-0002",
-    "nom": "Balance",
-    "composition": [
-      {
-        "composant": "Onyx noir",
-        "categorie": "Pierre",
-        "quantite": 5,
-        "cout_unitaire": 0.21
-      },
-      {
-        "composant": "Balance",
-        "categorie": "Cache-noeud",
-        "quantite": 1,
-        "cout_unitaire": 0.2
-      },
-      {
-        "composant": "Onyx noir",
-        "categorie": "Pierre",
-        "quantite": 5,
-        "cout_unitaire": 0.21
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Lapis-lazuli",
-        "categorie": "Pierre",
-        "quantite": 2,
-        "cout_unitaire": 0.08
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Rhodonite",
-        "categorie": "Pierre",
-        "quantite": 2,
-        "cout_unitaire": 0.02
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Aventurine verte",
-        "categorie": "Pierre",
-        "quantite": 2,
-        "cout_unitaire": 0.02
-      },
-      {
-        "composant": "Intercalaire rondelle argente 6mm",
-        "categorie": "Intercalaire",
-        "quantite": 1,
-        "cout_unitaire": 0.15
-      },
-      {
-        "composant": "Lapis-lazuli",
-        "categorie": "Pierre",
-        "quantite": 1,
-        "cout_unitaire": 0.08
-      },
-      {
-        "composant": "Onyx noir",
-        "categorie": "Pierre",
-        "quantite": 4,
-        "cout_unitaire": 0.21
-      }
-    ],
-    "prix_vente": 20.3,
-    "stock": 0,
-    "genre": "Homme",
-    "prix_auto": true,
-    "vertus": "Communication, Intuition, Sagesse, Vérité, Expression personnelle, Chance, Prospérité, Guérison, Optimisme, Bien-être",
-    "chakras": "Gorge (5e), 3e Œil (6e), Cœur (4e), Plexus solaire (3e)",
-    "photo": "",
-    "photo_thumb": "",
-    "updated_at": "2026-06-12T14:40:06",
-    "qr_enabled": false,
-    "created_at": "2026-06-12T13:59:00"
   },
   {
     "id": "62ebea51-6c13-4f6c-bc76-9c7dff17a3ab",
@@ -497,7 +95,7 @@
     "nom": "Sagitaire",
     "composition": [
       {
-        "composant": "Onyx noir mat",
+        "composant": "Onyx noir mat 8 mm",
         "categorie": "Pierre",
         "quantite": 5,
         "cout_unitaire": 0.17
@@ -509,7 +107,7 @@
         "cout_unitaire": 0.2
       },
       {
-        "composant": "Onyx noir mat",
+        "composant": "Onyx noir mat 8 mm",
         "categorie": "Pierre",
         "quantite": 5,
         "cout_unitaire": 0.17
@@ -521,19 +119,19 @@
         "cout_unitaire": 0.15
       },
       {
-        "composant": "Lapis-lazuli",
+        "composant": "Lapis-lazuli 8 mm",
         "categorie": "Pierre",
         "quantite": 1,
         "cout_unitaire": 0.08
       },
       {
-        "composant": "Turquoise",
+        "composant": "Turquoise 8 mm",
         "categorie": "Pierre",
         "quantite": 1,
         "cout_unitaire": 0.0
       },
       {
-        "composant": "Oeil de tigre",
+        "composant": "Oeil de tigre 8 mm",
         "categorie": "Pierre",
         "quantite": 1,
         "cout_unitaire": 0.05
@@ -545,19 +143,19 @@
         "cout_unitaire": 0.15
       },
       {
-        "composant": "Lapis-lazuli",
+        "composant": "Lapis-lazuli 8 mm",
         "categorie": "Pierre",
         "quantite": 1,
         "cout_unitaire": 0.08
       },
       {
-        "composant": "Turquoise blanche",
+        "composant": "Turquoise blanche 8 mm",
         "categorie": "Pierre",
         "quantite": 1,
         "cout_unitaire": 0.02
       },
       {
-        "composant": "Oeil de tigre",
+        "composant": "Oeil de tigre 8 mm",
         "categorie": "Pierre",
         "quantite": 1,
         "cout_unitaire": 0.05
@@ -569,13 +167,13 @@
         "cout_unitaire": 0.15
       },
       {
-        "composant": "Lapis-lazuli",
+        "composant": "Lapis-lazuli 8 mm",
         "categorie": "Pierre",
         "quantite": 1,
         "cout_unitaire": 0.08
       },
       {
-        "composant": "Onyx noir mat",
+        "composant": "Onyx noir mat 8 mm",
         "categorie": "Pierre",
         "quantite": 4,
         "cout_unitaire": 0.17
@@ -589,8 +187,2222 @@
     "chakras": "Gorge (5e), 3e Œil (6e), Cœur (4e), Plexus solaire (3e), Sacré (2e)",
     "photo": "",
     "photo_thumb": "",
-    "updated_at": "2026-06-12T16:22:34",
+    "updated_at": "2026-06-13T10:54:12",
     "qr_enabled": false,
     "created_at": "2026-06-12T14:08:55"
+  },
+  {
+    "id": "a231ed7b-d00d-4564-92b7-67f21d938f4f",
+    "reference": "BRA-0008",
+    "nom": "Gemeaux",
+    "composition": [
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Gemeaux",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Labradorite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.0
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Howlite blanche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.0
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Calcite jaune 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Labradorite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.0
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 4,
+        "cout_unitaire": 0.21
+      }
+    ],
+    "prix_vente": 19.5,
+    "stock": 0,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "Protection, Ancrage, Force intérieure, Confiance, Stabilité, Intuition, Transformation, Clairvoyance, Magie",
+    "chakras": "Racine (1ère), 3e Œil (6e), Couronne (7e)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T10:54:12",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T16:51:12"
+  },
+  {
+    "id": "ca889ec4-de55-4fcc-917f-b49a945bc3d2",
+    "reference": "BRA-0009",
+    "nom": "Cancer",
+    "composition": [
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Cancer",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Labradorite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.0
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Pierre de lune 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Quartz rose 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.02
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Labradorite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.0
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.21
+      }
+    ],
+    "prix_vente": 17.25,
+    "stock": 0,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "Protection, Ancrage, Force intérieure, Confiance, Stabilité, Intuition, Transformation, Clairvoyance, Magie, Féminin, Émotions, Créativité, Sommeil, Amour, Tendresse, Compassion, Paix intérieure, Réconfort",
+    "chakras": "Racine (1ère), 3e Œil (6e), Couronne (7e), Sacré (2e), Cœur (4e)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T10:54:12",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T17:01:18"
+  },
+  {
+    "id": "c697baf6-c3bf-4a65-b7b4-9ca235afaf05",
+    "reference": "BRA-0010",
+    "nom": "Vierge",
+    "composition": [
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Vierge",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Amazonite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Howlite blanche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.0
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Cornaline 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Amazonite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 4,
+        "cout_unitaire": 0.21
+      }
+    ],
+    "prix_vente": 21.25,
+    "stock": 0,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "Protection, Ancrage, Force intérieure, Confiance, Stabilité, Communication, Vérité, Harmonie, Apaisement, Sagesse, Créativité, Énergie, Vitalité, Motivation",
+    "chakras": "Racine (1ère), Gorge (5e), Cœur (4e), Sacré (2e)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T10:54:12",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T17:04:19"
+  },
+  {
+    "id": "aacdca1a-ac6d-47cd-8ac1-46d10fa9b2de",
+    "reference": "BRA-0011",
+    "nom": "Taureau",
+    "composition": [
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Taureau",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Oeil de faucon 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.14
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Aventurine verte 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.02
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Quartz rose 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.02
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Oeil de faucon 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.14
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 4,
+        "cout_unitaire": 0.21
+      }
+    ],
+    "prix_vente": 21.2,
+    "stock": 0,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "Protection, Ancrage, Force intérieure, Confiance, Stabilité",
+    "chakras": "Racine (1ère)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T10:54:12",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T17:06:29"
+  },
+  {
+    "id": "220623eb-168b-40ff-a11e-10862c868319",
+    "reference": "BRA-0012",
+    "nom": "André",
+    "composition": [
+      {
+        "composant": "Lapis-lazuli 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Citrine 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.11
+      },
+      {
+        "composant": "Bois de Santal 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.48
+      },
+      {
+        "composant": "Labradorite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.0
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Bois de Santal 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.48
+      },
+      {
+        "composant": "Citrine 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.11
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Labradorite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.0
+      },
+      {
+        "composant": "Bois de Santal 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.48
+      },
+      {
+        "composant": "Labradorite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.0
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Citrine 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.11
+      },
+      {
+        "composant": "Bois de Santal 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.48
+      },
+      {
+        "composant": "Labradorite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.0
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Bois de Santal 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.48
+      },
+      {
+        "composant": "Citrine 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.11
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Labradorite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.0
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Bois de Santal 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.48
+      },
+      {
+        "composant": "Citrine 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.11
+      }
+    ],
+    "prix_vente": 24.0,
+    "stock": 0,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "Communication, Intuition, Sagesse, Vérité, Expression personnelle, Prospérité, Abondance, Joie, Confiance, Énergie positive, Protection, Transformation, Clairvoyance, Magie",
+    "chakras": "Gorge (5e), 3e Œil (6e), Plexus solaire (3e), Sacré (2e), Couronne (7e)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T10:54:12",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T17:31:23",
+    "poignet_conseille": "Gauche",
+    "poignet": "Gauche"
+  },
+  {
+    "id": "7bda3a7e-51ba-4541-8eb1-391be6f98132",
+    "reference": "BRA-0013",
+    "nom": "André 2",
+    "composition": [
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Bois de Santal 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.48
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Bois de Santal 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.48
+      },
+      {
+        "composant": "Apatite bleue 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Bois de Santal 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.48
+      },
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Apatite bleue 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Apatite bleue 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Bois de Santal 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.48
+      },
+      {
+        "composant": "Apatite bleue 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Bois de Santal 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.48
+      },
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Bois de Santal 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.48
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Apatite bleue 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "agenté",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      }
+    ],
+    "prix_vente": 25.4,
+    "stock": 0,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "",
+    "chakras": "",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T11:39:46",
+    "qr_enabled": false,
+    "created_at": "2026-06-13T11:19:19",
+    "poignet_conseille": "Gauche",
+    "poignet": "Gauche"
+  },
+  {
+    "id": "d44729f9-7601-4dd4-8e57-91a0a25d8c53",
+    "reference": "BRA-0014",
+    "nom": "Gene",
+    "composition": [
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 2.0
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 2.0
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 2.0
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 2.0
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 2.0
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 2.0
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 2.0
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 2.0
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 2.0
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "agenté",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      }
+    ],
+    "prix_vente": 112.5,
+    "stock": 0,
+    "genre": "Femme",
+    "prix_auto": true,
+    "vertus": "Amplification, clarte, purification",
+    "chakras": "Couronne",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T11:52:05",
+    "qr_enabled": false,
+    "created_at": "2026-06-13T11:52:05",
+    "poignet_conseille": "Gauche",
+    "poignet": "Gauche"
+  },
+  {
+    "id": "68abbd3b-f041-4dfe-8e39-49b81084b790",
+    "reference": "BRA-0015",
+    "nom": "Gene 2",
+    "composition": [
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Amethyste 8 mm",
+        "categorie": "Pierre",
+        "quantite": 3,
+        "cout_unitaire": 0.24
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli 8 mm",
+        "categorie": "Pierre",
+        "quantite": 3,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Amethyste 8 mm",
+        "categorie": "Pierre",
+        "quantite": 3,
+        "cout_unitaire": 0.24
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli 8 mm",
+        "categorie": "Pierre",
+        "quantite": 3,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Amethyste 8 mm",
+        "categorie": "Pierre",
+        "quantite": 3,
+        "cout_unitaire": 0.24
+      },
+      {
+        "composant": "Intercalaire rondelle dore 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "agenté",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      }
+    ],
+    "prix_vente": 21.2,
+    "stock": 0,
+    "genre": "Femme",
+    "prix_auto": true,
+    "vertus": "Amplification, clarte, purification",
+    "chakras": "Couronne",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T12:04:18",
+    "qr_enabled": false,
+    "created_at": "2026-06-13T11:57:55",
+    "poignet_conseille": "Gauche",
+    "poignet": "Gauche"
+  },
+  {
+    "id": "e2244751-03d6-4ae1-afec-0f2720b135e5",
+    "reference": "BRA-0016",
+    "nom": "Poisson",
+    "composition": [
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Poisson",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Aigue-marine 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.22
+      },
+      {
+        "composant": "Amethyste 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.24
+      },
+      {
+        "composant": "Pierre de lune 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Aigue-marine 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.22
+      },
+      {
+        "composant": "Amethyste 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.24
+      },
+      {
+        "composant": "Pierre de lune 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Aigue-marine 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.22
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 4,
+        "cout_unitaire": 0.21
+      }
+    ],
+    "prix_vente": 25.15,
+    "stock": 0,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "",
+    "chakras": "",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T13:36:33",
+    "qr_enabled": false,
+    "created_at": "2026-06-13T13:33:33",
+    "poignet_conseille": "Gauche",
+    "poignet": "Gauche"
+  },
+  {
+    "id": "566bfb7f-6ed8-4ef3-a8e5-ab043399b89e",
+    "reference": "BRA-0001",
+    "nom": "Belier",
+    "composition": [
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 6,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Belier",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 7,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Jaspe rouge 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Cornaline 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Grenat 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.1
+      },
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Jaspe rouge 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      }
+    ],
+    "prix_vente": 20.25,
+    "stock": 1,
+    "genre": "Homme",
+    "prix_auto": false,
+    "vertus": "Protection, Ancrage, Force intérieure, Confiance, Stabilité, Concentration, Mémoire, Vitalité, Force physique, Endurance",
+    "chakras": "Racine (1ère)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T13:39:37",
+    "qr_enabled": false,
+    "created_at": "2026-06-10T14:58:37",
+    "poignet_conseille": "Au choix",
+    "poignet": "Au choix"
+  },
+  {
+    "id": "49d7771c-d0c3-4938-9610-225746a89c60",
+    "reference": "BRA-0002",
+    "nom": "Balance",
+    "composition": [
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Balance",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Rhodonite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.02
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Aventurine verte 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.02
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Lapis-lazuli 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.08
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 4,
+        "cout_unitaire": 0.21
+      }
+    ],
+    "prix_vente": 20.3,
+    "stock": 1,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "Communication, Intuition, Sagesse, Vérité, Expression personnelle, Chance, Prospérité, Guérison, Optimisme, Bien-être",
+    "chakras": "Gorge (5e), 3e Œil (6e), Cœur (4e), Plexus solaire (3e)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T13:40:00",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T13:59:00",
+    "poignet_conseille": "Au choix",
+    "poignet": "Au choix"
+  },
+  {
+    "id": "89dce7dd-d20e-48ac-b46c-48f8f0757270",
+    "reference": "BRA-0007",
+    "nom": "Lion",
+    "composition": [
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Lion",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Oeil de tigre 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Pierre de soleil 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.3
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Citrine 8 mm",
+        "categorie": "Pierre",
+        "quantite": 2,
+        "cout_unitaire": 0.11
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Oeil de tigre 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 4,
+        "cout_unitaire": 0.21
+      }
+    ],
+    "prix_vente": 18.3,
+    "stock": 1,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "Protection, Ancrage, Force intérieure, Confiance, Stabilité, Détermination, Prospérité, Abondance, Joie, Énergie positive",
+    "chakras": "Racine (1ère), Plexus solaire (3e), Sacré (2e)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T13:40:19",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T16:42:52",
+    "poignet_conseille": "Au choix",
+    "poignet": "Au choix"
+  },
+  {
+    "id": "e7acf60e-e185-4058-9522-db10374f54d8",
+    "reference": "BRA-0006",
+    "nom": "Verseau",
+    "composition": [
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Verseau",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Amethyste 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.24
+      },
+      {
+        "composant": "Fluorite viollet 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Sodalite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.02
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Amethyste 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.24
+      },
+      {
+        "composant": "Fluorite viollet 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Sodalite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.02
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Amethyste 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.24
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 4,
+        "cout_unitaire": 0.21
+      }
+    ],
+    "prix_vente": 22.0,
+    "stock": 1,
+    "genre": "Homme",
+    "prix_auto": false,
+    "vertus": "Apaisement, Spiritualité, Intuition, Protection, Sérénité, Communication, Vérité, Logique, Clarté",
+    "chakras": "Couronne (7e), 3e Œil (6e), Gorge (5e)",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T14:22:35",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T14:17:18",
+    "poignet_conseille": "Au choix",
+    "poignet": "Au choix"
+  },
+  {
+    "id": "61762b92-d1bb-4bfd-a6ea-9960c4baeda8",
+    "reference": "BRA-0005",
+    "nom": "Capricorne",
+    "composition": [
+      {
+        "composant": "Onyx noir mat 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.17
+      },
+      {
+        "composant": "Capricorne",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      },
+      {
+        "composant": "Onyx noir mat 8 mm",
+        "categorie": "Pierre",
+        "quantite": 5,
+        "cout_unitaire": 0.17
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Malachite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.16
+      },
+      {
+        "composant": "Cristal de roche 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Intercalaire rondelle argente 6mm",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Onyx noir mat 8 mm",
+        "categorie": "Pierre",
+        "quantite": 4,
+        "cout_unitaire": 0.17
+      }
+    ],
+    "prix_vente": 17.7,
+    "stock": 0,
+    "genre": "Homme",
+    "prix_auto": true,
+    "vertus": "Protection, Purification, Ancrage, Nettoyage, Vérité, Transformation, Guérison, Confiance, Changement, Amplification, clarte, purification",
+    "chakras": "Racine (1ère), Cœur (4e), Plexus solaire (3e), Couronne",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T14:25:17",
+    "qr_enabled": false,
+    "created_at": "2026-06-12T14:13:00",
+    "poignet_conseille": "Au choix",
+    "poignet": "Au choix"
+  },
+  {
+    "id": "655f4303-7777-46b2-aa65-ad5fe0e394e5",
+    "reference": "BRA-0020",
+    "nom": "Triple protection",
+    "composition": [
+      {
+        "composant": "Oeil de faucon 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.14
+      },
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Oeil de faucon 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.14
+      },
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Oeil de faucon 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.14
+      },
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Oeil de faucon 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.14
+      },
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Oeil de faucon 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.14
+      },
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "Onyx noir 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.21
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Oeil de faucon 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.14
+      },
+      {
+        "composant": "agenté",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      }
+    ],
+    "prix_vente": 18.0,
+    "stock": 1,
+    "genre": "Femme",
+    "prix_auto": false,
+    "vertus": "",
+    "chakras": "",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T14:42:45",
+    "qr_enabled": false,
+    "created_at": "2026-06-13T14:14:18",
+    "poignet_conseille": "Gauche",
+    "poignet": "Gauche"
+  },
+  {
+    "id": "4764d80f-fe58-414e-bfc3-131acd3ab71a",
+    "reference": "BRA-0019",
+    "nom": "Protection gestion du stress",
+    "composition": [
+      {
+        "composant": "Pierre de lave 8 mm",
+        "categorie": "Pierre",
+        "quantite": 10,
+        "cout_unitaire": 0.04
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Oeil de faucon 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.14
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Pierre de lave 8 mm",
+        "categorie": "Pierre",
+        "quantite": 10,
+        "cout_unitaire": 0.04
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Oeil de faucon 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.14
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      }
+    ],
+    "prix_vente": 12.0,
+    "stock": 1,
+    "genre": "Mixte",
+    "prix_auto": false,
+    "vertus": "",
+    "chakras": "",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T14:45:51",
+    "qr_enabled": false,
+    "created_at": "2026-06-13T14:05:44",
+    "poignet_conseille": "Au choix",
+    "poignet": "Au choix"
+  },
+  {
+    "id": "1cf045a0-57ea-4b23-ad3b-f55effd69da7",
+    "reference": "BRA-0018",
+    "nom": "Bouclier anti negatif",
+    "composition": [
+      {
+        "composant": "Pierre de lave 8 mm",
+        "categorie": "Pierre",
+        "quantite": 22,
+        "cout_unitaire": 0.04
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Labradorite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.0
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      }
+    ],
+    "prix_vente": 9.0,
+    "stock": 1,
+    "genre": "Mixte",
+    "prix_auto": false,
+    "vertus": "",
+    "chakras": "",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T14:48:56",
+    "qr_enabled": false,
+    "created_at": "2026-06-13T14:00:26",
+    "poignet_conseille": "Au choix",
+    "poignet": "Au choix"
+  },
+  {
+    "id": "929a1caa-2f96-442c-abea-be315daf7f27",
+    "reference": "BRA-0017",
+    "nom": "Protection anti negatif",
+    "composition": [
+      {
+        "composant": "Oeil de faucon 8 mm",
+        "categorie": "Pierre",
+        "quantite": 22,
+        "cout_unitaire": 0.14
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Hematite 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.01
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      }
+    ],
+    "prix_vente": 18.0,
+    "stock": 1,
+    "genre": "Mixte",
+    "prix_auto": false,
+    "vertus": "",
+    "chakras": "",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T14:50:37",
+    "qr_enabled": false,
+    "created_at": "2026-06-13T13:43:41",
+    "poignet_conseille": "Au choix",
+    "poignet": "Au choix"
+  },
+  {
+    "id": "d53e553b-b347-4a77-bc5e-a2223607e95e",
+    "reference": "BRA-0021",
+    "nom": "Mauvais oeil ondes negatives",
+    "composition": [
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Oeil de tigre 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Oeil de tigre 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Oeil de tigre 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Oeil de tigre 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Oeil de tigre 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Oeil de tigre 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Oeil de tigre 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Oeil de tigre 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Oeil de tigre 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Oeil de tigre 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "Oeil de tigre 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.05
+      },
+      {
+        "composant": "intercalaire",
+        "categorie": "Intercalaire",
+        "quantite": 1,
+        "cout_unitaire": 0.15
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "Obsidienne noire 8 mm",
+        "categorie": "Pierre",
+        "quantite": 1,
+        "cout_unitaire": 0.03
+      },
+      {
+        "composant": "agenté",
+        "categorie": "Cache-noeud",
+        "quantite": 1,
+        "cout_unitaire": 0.2
+      }
+    ],
+    "prix_vente": 10.0,
+    "stock": 1,
+    "genre": "Femme",
+    "prix_auto": false,
+    "vertus": "",
+    "chakras": "",
+    "photo": "",
+    "photo_thumb": "",
+    "updated_at": "2026-06-13T14:58:42",
+    "qr_enabled": false,
+    "created_at": "2026-06-13T14:57:50",
+    "poignet_conseille": "Gauche",
+    "poignet": "Gauche"
   }
 ]
