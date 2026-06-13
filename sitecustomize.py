@@ -260,6 +260,7 @@ def _patch_crud_editors(module: ModuleType) -> None:
     orig_clear_all_rows = BraceletEditor._clear_all_rows
     orig_apply_filter = BraceletEditor._apply_filter
     orig_refresh_comp_positions = BraceletEditor._refresh_comp_positions
+    orig_on_category_changed = BraceletEditor._on_category_changed
 
     def _format_diameter_value(value: Any) -> str:
         if value in (None, ""):
@@ -485,9 +486,128 @@ def _patch_crud_editors(module: ModuleType) -> None:
 
         row["_selection_enhanced"] = True
 
+    # ──────────────────────────────────────────────────────────────────────
+    # Composition bracelet : filtre de diamètre pour les pierres
+    # ──────────────────────────────────────────────────────────────────────
+    _diameter_suffix_re = re.compile(r"\s+(\d+(?:[\.,]\d+)?)\s*mm\s*$", re.IGNORECASE)
+
+    def _normalize_diameter_key(value: Any) -> str:
+        if value in (None, ""):
+            return ""
+        text = str(value).strip().lower().replace("mm", "").replace(",", ".")
+        try:
+            number = float(text)
+        except Exception:
+            return ""
+        if number <= 0:
+            return ""
+        return str(int(number)) if number.is_integer() else str(number).rstrip("0").rstrip(".")
+
+    def _diameter_label(key: str) -> str:
+        if not key:
+            return "Tous"
+        return f"{key.replace('.', ',')} mm"
+
+    def _component_diameter_key(comp: dict[str, Any] | None) -> str:
+        if not comp:
+            return ""
+        for field in ("diametre", "diametre_mm"):
+            key = _normalize_diameter_key(comp.get(field))
+            if key:
+                return key
+        name = str(comp.get("nom", "") or "").strip()
+        match = _diameter_suffix_re.search(name)
+        return _normalize_diameter_key(match.group(1)) if match else ""
+
+    def _stone_diameter_choices(self) -> list[str]:
+        keys: set[str] = set()
+        for comp in getattr(self, "_components_catalog", []) or []:
+            if str(comp.get("categorie", "")) != "Pierre":
+                continue
+            key = _component_diameter_key(comp)
+            if key:
+                keys.add(key)
+        ordered = sorted(keys, key=lambda k: float(k.replace(",", ".")))
+        choices = [_diameter_label(k) for k in ordered]
+        return choices or ["Tous"]
+
+    def _selected_stone_diameter_key(self) -> str:
+        var = getattr(self, "_stone_diameter_filter_var", None)
+        raw = var.get() if var is not None else ""
+        if not raw or raw == "Tous":
+            return ""
+        return _normalize_diameter_key(raw)
+
+    def _filtered_names_for_category(self, cat: str) -> list[str]:
+        cat = str(cat or "").strip()
+        if cat != "Pierre":
+            return list(self._names_by_cat.get(cat, []))
+        selected_key = _selected_stone_diameter_key(self)
+        if not selected_key:
+            return list(self._names_by_cat.get(cat, []))
+        names: list[str] = []
+        for comp in getattr(self, "_components_catalog", []) or []:
+            if str(comp.get("categorie", "")) != "Pierre":
+                continue
+            if _component_diameter_key(comp) == selected_key:
+                name = str(comp.get("nom", "") or "").strip()
+                if name:
+                    names.append(name)
+        return sorted(list(dict.fromkeys(names)), key=lambda s: s.lower())
+
+    def _apply_stone_diameter_to_row(self, row: dict[str, Any], keep_current: bool = True) -> None:
+        if row not in getattr(self, "_composition_rows", []):
+            return
+        cat = row.get("cat_var").get() if row.get("cat_var") else ""
+        if cat != "Pierre":
+            return
+        names = _filtered_names_for_category(self, "Pierre")
+        box = row.get("comp_box")
+        if box is not None:
+            box.set_values(names or ["(Aucune pierre)"])
+        current = row.get("comp_var").get() if row.get("comp_var") else ""
+        if (not keep_current or current not in names) and names:
+            row["comp_var"].set(names[0])
+            row["pu_var"].set(self._fmt_pu(self._price_for("Pierre", names[0])))
+
+    def _refresh_stone_diameter_filter(self) -> None:
+        for row in getattr(self, "_composition_rows", []) or []:
+            _apply_stone_diameter_to_row(self, row, keep_current=True)
+        self._on_comp_row_changed()
+
     def _build_composition_tab_patched(self, tab) -> None:
         self._selected_comp_row = None
         orig_build_composition_tab(self, tab)
+
+        # Choix global du diamètre des pierres : les listes de pierres de la
+        # composition ne montrent que le diamètre sélectionné.
+        try:
+            choices = _stone_diameter_choices(self)
+            default_choice = "8 mm" if "8 mm" in choices else (choices[0] if choices else "Tous")
+            self._stone_diameter_filter_var = ctk.StringVar(value=default_choice)
+
+            ctk.CTkFrame(self._recap_bar, fg_color=theme.BORDER, width=1, height=30).pack(
+                side="left", padx=(10, 8), pady=6
+            )
+            ctk.CTkLabel(
+                self._recap_bar,
+                text="Diamètre pierres",
+                text_color=theme.TEXT_SECONDARY,
+                font=ctk.CTkFont(size=12, weight="bold"),
+            ).pack(side="left", padx=(0, 6), pady=6)
+            ctk.CTkOptionMenu(
+                self._recap_bar,
+                variable=self._stone_diameter_filter_var,
+                values=choices,
+                width=92,
+                height=32,
+                fg_color=theme.BG_INPUT,
+                button_color=theme.BG_CARD,
+                button_hover_color=theme.BG_CARD_HOVER,
+                command=lambda _v: _refresh_stone_diameter_filter(self),
+            ).pack(side="left", padx=(0, 8), pady=6)
+        except Exception:
+            pass
 
         # La barre est placée dans le récapitulatif : elle reste visible et ne
         # réduit presque pas la hauteur utile de la liste.
@@ -559,10 +679,18 @@ def _patch_crud_editors(module: ModuleType) -> None:
             if self._composition_rows:
                 row = self._composition_rows[-1]
                 _enhance_comp_row(self, row)
+                _apply_stone_diameter_to_row(self, row, keep_current=True)
                 self._select_comp_row(row)
         except Exception:
             pass
         return result
+
+    def _on_category_changed_patched(self, row: dict[str, Any]) -> None:
+        orig_on_category_changed(self, row)
+        try:
+            _apply_stone_diameter_to_row(self, row, keep_current=False)
+        except Exception:
+            pass
 
     def _move_comp_row_patched(self, row: dict[str, Any], direction: int) -> None:
         orig_move_comp_row(self, row, direction)
@@ -658,6 +786,7 @@ def _patch_crud_editors(module: ModuleType) -> None:
     BraceletEditor._clear_all_rows = _clear_all_rows_patched
     BraceletEditor._apply_filter = _apply_filter_patched
     BraceletEditor._refresh_comp_positions = _refresh_comp_positions_patched
+    BraceletEditor._on_category_changed = _on_category_changed_patched
     BraceletEditor._select_comp_row = _select_comp_row
     BraceletEditor._refresh_row_selection = _refresh_row_selection
 
