@@ -880,11 +880,11 @@ class PDFGenerator:
         c.showPage()
         c.save()
 
-    # ------------------------------------------------------------------------------
-    # Fiche VIERGE -- 2 par page A4 (2x1), colonnes : #  Qte  Composant  Type
-    # ------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
+    # Fiche VIERGE -- 2 par page A4, 50 lignes par fiche, lignes bien espacees
+    # -------------------------------------------------------------------------
     def export_fiche_vierge_pdf(self, output_path: str, nb_lignes: int = 50) -> None:
-        """Genere 2 grandes fiches vierges par page A4 (2 colonnes x 1 ligne), 50 lignes par fiche."""
+        """Genere 2 fiches vierges cote a cote sur une page A4 (50 lignes chacune)."""
         self.refresh_style_from_settings()
         fnt = self._safe_font
         font_n = fnt(self.base_font, bold=False)
@@ -892,28 +892,33 @@ class PDFGenerator:
 
         page_w, page_h = A4
 
-        page_margin = 18.0
-        gap        = 8.0
-        cols_page  = 2
-        rows_page  = 1
+        page_margin = 14.0
+        gap         = 8.0
+        cols_page   = 2
+        rows_page   = 1
         card_w = (page_w - 2 * page_margin - (cols_page - 1) * gap) / cols_page
         card_h = (page_h - 2 * page_margin - (rows_page - 1) * gap) / rows_page
 
-        pad = 6.0
+        pad    = 5.0
         inner_w = card_w - 2 * pad
 
         r_idx  = 0
-        r_qte  = r_idx + 18
-        r_nom  = r_idx + 26
-        r_type = r_idx + 26 + inner_w * 0.52
+        r_qte  = r_idx + 16
+        r_nom  = r_idx + 24
+        r_type = r_idx + 24 + inner_w * 0.52
         r_end  = inner_w
 
-        # Hauteur de ligne : dynamique pour remplir la carte en hauteur
-        # En-tete fixe ~65pt, recap bas ~30pt
-        _header_est = 65.0
-        _recap_est  = 32.0
-        _avail      = card_h - _header_est - _recap_est
-        row_h = max(12.0, min(18.0, _avail / max(1, nb_lignes)))
+        # --- calcul exact de la hauteur de ligne ----------------------------
+        # On mesure le header reellement pour ne pas se tromper.
+        # header = 2 (top pad) + 8 (titre) + 3 (sep) + 9 (gap) +
+        #          10 (nom) + 10 (ref/genre) + 12 (date/stock) + 11 (th) = 65
+        _header_h = 65.0
+        # recap bas = pad (5) + 28 = 33 => on prend 36 pour marge
+        _recap_h  = 36.0
+        _avail    = card_h - _header_h - _recap_h
+        # row_h egal a l'espace disponible divise par nb_lignes,
+        # borne entre 12 et 18 pt
+        row_h = max(12.0, min(18.0, _avail / nb_lignes))
 
         c = canvas.Canvas(output_path, pagesize=A4)
 
@@ -924,7 +929,8 @@ class PDFGenerator:
             lx = cx + pad
             yy = cy + card_h - pad
 
-            def dline(x1, y1, x2, y2, dash=False, lw=0.3):
+            def dline(x1: float, y1: float, x2: float, y2: float,
+                      dash: bool = False, lw: float = 0.3) -> None:
                 c.setLineWidth(lw)
                 if dash:
                     c.setDash(2, 3)
@@ -932,20 +938,21 @@ class PDFGenerator:
                 if dash:
                     c.setDash()
 
-            def field_line(label, width, x_start=None):
-                nonlocal yy
+            def field_line(label: str, width: float, x_start: float | None = None) -> None:
+                """Dessine un champ label + ligne pointillee (ne modifie PAS yy)."""
                 xs = x_start if x_start is not None else lx
                 c.setFont(font_b, 6.5)
                 c.drawString(xs, yy, label)
                 lw_px = c.stringWidth(label, font_b, 6.5)
-                x_line_start = xs + lw_px + 3
-                x_line_end   = xs + width
-                if x_line_end > x_line_start + 5:
-                    dline(x_line_start, yy - 1.5, x_line_end, yy - 1.5, dash=True)
+                x1 = xs + lw_px + 3
+                x2 = xs + width
+                if x2 > x1 + 5:
+                    dline(x1, yy - 1.5, x2, yy - 1.5, dash=True)
 
+            # -- En-tete -----------------------------------------------------
             yy -= 2
             c.setFont(font_b, 8)
-            c.drawString(lx, yy, "Fiche de creation de bracelet")
+            c.drawString(lx, yy, "Fiche vierge bracelet")
             yy -= 3
             dline(lx, yy, cx + card_w - pad, yy, lw=0.6)
             yy -= 9
@@ -960,59 +967,69 @@ class PDFGenerator:
             field_line("Stock :", half, x_start=lx + half + 8)
             yy -= 12
 
+            # -- En-tete tableau ---------------------------------------------
             th_h = 10.0
             c.setFillColorRGB(0.88, 0.88, 0.88)
             c.rect(lx, yy - th_h + 2, inner_w, th_h, fill=1, stroke=0)
             c.setFillColorRGB(0, 0, 0)
             c.setFont(font_b, 6.5)
             c.drawString(lx + r_idx,  yy, "#")
-            c.drawRightString(lx + r_qte,  yy, "Qte")
+            c.drawRightString(lx + r_qte, yy, "Qte")
             c.drawString(lx + r_nom,  yy, "Composant")
             c.drawString(lx + r_type, yy, "Type")
             yy -= th_h + 1
 
-            bottom_reserve = cy + pad + 28
+            # -- Lignes du tableau -------------------------------------------
+            # On calcule bottom_reserve de facon a laisser la zone recap
+            bottom_reserve = cy + pad + _recap_h - 4
             font_size_row = max(6, min(8, int(row_h * 0.55)))
+
             for i in range(1, nb_lignes + 1):
+                # Verifie qu'il reste assez de place pour cette ligne
                 if yy - row_h < bottom_reserve:
                     break
+                # Fond alterne gris clair
                 if i % 2 == 0:
-                    c.setFillColorRGB(0.96, 0.96, 0.96)
-                    c.rect(lx, yy - row_h + 3, inner_w, row_h, fill=1, stroke=0)
+                    c.setFillColorRGB(0.95, 0.95, 0.95)
+                    c.rect(lx, yy - row_h + 2, inner_w, row_h, fill=1, stroke=0)
                     c.setFillColorRGB(0, 0, 0)
+                # Numero de ligne
                 c.setFont(font_n, font_size_row)
                 c.drawString(lx + r_idx, yy, str(i))
+                # Lignes pointillees pour chaque colonne
                 c.setLineWidth(0.25)
                 c.setDash(2, 3)
-                c.line(lx + r_qte - 14, yy - 1.5, lx + r_qte,      yy - 1.5)
-                c.line(lx + r_nom,      yy - 1.5, lx + r_type - 6,  yy - 1.5)
-                c.line(lx + r_type,     yy - 1.5, lx + r_end,        yy - 1.5)
+                c.line(lx + r_qte - 12, yy - 1.5, lx + r_qte,     yy - 1.5)
+                c.line(lx + r_nom,      yy - 1.5, lx + r_type - 5, yy - 1.5)
+                c.line(lx + r_type,     yy - 1.5, lx + r_end,      yy - 1.5)
                 c.setDash()
-                # Separateur de ligne bien visible
-                c.setLineWidth(0.4)
+                # Separateur horizontal BIEN VISIBLE entre chaque ligne
+                c.setLineWidth(0.5)
+                c.setStrokeColorRGB(0.7, 0.7, 0.7)
                 c.line(lx, yy - row_h + 2, lx + inner_w, yy - row_h + 2)
+                c.setStrokeColorRGB(0, 0, 0)
                 yy -= row_h
 
-            recap_y = cy + pad + 22
-            dline(lx, recap_y + 2, lx + inner_w, recap_y + 2, lw=0.4)
-            recap_y -= 2
+            # -- Zone recap bas ----------------------------------------------
+            recap_y = cy + pad + 20
+            dline(lx, recap_y + 4, lx + inner_w, recap_y + 4, lw=0.5)
+            recap_y -= 1
 
             c.setFont(font_b, 6.5)
             c.drawString(lx, recap_y, "Nb pierres :")
-            nb_label_w = c.stringWidth("Nb pierres :", font_b, 6.5)
-            dline(lx + nb_label_w + 3, recap_y - 1.5, lx + inner_w * 0.38, recap_y - 1.5, dash=True)
+            nb_lw = c.stringWidth("Nb pierres :", font_b, 6.5)
+            dline(lx + nb_lw + 3, recap_y - 1.5, lx + inner_w * 0.38, recap_y - 1.5, dash=True)
 
             c.drawString(lx + inner_w * 0.42, recap_y, "Prix de vente :")
-            pv_label_w = c.stringWidth("Prix de vente :", font_b, 6.5)
-            pv_x = lx + inner_w * 0.42 + pv_label_w + 3
-            dline(pv_x, recap_y - 1.5, lx + inner_w, recap_y - 1.5, dash=True)
+            pv_lw = c.stringWidth("Prix de vente :", font_b, 6.5)
+            dline(lx + inner_w * 0.42 + pv_lw + 3, recap_y - 1.5, lx + inner_w, recap_y - 1.5, dash=True)
 
-        per_page = cols_page * rows_page
-        for slot in range(per_page):
-            col_idx_page = slot % cols_page
-            row_idx_page = slot // cols_page
-            bx = page_margin + col_idx_page * (card_w + gap)
-            by = page_h - page_margin - (row_idx_page + 1) * card_h - row_idx_page * gap
+        # -- Dessin des 2 cartes --------------------------------------------
+        for slot in range(cols_page * rows_page):
+            col_i = slot % cols_page
+            row_i = slot // cols_page
+            bx = page_margin + col_i * (card_w + gap)
+            by = page_h - page_margin - (row_i + 1) * card_h - row_i * gap
             draw_one_card(bx, by)
 
         c.showPage()
