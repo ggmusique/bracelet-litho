@@ -317,4 +317,9 @@ class PDFGenerator:
 
         nom_cfg = layout.get("nom", {})
         if isinstance(nom_cfg, dict):
-            nom_size = int(nom_cfg.get("
+            nom_size = int(nom_cfg.get("size", 11))
+            c.setFont(fnt(self.base_font, bold=bool(nom_cfg.get("bold", True))), nom_size)
+            cx, cy = at(nom_cfg.get("x", 4), nom_cfg.get("y", 4), nom_size)
+            c.drawString(cx, cy, bracelet.get("nom", "") or "Bracelet")
+
+        sep_y_mm = float(layout.get("sep_y", 7
