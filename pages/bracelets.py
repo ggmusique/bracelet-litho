@@ -111,7 +111,6 @@ class BraceletsPage(ctk.CTkFrame):
             command=self._delete_bracelet,
         ).pack(fill="x", pady=(2, 0))
 
-        # ── Séparateur + bouton Fiche vierge ──────────────────────────
         ctk.CTkFrame(self._left, height=1, fg_color=theme.BORDER).pack(fill="x", padx=14, pady=(10, 6))
         ctk.CTkButton(
             self._left,
@@ -122,7 +121,6 @@ class BraceletsPage(ctk.CTkFrame):
             hover_color=theme.BG_CARD_HOVER,
             command=self._export_fiche_vierge,
         ).pack(fill="x", padx=14, pady=(0, 6))
-        # ──────────────────────────────────────────────────────────────
 
         ctk.CTkFrame(self._left, height=1, fg_color=theme.BORDER).pack(fill="x", padx=14)
 
@@ -439,7 +437,7 @@ class BraceletsPage(ctk.CTkFrame):
         self._render_fiche(bracelet, metrics)
 
     def _export_fiche_vierge(self) -> None:
-        """Genere une fiche de creation vierge (25 lignes) au format A4 et l'ouvre."""
+        """Genere une fiche de creation vierge (50 lignes) au format A4 et l'ouvre."""
         from pdf_generator import PDFGenerator
         dest = fd.asksaveasfilename(
             title="Enregistrer la fiche vierge",
@@ -451,7 +449,7 @@ class BraceletsPage(ctk.CTkFrame):
             return
         try:
             gen = PDFGenerator(self.db)
-            gen.export_fiche_vierge_pdf(dest, nb_lignes=25)
+            gen.export_fiche_vierge_pdf(dest, nb_lignes=50)
             mb.showinfo("Fiche vierge", f"Fiche generee :\n{dest}")
             try:
                 os.startfile(dest)
