@@ -289,37 +289,4 @@ class PDFGenerator:
         pdf.showPage()
         pdf.save()
 
-    def draw_label_action_70x37(self, c: canvas.Canvas, bracelet: dict[str, Any], x: float, y: float, w: float, h: float) -> None:
-        self._draw_action_label(c, bracelet, x, y, w, h, "bracelet", self._get_action_layout("bracelet"))
-
-    def draw_label_vertus_chakras(self, c: canvas.Canvas, bracelet: dict[str, Any], x: float, y: float, w: float, h: float) -> None:
-        self._draw_action_label(c, bracelet, x, y, w, h, "vertus", self._get_action_layout("vertus"))
-
-    def _draw_action_label(
-        self,
-        c: canvas.Canvas,
-        bracelet: dict[str, Any],
-        x: float, y: float, w: float, h: float,
-        model: str,
-        layout: dict[str, Any],
-    ) -> None:
-        self.refresh_style_from_settings()
-        fnt = self._safe_font
-
-        def pt(mm: float) -> float:
-            return mm_to_pt(mm)
-
-        def at(ex_mm: float, ey_mm: float, size_pt: float = 0.0) -> tuple[float, float]:
-            return x + pt(ex_mm), y + h - pt(ey_mm) - size_pt * 0.72
-
-        c.setLineWidth(0.5)
-        c.rect(x, y, w, h)
-
-        nom_cfg = layout.get("nom", {})
-        if isinstance(nom_cfg, dict):
-            nom_size = int(nom_cfg.get("size", 11))
-            c.setFont(fnt(self.base_font, bold=bool(nom_cfg.get("bold", True))), nom_size)
-            cx, cy = at(nom_cfg.get("x", 4), nom_cfg.get("y", 4), nom_size)
-            c.drawString(cx, cy, bracelet.get("nom", "") or "Bracelet")
-
-        sep_y_mm = float(layout.get("sep_y", 7
+    def draw_label_action_70x37(self, c: canvas.Canvas, bracelet: dict[str, Any
