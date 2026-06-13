@@ -9,6 +9,11 @@ from __future__ import annotations
 import time
 import customtkinter as ctk
 
+# Charge les correctifs runtime du projet dès le démarrage de la V2.
+# Important sous Windows : le module sitecustomize n'est pas toujours chargé
+# automatiquement assez tôt selon la façon dont l'application est lancée.
+import sitecustomize  # noqa: F401
+
 import theme
 from phase1c_services import normalize_phase1c_data, run_rotating_backup
 from version import APP_NAME, APP_VERSION
