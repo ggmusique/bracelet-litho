@@ -47,14 +47,14 @@ class PDFGenerator:
         self.base_font = "Helvetica"
 
     def invalidate_layout_cache(self) -> None:
-        """Invalide le cache des profils de mise en page (appeler après sauvegarde JSON)."""
+        """Invalide le cache des profils de mise en page (appeler apres sauvegarde JSON)."""
         for model in ("bracelet", "vertus"):
             attr = f"_layout_cache_{model}"
             if hasattr(self, attr):
                 delattr(self, attr)
 
     def _get_action_layout(self, model: str) -> dict:
-        """Retourne le profil de mise en page en cache (chargé depuis JSON si nécessaire)."""
+        """Retourne le profil de mise en page en cache (charge depuis JSON si necessaire)."""
         attr = f"_layout_cache_{model}"
         if not hasattr(self, attr):
             setattr(self, attr, layout_profiles.load_layout(model, self.db.base_dir))
@@ -128,7 +128,7 @@ class PDFGenerator:
         cursor_y -= 14
 
         c.setFont(self._safe_font(self.base_font), 8)
-        c.drawString(cursor_x, cursor_y, f"Réf: {payload['reference'] or '-'}")
+        c.drawString(cursor_x, cursor_y, f"Ref: {payload['reference'] or '-'}")
         cursor_y -= 11
 
         qr_enabled = bool(bracelet.get("qr_enabled"))
@@ -699,7 +699,6 @@ class PDFGenerator:
         x_right = page_w - margin
         usable_w = x_right - x0
 
-        # Police adaptative : choisir la taille qui fait tenir tous les composants sur 1 page
         FIXED_PT = 380.0
         avail_table = page_h - 2 * margin - FIXED_PT
         nb_rows = max(len(composition), 1)
@@ -718,7 +717,6 @@ class PDFGenerator:
 
         c = canvas.Canvas(output_path, pagesize=A4)
 
-        # En-tete
         y = page_h - margin
         c.setFont(font_b, 18)
         c.drawString(x0, y, "Fiche de creation de bracelet")
@@ -743,7 +741,6 @@ class PDFGenerator:
         c.drawString(x0, y, "Ordre de montage")
         y -= 6
 
-        # En-tete du tableau
         th_h = chosen_size + 5
         c.setFillColorRGB(0.93, 0.93, 0.93)
         c.rect(x0, y - th_h + 2, usable_w, th_h, fill=1, stroke=0)
@@ -756,7 +753,6 @@ class PDFGenerator:
         c.drawRightString(col_sub, y, "Sous-total")
         y -= th_h + 2
 
-        # Lignes de composition
         total_mat = 0.0
         total_pierres = 0.0
         nb_pierres = 0
@@ -799,7 +795,6 @@ class PDFGenerator:
         c.line(x0, y, x_right, y)
         y -= 16
 
-        # Recapitulatif
         prix_vente   = float(bracelet.get("prix_vente", 0.0) or 0.0)
         total_autres = total_mat - total_pierres
         marge        = prix_vente - total_mat
@@ -822,7 +817,6 @@ class PDFGenerator:
         total_line("Marge :",         f"{marge:.2f} EUR")
         y -= 10
 
-        # Vertus & Chakras
         vertus  = metrics.get("vertus",  []) or []
         chakras = metrics.get("chakras", []) or []
         if vertus:
@@ -839,7 +833,6 @@ class PDFGenerator:
             y -= 12
         y -= 4
 
-        # Entretien
         from catalogue_services import _find_stone_info
         purifs, rechs, seen = [], [], set()
         for erow in composition:
@@ -867,7 +860,6 @@ class PDFGenerator:
                 y -= 10
         y -= 4
 
-        # Pleines lunes
         moon_based = (not rechs) or any("lune" in str(r).lower() for r in rechs)
         if moon_based:
             from lunar_services import next_full_moons
@@ -888,11 +880,11 @@ class PDFGenerator:
         c.showPage()
         c.save()
 
-    # ──────────────────────────────────────────────────────────────────────────
-    # Fiche VIERGE — 4 par page A4 (2x2), colonnes : #  Qte  Composant  Type
-    # ──────────────────────────────────────────────────────────────────────────
-    def export_fiche_vierge_pdf(self, output_path: str, nb_lignes: int = 25) -> None:
-        """Genere 4 fiches vierges par page A4 (disposition 2 colonnes x 2 lignes)."""
+    # ------------------------------------------------------------------------------
+    # Fiche VIERGE -- 2 par page A4 (2x1), colonnes : #  Qte  Composant  Type
+    # ------------------------------------------------------------------------------
+    def export_fiche_vierge_pdf(self, output_path: str, nb_lignes: int = 50) -> None:
+        """Genere 2 grandes fiches vierges par page A4 (2 colonnes x 1 ligne), 50 lignes par fiche."""
         self.refresh_style_from_settings()
         fnt = self._safe_font
         font_n = fnt(self.base_font, bold=False)
@@ -903,7 +895,7 @@ class PDFGenerator:
         page_margin = 18.0
         gap        = 8.0
         cols_page  = 2
-        rows_page  = 2
+        rows_page  = 1
         card_w = (page_w - 2 * page_margin - (cols_page - 1) * gap) / cols_page
         card_h = (page_h - 2 * page_margin - (rows_page - 1) * gap) / rows_page
 
@@ -916,7 +908,12 @@ class PDFGenerator:
         r_type = r_idx + 26 + inner_w * 0.52
         r_end  = inner_w
 
-        row_h = 13.0
+        # Hauteur de ligne : dynamique pour remplir la carte en hauteur
+        # En-tete fixe ~65pt, recap bas ~30pt
+        _header_est = 65.0
+        _recap_est  = 32.0
+        _avail      = card_h - _header_est - _recap_est
+        row_h = max(12.0, min(18.0, _avail / max(1, nb_lignes)))
 
         c = canvas.Canvas(output_path, pagesize=A4)
 
@@ -926,10 +923,6 @@ class PDFGenerator:
 
             lx = cx + pad
             yy = cy + card_h - pad
-
-            def dstr(text, x_abs, y_abs, bold=False, size=7):
-                c.setFont(font_b if bold else font_n, size)
-                c.drawString(x_abs, y_abs, text)
 
             def dline(x1, y1, x2, y2, dash=False, lw=0.3):
                 c.setLineWidth(lw)
@@ -979,6 +972,7 @@ class PDFGenerator:
             yy -= th_h + 1
 
             bottom_reserve = cy + pad + 28
+            font_size_row = max(6, min(8, int(row_h * 0.55)))
             for i in range(1, nb_lignes + 1):
                 if yy - row_h < bottom_reserve:
                     break
@@ -986,7 +980,7 @@ class PDFGenerator:
                     c.setFillColorRGB(0.96, 0.96, 0.96)
                     c.rect(lx, yy - row_h + 3, inner_w, row_h, fill=1, stroke=0)
                     c.setFillColorRGB(0, 0, 0)
-                c.setFont(font_n, 6)
+                c.setFont(font_n, font_size_row)
                 c.drawString(lx + r_idx, yy, str(i))
                 c.setLineWidth(0.25)
                 c.setDash(2, 3)
@@ -994,7 +988,8 @@ class PDFGenerator:
                 c.line(lx + r_nom,      yy - 1.5, lx + r_type - 6,  yy - 1.5)
                 c.line(lx + r_type,     yy - 1.5, lx + r_end,        yy - 1.5)
                 c.setDash()
-                c.setLineWidth(0.12)
+                # Separateur de ligne bien visible
+                c.setLineWidth(0.4)
                 c.line(lx, yy - row_h + 2, lx + inner_w, yy - row_h + 2)
                 yy -= row_h
 
