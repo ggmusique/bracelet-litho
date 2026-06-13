@@ -96,6 +96,8 @@ def _patch_crud_editors(module: ModuleType) -> None:
     # ──────────────────────────────────────────────────────────────────────
     # Sélection d'une ligne de composition + actions globales larges
     # ──────────────────────────────────────────────────────────────────────
+    orig_build_info_tab = BraceletEditor._build_info_tab
+    orig_save_bracelet = BraceletEditor._save
     orig_build_composition_tab = BraceletEditor._build_composition_tab
     orig_add_comp_row = BraceletEditor._add_comp_row
     orig_move_comp_row = BraceletEditor._move_comp_row
@@ -104,6 +106,50 @@ def _patch_crud_editors(module: ModuleType) -> None:
     orig_clear_all_rows = BraceletEditor._clear_all_rows
     orig_apply_filter = BraceletEditor._apply_filter
     orig_refresh_comp_positions = BraceletEditor._refresh_comp_positions
+
+    def _build_info_tab_with_wrist(self, tab) -> None:
+        orig_build_info_tab(self, tab)
+        try:
+            raw = str(self.initial_item.get("poignet_conseille", self.initial_item.get("poignet", "") or "")).strip()
+            if raw not in ("Gauche", "Droit", "Au choix"):
+                raw = "Au choix"
+            self._poignet_var = ctk.StringVar(value=raw)
+            poignet_menu = ctk.CTkOptionMenu(
+                tab,
+                variable=self._poignet_var,
+                values=["Au choix", "Gauche", "Droit"],
+                fg_color=theme.BG_INPUT,
+                button_color=theme.BG_CARD,
+                button_hover_color=theme.BG_CARD_HOVER,
+            )
+            self._add_labeled_widget(tab, 6, 0, "Poignet conseillé", poignet_menu)
+            self._poignet_var.trace_add("write", self._mark_dirty)
+        except Exception:
+            pass
+
+    def _save_bracelet_with_wrist(self) -> None:
+        original_submit = self.on_submit
+
+        def _submit_with_wrist(payload: dict[str, Any]) -> bool:
+            try:
+                wrist = self._poignet_var.get().strip() or "Au choix"
+                payload["poignet_conseille"] = wrist
+                payload["poignet"] = wrist
+            except Exception:
+                pass
+            return original_submit(payload)
+
+        self.on_submit = _submit_with_wrist
+        try:
+            orig_save_bracelet(self)
+        finally:
+            try:
+                self.on_submit = original_submit
+            except Exception:
+                pass
+
+    BraceletEditor._build_info_tab = _build_info_tab_with_wrist
+    BraceletEditor._save = _save_bracelet_with_wrist
 
     def _row_title(self, row: dict[str, Any] | None) -> str:
         if row is None or row not in getattr(self, "_composition_rows", []):
@@ -485,8 +531,9 @@ def _patch_catalogue_services(module: ModuleType) -> None:
             from reportlab.lib.units import mm
             from reportlab.pdfgen import canvas
 
-            # Carte postale A6 paysage : 148 × 105 mm.
-            page_w, page_h = 148 * mm, 105 * mm
+            # Format carte produit : plus petit qu'une carte postale A6,
+            # mais plus grand qu'une carte de visite standard.
+            page_w, page_h = 120 * mm, 85 * mm
             c = canvas.Canvas(output_path, pagesize=(page_w, page_h))
 
             cream = (0.992, 0.965, 0.905)
@@ -518,32 +565,32 @@ def _patch_catalogue_services(module: ModuleType) -> None:
                 c.line(sx, sy, sx + dx, sy)
                 c.line(sx, sy, sx, sy + dy)
 
-            margin = 14 * mm
+            margin = 11 * mm
             inner_w = page_w - 2 * margin
-            y = page_h - 17 * mm
+            y = page_h - 14 * mm
 
             # Titre principal : nom du bracelet uniquement.
             c.setFillColorRGB(*ink)
-            c.setFont("Times-Italic", 8.5)
+            c.setFont("Times-Italic", 7.8)
             c.drawCentredString(page_w / 2, y, "Bracelet énergétique")
             y -= 6 * mm
             _ornament(c, margin + 15 * mm, y + 2 * mm, inner_w - 30 * mm, gold)
             y -= 4 * mm
 
             name = str(bracelet.get("nom", "") or "Bracelet").strip()
-            y = _draw_centered_wrapped(c, name, "Times-Bold", 17, margin, y, inner_w, 6.0 * mm, max_lines=2)
+            y = _draw_centered_wrapped(c, name, "Times-Bold", 14.8, margin, y, inner_w, 5.3 * mm, max_lines=2)
             y -= 2 * mm
 
             # Pierres : uniquement les pierres, dans l'ordre, sans quantités.
             stones = _stone_names_in_order(bracelet)
             if stones:
                 c.setFillColorRGB(*gold)
-                c.setFont("Times-Bold", 9.5)
+                c.setFont("Times-Bold", 7.8)
                 c.drawCentredString(page_w / 2, y, "Pierres")
                 y -= 5 * mm
                 c.setFillColorRGB(*ink)
                 stones_txt = "  •  ".join(stones)
-                y = _draw_centered_wrapped(c, stones_txt, "Times-Roman", 10.2, margin + 6 * mm, y, inner_w - 12 * mm, 4.8 * mm, max_lines=3)
+                y = _draw_centered_wrapped(c, stones_txt, "Times-Roman", 8.8, margin + 4 * mm, y, inner_w - 8 * mm, 4.1 * mm, max_lines=3)
                 y -= 1.5 * mm
             else:
                 c.setFillColorRGB(*ink)
@@ -551,8 +598,15 @@ def _patch_catalogue_services(module: ModuleType) -> None:
                 c.drawCentredString(page_w / 2, y, "Pierres non renseignées")
                 y -= 6 * mm
 
-            _ornament(c, margin + 22 * mm, y + 1.5 * mm, inner_w - 44 * mm, soft_gold)
-            y -= 5 * mm
+            wrist = str(bracelet.get("poignet_conseille", bracelet.get("poignet", "") or "")).strip()
+            if wrist and wrist not in ("Au choix", "Non spécifié", "Non specifie"):
+                c.setFillColorRGB(*amethyst)
+                c.setFont("Times-Italic", 7.8)
+                c.drawCentredString(page_w / 2, y, f"À porter au poignet {wrist.lower()}")
+                y -= 4.0 * mm
+
+            _ornament(c, margin + 18 * mm, y + 1.2 * mm, inner_w - 36 * mm, soft_gold)
+            y -= 4.0 * mm
 
             # Vertus + chakras : le reste utile de la fiche client.
             vertus = module.aggregate_vertus(bracelet, db) if db is not None else []
@@ -565,21 +619,21 @@ def _patch_catalogue_services(module: ModuleType) -> None:
             section_y = y
 
             c.setFillColorRGB(*turquoise)
-            c.setFont("Times-Bold", 9.5)
+            c.setFont("Times-Bold", 8.4)
             c.drawString(left_x, section_y, "Vertus")
             c.setFillColorRGB(*ink)
             vertus_txt = ", ".join(vertus[:6]) if vertus else "Harmonie, douceur et équilibre."
-            _draw_wrapped(c, vertus_txt, "Times-Roman", 8.4, left_x, section_y - 4.5 * mm, col_w, 3.9 * mm, max_lines=4)
+            _draw_wrapped(c, vertus_txt, "Times-Roman", 7.5, left_x, section_y - 4.0 * mm, col_w, 3.4 * mm, max_lines=4)
 
             c.setFillColorRGB(*amethyst)
-            c.setFont("Times-Bold", 9.5)
+            c.setFont("Times-Bold", 8.4)
             c.drawString(right_x, section_y, "Chakras")
             c.setFillColorRGB(*ink)
             chakras_txt = ", ".join(chakras[:4]) if chakras else "Énergies associées aux pierres."
-            _draw_wrapped(c, chakras_txt, "Times-Roman", 8.4, right_x, section_y - 4.5 * mm, col_w, 3.9 * mm, max_lines=4)
+            _draw_wrapped(c, chakras_txt, "Times-Roman", 7.5, right_x, section_y - 4.0 * mm, col_w, 3.4 * mm, max_lines=4)
 
             # Conseils courts et élégants.
-            advice_y = 21 * mm
+            advice_y = 17.5 * mm
             c.setStrokeColorRGB(*soft_gold)
             c.setLineWidth(0.45)
             c.line(margin + 8 * mm, advice_y + 8 * mm, page_w - margin - 8 * mm, advice_y + 8 * mm)
@@ -587,12 +641,12 @@ def _patch_catalogue_services(module: ModuleType) -> None:
             c.setFont("Times-Bold", 8.8)
             c.drawCentredString(page_w / 2, advice_y + 4.0 * mm, "Conseils")
             c.setFillColorRGB(*ink)
-            c.setFont("Times-Italic", 7.8)
-            c.drawCentredString(page_w / 2, advice_y, "À porter avec intention. Purifier régulièrement. Recharger à la lumière douce de la lune.")
+            c.setFont("Times-Italic", 6.8)
+            c.drawCentredString(page_w / 2, advice_y, "À porter avec intention · Purifier régulièrement · Recharger à la lune")
 
             c.setFillColorRGB(0.38, 0.32, 0.25)
-            c.setFont("Times-Italic", 6.8)
-            c.drawCentredString(page_w / 2, 10.2 * mm, "Une création pensée pour accompagner votre énergie au quotidien")
+            c.setFont("Times-Italic", 5.9)
+            c.drawCentredString(page_w / 2, 8.6 * mm, "Une création pensée pour accompagner votre énergie au quotidien")
 
             c.showPage()
             c.save()
