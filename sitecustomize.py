@@ -8,11 +8,160 @@ from __future__ import annotations
 
 import importlib.abc
 import importlib.machinery
+import json
+import re
 import sys
 from types import ModuleType
+from copy import deepcopy
+from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 _TARGET = "pages.crud_editors"
+
+
+def _migrate_stones_to_6_8mm_inventory() -> None:
+    """Crée un inventaire pierre 8 mm / 6 mm sans perdre les stocks existants.
+
+    - Les pierres existantes deviennent les variantes 8 mm, stock conservé.
+    - Une variante 6 mm est créée pour chaque pierre, avec stock à 0.
+    - Les compositions bracelet existantes sont redirigées vers la variante 8 mm.
+
+    La migration est idempotente : elle peut être relancée sans recréer des
+    doublons 6 mm.
+    """
+    try:
+        base_dir = Path(__file__).resolve().parent
+        stones_path = base_dir / "pierres.json"
+        bracelets_path = base_dir / "bracelets.json"
+        if not stones_path.exists():
+            return
+
+        stones = json.loads(stones_path.read_text(encoding="utf-8"))
+        if not isinstance(stones, list) or not stones:
+            return
+
+        now = datetime.now().isoformat(timespec="seconds")
+        suffix_re = re.compile(r"\s+(6|8)\s*mm\s*$", re.IGNORECASE)
+
+        def split_name(name: str):
+            text = str(name or "").strip()
+            match = suffix_re.search(text)
+            if not match:
+                return text, None
+            return text[: match.start()].strip(), match.group(1)
+
+        def make_name(base: str, diameter: int) -> str:
+            return f"{base} {diameter} mm"
+
+        def ref_number(ref: Any) -> int | None:
+            text = str(ref or "").strip().upper()
+            if text.startswith("PIE-") and text[4:].isdigit():
+                return int(text[4:])
+            return None
+
+        max_ref = 0
+        for stone in stones:
+            n = ref_number(stone.get("reference")) if isinstance(stone, dict) else None
+            if n and n > max_ref:
+                max_ref = n
+
+        def next_ref() -> str:
+            nonlocal max_ref
+            max_ref += 1
+            return f"PIE-{max_ref:04d}"
+
+        existing_names = {
+            str(stone.get("nom", "")).strip().casefold()
+            for stone in stones
+            if isinstance(stone, dict)
+        }
+
+        originals = [stone for stone in stones if isinstance(stone, dict)]
+        changed = False
+        created = []
+
+        for stone in originals:
+            raw_name = str(stone.get("nom", "") or "").strip()
+            if not raw_name:
+                continue
+            base, suffix = split_name(raw_name)
+            if not base:
+                continue
+
+            if suffix == "6":
+                if stone.get("diametre") != 6 or stone.get("diametre_mm") != 6:
+                    stone["diametre"] = 6
+                    stone["diametre_mm"] = 6
+                    changed = True
+                if int(stone.get("stock", 0) or 0) != 0:
+                    stone["stock"] = 0
+                    stone["stock_reserve"] = 0
+                    changed = True
+                continue
+
+            # Toute pierre existante non 6 mm devient la variante 8 mm.
+            target_8_name = make_name(base, 8)
+            if raw_name != target_8_name:
+                stone["nom"] = target_8_name
+                changed = True
+            if stone.get("diametre") != 8 or stone.get("diametre_mm") != 8:
+                stone["diametre"] = 8
+                stone["diametre_mm"] = 8
+                changed = True
+            stone["updated_at"] = now
+
+            target_6_name = make_name(base, 6)
+            if target_6_name.casefold() not in existing_names:
+                clone = deepcopy(stone)
+                clone["id"] = __import__("uuid").uuid4().__str__()
+                clone["reference"] = next_ref()
+                clone["nom"] = target_6_name
+                clone["diametre"] = 6
+                clone["diametre_mm"] = 6
+                clone["stock"] = 0
+                clone["stock_reserve"] = 0
+                clone["created_at"] = now
+                clone["updated_at"] = now
+                created.append(clone)
+                existing_names.add(target_6_name.casefold())
+                changed = True
+
+        if created:
+            stones.extend(created)
+
+        if changed:
+            stones_path.write_text(json.dumps(stones, indent=2, ensure_ascii=False), encoding="utf-8")
+
+        # Redirige les anciennes compositions vers les variantes 8 mm.
+        if bracelets_path.exists():
+            bracelets = json.loads(bracelets_path.read_text(encoding="utf-8"))
+            bracelets_changed = False
+            if isinstance(bracelets, list):
+                for bracelet in bracelets:
+                    if not isinstance(bracelet, dict):
+                        continue
+                    for row in bracelet.get("composition", []) or []:
+                        if not isinstance(row, dict):
+                            continue
+                        cat = str(row.get("categorie", "") or "").strip().lower()
+                        if not cat.startswith("pierre"):
+                            continue
+                        comp_name = str(row.get("composant", "") or "").strip()
+                        base, suffix = split_name(comp_name)
+                        if base and suffix is None:
+                            row["composant"] = make_name(base, 8)
+                            bracelets_changed = True
+                    if bracelets_changed:
+                        bracelet["updated_at"] = now
+                if bracelets_changed:
+                    bracelets_path.write_text(json.dumps(bracelets, indent=2, ensure_ascii=False), encoding="utf-8")
+    except Exception:
+        # Ne jamais bloquer le lancement de l'application pour une migration.
+        pass
+
+
+_migrate_stones_to_6_8mm_inventory()
 
 
 def _safe_configure(widget: Any, **kwargs: Any) -> None:
@@ -96,11 +245,21 @@ def _patch_crud_editors(module: ModuleType) -> None:
     BaseEditor._maximize_window = _adaptive_maximize_window
 
     # ──────────────────────────────────────────────────────────────────────
-    # Champ diamètre des pierres dans l'éditeur composant
+    # Sélection d'une ligne de composition + actions globales larges
     # ──────────────────────────────────────────────────────────────────────
     orig_component_build_info_tab = ComponentEditor._build_info_tab
     orig_component_on_category_change = ComponentEditor._on_category_change
     orig_component_save = ComponentEditor._save
+    orig_build_info_tab = BraceletEditor._build_info_tab
+    orig_save_bracelet = BraceletEditor._save
+    orig_build_composition_tab = BraceletEditor._build_composition_tab
+    orig_add_comp_row = BraceletEditor._add_comp_row
+    orig_move_comp_row = BraceletEditor._move_comp_row
+    orig_remove_comp_row = BraceletEditor._remove_comp_row
+    orig_duplicate_comp_row = BraceletEditor._duplicate_comp_row
+    orig_clear_all_rows = BraceletEditor._clear_all_rows
+    orig_apply_filter = BraceletEditor._apply_filter
+    orig_refresh_comp_positions = BraceletEditor._refresh_comp_positions
 
     def _format_diameter_value(value: Any) -> str:
         if value in (None, ""):
@@ -176,20 +335,6 @@ def _patch_crud_editors(module: ModuleType) -> None:
     ComponentEditor._build_info_tab = _component_build_info_tab_with_diameter
     ComponentEditor._on_category_change = _component_on_category_change_with_diameter
     ComponentEditor._save = _component_save_with_diameter
-
-    # ──────────────────────────────────────────────────────────────────────
-    # Sélection d'une ligne de composition + actions globales larges
-    # ──────────────────────────────────────────────────────────────────────
-    orig_build_info_tab = BraceletEditor._build_info_tab
-    orig_save_bracelet = BraceletEditor._save
-    orig_build_composition_tab = BraceletEditor._build_composition_tab
-    orig_add_comp_row = BraceletEditor._add_comp_row
-    orig_move_comp_row = BraceletEditor._move_comp_row
-    orig_remove_comp_row = BraceletEditor._remove_comp_row
-    orig_duplicate_comp_row = BraceletEditor._duplicate_comp_row
-    orig_clear_all_rows = BraceletEditor._clear_all_rows
-    orig_apply_filter = BraceletEditor._apply_filter
-    orig_refresh_comp_positions = BraceletEditor._refresh_comp_positions
 
     def _build_info_tab_with_wrist(self, tab) -> None:
         orig_build_info_tab(self, tab)
@@ -788,6 +933,7 @@ if _CATALOGUE_TARGET in sys.modules:
     _patch_catalogue_services(sys.modules[_CATALOGUE_TARGET])
 elif not any(isinstance(finder, _CataloguePatchFinder) for finder in sys.meta_path):
     sys.meta_path.insert(0, _CataloguePatchFinder())
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────
