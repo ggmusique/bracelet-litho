@@ -69,6 +69,10 @@ class KPICard(ctk.CTkFrame):
         """Met à jour la valeur affichée dans la carte."""
         self._value_lbl.configure(text=value)
 
+    def set_value_color(self, color: str) -> None:
+        """Met à jour la couleur de la valeur affichée."""
+        self._value_lbl.configure(text_color=color)
+
 
 class SectionHeader(ctk.CTkFrame):
     """En-tête de page avec titre et sous-titre."""
